@@ -7,6 +7,7 @@ use App\Http\Controllers\homeController;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\logoutController;
 use App\Http\Controllers\marcaController;
+use App\Http\Controllers\fabricanteController;
 use App\Http\Controllers\presentacioneController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\profileController;
@@ -30,6 +31,7 @@ Route::get('/',[homeController::class,'index'])->name('panel');
 
 Route::resources([
     'categorias' => categoriaController::class,
+    'fabricantes' => fabricanteController::class,
     'presentaciones' => presentacioneController::class,
     'marcas' => marcaController::class,
     'productos' => ProductoController::class,

@@ -100,10 +100,10 @@
                 </a>
                 @endcan
 
-                @can('ver-presentacione')
-                <a class="nav-link" href="{{ route('presentaciones.index') }}">
+                @can('ver-fabricante')
+                <a class="nav-link" href="{{ route('fabricantes.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-box-archive"></i></div>
-                    Presentaciones
+                    Fabricantes
                 </a>
                 @endcan
 
@@ -115,7 +115,7 @@
                 @endcan
 
                 @can('ver-producto')
-                <a class="nav-link" href="{{ route('productos.index') }}">
+                <a class="nav-link" href="{{route('productos.index')}}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                     Productos
                 </a>

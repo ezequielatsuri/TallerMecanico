@@ -88,13 +88,13 @@
 
                     <!---Presentaciones---->
                     <div class="col-md-6">
-                        <label for="presentacione_id" class="form-label">Presentación:</label>
-                        <select data-size="4" title="Seleccione una presentación" data-live-search="true" name="presentacione_id" id="presentacione_id" class="form-control selectpicker show-tick">
-                            @foreach ($presentaciones as $item)
-                            <option value="{{$item->id}}" {{ old('presentacione_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                        <label for="presentacione_id" class="form-label">Fabricante:</label>
+                        <select data-size="4" title="Seleccione un fabricante" data-live-search="true" name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick">
+                            @foreach ($fabricantes as $item)
+                            <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
                             @endforeach
                         </select>
-                        @error('presentacione_id')
+                        @error('fabricante_id')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>

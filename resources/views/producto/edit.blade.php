@@ -92,17 +92,17 @@
 
                     <!---Presentaciones---->
                     <div class="col-md-6">
-                        <label for="presentacione_id" class="form-label">Presentación:</label>
-                        <select data-size="4" title="Seleccione una presentación" data-live-search="true" name="presentacione_id" id="presentacione_id" class="form-control selectpicker show-tick">
-                            @foreach ($presentaciones as $item)
-                            @if ($producto->presentacione_id == $item->id)
-                            <option selected value="{{$item->id}}" {{ old('presentacione_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                        <label for="fabricante_id" class="form-label">Fabricante:</label>
+                        <select data-size="4" title="Seleccione un fabricante" data-live-search="true" name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick">
+                            @foreach ($fabricantes as $item)
+                            @if ($producto->fabricante_id == $item->id)
+                            <option selected value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
                             @else
-                            <option value="{{$item->id}}" {{ old('presentacione_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                            <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
                             @endif
                             @endforeach
                         </select>
-                        @error('presentacione_id')
+                        @error('fabricante_id')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>

@@ -44,6 +44,12 @@ class PermissionSeeder extends Seeder
             'editar-presentacione',
             'eliminar-presentacione',
 
+            'ver-fabricante',
+            'crear-fabricante',
+            'editar-fabricante',
+            'eliminar-fabricante',
+
+            
             //Producto
             'ver-producto',
             'crear-producto',

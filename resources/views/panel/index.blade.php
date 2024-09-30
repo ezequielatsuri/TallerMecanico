@@ -136,21 +136,21 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-8">
-                            <i class="fa-solid fa-box-archive"></i><span class="m-1">Presentaciones</span>
+                            <i class="fa-solid fa-box-archive"></i><span class="m-1">Fabricantes</span>
                         </div>
                         <div class="col-4">
                             <?php
 
-                            use App\Models\Presentacione;
+                            use App\Models\Fabricante;
 
-                            $presentaciones = count(Presentacione::all());
+                            $fabricantes = count(Fabricante::all());
                             ?>
-                            <p class="text-center fw-bold fs-4">{{$presentaciones}}</p>
+                            <p class="text-center fw-bold fs-4">{{$fabricantes}}</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="{{ route('presentaciones.index') }}">Ver más</a>
+                    <a class="small text-white stretched-link" href="{{ route('fabricantes.index') }}">Ver más</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>

@@ -28,7 +28,7 @@ class StoreProductoRequest extends FormRequest
             'fecha_vencimiento' => 'nullable|date',
             'img_path' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'marca_id' => 'required|integer|exists:marcas,id',
-            'presentacione_id' => 'required|integer|exists:presentaciones,id',
+            'fabricante_id' => 'required|integer|exists:fabricantes,id',
             'categorias' => 'required'
         ];
     }
@@ -37,7 +37,7 @@ class StoreProductoRequest extends FormRequest
     {
         return [
             'marca_id' => 'marca',
-            'presentacione_id' => 'presentación'
+            'fabricante_id' => 'fabricante'
         ];
     }
 

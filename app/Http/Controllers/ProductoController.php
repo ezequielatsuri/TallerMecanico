@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Categoria;
 use App\Models\Marca;
 use App\Models\Presentacione;
+use App\Models\Fabricante;
 use App\Models\Producto;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::with(['categorias.caracteristica','marca.caracteristica','presentacione.caracteristica'])->latest()->get();
+        $productos = Producto::with(['categorias.caracteristica','marca.caracteristica','fabricante.caracteristica'])->latest()->get();
     
         return view('producto.index',compact('productos'));
     }
@@ -41,8 +42,8 @@ class ProductoController extends Controller
             ->where('c.estado', 1)
             ->get();
 
-        $presentaciones = Presentacione::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
-            ->select('presentaciones.id as id', 'c.nombre as nombre')
+        $fabricantes = Fabricante::join('caracteristicas as c', 'fabricantes.caracteristica_id', '=', 'c.id')
+            ->select('fabricantes.id as id', 'c.nombre as nombre')
             ->where('c.estado', 1)
             ->get();
 
@@ -51,7 +52,7 @@ class ProductoController extends Controller
             ->where('c.estado', 1)
             ->get();
 
-        return view('producto.create', compact('marcas', 'presentaciones', 'categorias'));
+        return view('producto.create', compact('marcas', 'fabricantes', 'categorias'));
     }
 
     /**
@@ -77,7 +78,7 @@ class ProductoController extends Controller
                 'fecha_vencimiento' => $request->fecha_vencimiento,
                 'img_path' => $name,
                 'marca_id' => $request->marca_id,
-                'presentacione_id' => $request->presentacione_id
+                'fabricante_id' => $request->fabricante_id
             ]);
 
             $producto->save();
@@ -113,8 +114,8 @@ class ProductoController extends Controller
             ->where('c.estado', 1)
             ->get();
 
-        $presentaciones = Presentacione::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
-            ->select('presentaciones.id as id', 'c.nombre as nombre')
+        $fabricantes = Fabricante::join('caracteristicas as c', 'fabricantes.caracteristica_id', '=', 'c.id')
+            ->select('fabricantes.id as id', 'c.nombre as nombre')
             ->where('c.estado', 1)
             ->get();
 
@@ -123,7 +124,7 @@ class ProductoController extends Controller
             ->where('c.estado', 1)
             ->get();
 
-        return view('producto.edit',compact('producto','marcas','presentaciones','categorias'));
+        return view('producto.edit',compact('producto','marcas','fabricantes','categorias'));
     }
 
     /**

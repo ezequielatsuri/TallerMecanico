@@ -16,7 +16,7 @@ class Producto extends Model
         'descripcion',
         'fecha_vencimiento',
         'marca_id',
-        'presentacione_id',
+        'fabricante_id',
         'img_path'
     ];
 
@@ -42,16 +42,16 @@ class Producto extends Model
         return $this->belongsTo(Marca::class);
     }
 
-    public function presentacione()
+    public function fabricante()
     {
-        return $this->belongsTo(Presentacione::class);
+        return $this->belongsTo(Fabricante::class);
     }
 
     public function handleUploadImage($image)
     {
         $file = $image;
         $name = time() . $file->getClientOriginalName();
-        //$file->move(public_path() . '/img/productos/', $name);
+       // $file->move(public_path() . '/img/productos/', $name);
         Storage::putFileAs('/public/productos/',$file,$name,'public');
 
         return $name;
