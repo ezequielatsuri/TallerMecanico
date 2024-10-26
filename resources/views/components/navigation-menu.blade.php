@@ -1,6 +1,6 @@
 <div id="layoutSidenav_nav">
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-        <div class="sb-sidenav-menu">
+        <div class="sb-sidenav-menu bg-dark">
             <div class="nav">
 
                 <div class="sb-sidenav-menu-heading">Inicio</div>
