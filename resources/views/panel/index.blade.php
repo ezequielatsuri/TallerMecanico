@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-
+        {{-- 
         <!----Compra--->
         <div class="col-xl-3 col-md-6">
             <div class="card bg-success text-white mb-4">
@@ -103,7 +103,7 @@
                 </div>
             </div>
         </div>
-
+        --}}
         <!----Marcas--->
         <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white mb-4">

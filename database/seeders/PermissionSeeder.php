@@ -49,6 +49,11 @@ class PermissionSeeder extends Seeder
             'editar-fabricante',
             'eliminar-fabricante',
 
+            'ver-servicio',
+            'crear-servicio',
+            'editar-servicio',
+            'eliminar-servicio',
+                   
             
             //Producto
             'ver-producto',

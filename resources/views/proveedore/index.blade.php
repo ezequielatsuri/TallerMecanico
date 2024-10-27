@@ -72,7 +72,7 @@
                         </td>
                         <td>
                             <div class="d-flex justify-content-around">
-
+                            {{-- 
                                 <div>
                                     <button title="Opciones" class="btn btn-datatable btn-icon btn-transparent-dark me-2" data-bs-toggle="dropdown" aria-expanded="false">
                                         <svg class="svg-inline--fa fa-ellipsis-vertical" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-vertical" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" data-fa-i2svg="">
@@ -106,6 +106,7 @@
                                     @endif
                                     @endcan
                                 </div>
+                                --}}
                             </div>
                         </td>
                     </tr>

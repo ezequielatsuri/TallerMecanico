@@ -6,12 +6,12 @@ use App\Http\Requests\StoreVentaRequest;
 use App\Models\Cliente;
 use App\Models\Comprobante;
 use App\Models\Producto;
+use App\Models\Servicio;
 use App\Models\Venta;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ventaController extends Controller
+class VentaController extends Controller
 {
     function __construct()
     {
@@ -20,25 +20,19 @@ class ventaController extends Controller
         $this->middleware('permission:mostrar-venta', ['only' => ['show']]);
         $this->middleware('permission:eliminar-venta', ['only' => ['destroy']]);
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $ventas = Venta::with(['comprobante','cliente.persona','user'])
-        ->where('estado',1)
-        ->latest()
-        ->get();
+            ->where('estado', 1)
+            ->latest()
+            ->get();
 
-        return view('venta.index',compact('ventas'));
+        return view('venta.index', compact('ventas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-
         $subquery = DB::table('compra_producto')
             ->select('producto_id', DB::raw('MAX(created_at) as max_created_at'))
             ->groupBy('producto_id');
@@ -59,98 +53,73 @@ class ventaController extends Controller
         $clientes = Cliente::whereHas('persona', function ($query) {
             $query->where('estado', 1);
         })->get();
-        $comprobantes = Comprobante::all();
 
-        return view('venta.create', compact('productos', 'clientes', 'comprobantes'));
+        $comprobantes = Comprobante::all();
+        $servicios = Servicio::where('estado', 1)->get();
+
+        return view('venta.create', compact('productos', 'clientes', 'comprobantes', 'servicios'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreVentaRequest $request)
     {
-        try{
+        try {
             DB::beginTransaction();
 
-            //Llenar mi tabla venta
+            // Crear la venta
             $venta = Venta::create($request->validated());
 
-            //Llenar mi tabla venta_producto
-            //1. Recuperar los arrays
+            // Guardar productos de la venta
             $arrayProducto_id = $request->get('arrayidproducto');
             $arrayCantidad = $request->get('arraycantidad');
             $arrayPrecioVenta = $request->get('arrayprecioventa');
             $arrayDescuento = $request->get('arraydescuento');
-
-            //2.Realizar el llenado
             $siseArray = count($arrayProducto_id);
-            $cont = 0;
-
-            while($cont < $siseArray){
+            for ($i = 0; $i < $siseArray; $i++) {
                 $venta->productos()->syncWithoutDetaching([
-                    $arrayProducto_id[$cont] => [
-                        'cantidad' => $arrayCantidad[$cont],
-                        'precio_venta' => $arrayPrecioVenta[$cont],
-                        'descuento' => $arrayDescuento[$cont]
+                    $arrayProducto_id[$i] => [
+                        'cantidad' => $arrayCantidad[$i],
+                        'precio_venta' => $arrayPrecioVenta[$i],
+                        'descuento' => $arrayDescuento[$i]
                     ]
                 ]);
 
-                //Actualizar stock
-                $producto = Producto::find($arrayProducto_id[$cont]);
-                $stockActual = $producto->stock;
-                $cantidad = intval($arrayCantidad[$cont]);
+                // Actualizar stock
+                $producto = Producto::find($arrayProducto_id[$i]);
+                $producto->stock -= intval($arrayCantidad[$i]);
+                $producto->save();
+            }
 
-                DB::table('productos')
-                ->where('id',$producto->id)
-                ->update([
-                    'stock' => $stockActual - $cantidad
-                ]);
-
-                $cont++;
+            // Guardar servicios de la venta
+            $arrayServicio_id = $request->get('arrayidservicio');
+            $arrayPrecioServicio = $request->get('arrayprecioservicio');
+            $arrayDescuentoServicio = $request->get('arraydescuentoservicio');
+            if ($arrayServicio_id) {
+                $siseArrayServicio = count($arrayServicio_id);
+                for ($j = 0; $j < $siseArrayServicio; $j++) {
+                    $venta->servicios()->attach($arrayServicio_id[$j], [
+                        'precio' => $arrayPrecioServicio[$j],
+                        'descuento' => $arrayDescuentoServicio[$j]
+                    ]);
+                }
             }
 
             DB::commit();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
+            return redirect()->route('ventas.index')->withErrors('Error al registrar la venta.');
         }
 
-        return redirect()->route('ventas.index')->with('success','Venta exitosa');
+        return redirect()->route('ventas.index')->with('success', 'Venta registrada exitosamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Venta $venta)
     {
-        return view('venta.show',compact('venta'));
+        return view('venta.show', compact('venta'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        Venta::where('id',$id)
-        ->update([
-            'estado' => 0
-        ]);
-
-        return redirect()->route('ventas.index')->with('success','Venta eliminada');
+        Venta::where('id', $id)->update(['estado' => 0]);
+        return redirect()->route('ventas.index')->with('success', 'Venta eliminada');
     }
 }

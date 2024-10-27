@@ -8178,7 +8178,7 @@ textarea.form-control-lg {
 
 .bg-dark {
   --bs-bg-opacity: 1;
-  background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+  background-color: #011E34 !important;
 }
 
 .bg-black {
@@ -11017,22 +11017,24 @@ body {
   padding: 0.75rem;
   flex-shrink: 0;
 }
-
+.color-blanco {
+    color: white;
+}
 .sb-sidenav-dark {
   background-color: #212529;
   color: rgba(255, 255, 255, 0.5);
 }
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.25);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: rgba(255, 255, 255, 0.25);
+  color:black;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
-  color: rgba(255, 255, 255, 0.25);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
   color: #fff;
@@ -11044,7 +11046,7 @@ body {
   color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-footer {
-  background-color: #343a40;
+  background-color: #011E34;
 }
 
 .sb-sidenav-light {
@@ -11274,7 +11276,7 @@ body {
 }
 
 /**Estilos paginación tabla**/
-.datatable-active a , 
+.datatable-active a ,
 .datatable-pagination-list-item-link:active,
 .datatable-pagination-list-item-link:hover{
   background-color: #0061f2 !important;

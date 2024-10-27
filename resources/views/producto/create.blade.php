@@ -54,7 +54,7 @@
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
-
+                    {{-- 
                     <!---Fecha de vencimiento---->
                     <div class="col-md-6">
                         <label for="fecha_vencimiento" class="form-label">Fecha de vencimiento:</label>
@@ -63,7 +63,7 @@
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
-
+                        --}}
                     <!---Imagen---->
                     <div class="col-md-6">
                         <label for="img_path" class="form-label">Imagen:</label>

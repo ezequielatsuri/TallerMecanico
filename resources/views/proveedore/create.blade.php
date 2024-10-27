@@ -31,8 +31,8 @@
                         <label for="tipo_persona" class="form-label">Tipo de proveedor:</label>
                         <select class="form-select" name="tipo_persona" id="tipo_persona">
                             <option value="" selected disabled>Seleccione una opción</option>
-                            <option value="natural" {{ old('tipo_persona') == 'natural' ? 'selected' : '' }}>Persona natural</option>
-                            <option value="juridica" {{ old('tipo_persona') == 'juridica' ? 'selected' : '' }}>Persona jurídica</option>
+                            <option value="natural" {{ old('tipo_persona') == 'natural' ? 'selected' : '' }}>Persona fisica</option>
+                            <option value="juridica" {{ old('tipo_persona') == 'juridica' ? 'selected' : '' }}>Persona Moral</option>
                         </select>
                         @error('tipo_persona')
                         <small class="text-danger">{{'*'.$message}}</small>

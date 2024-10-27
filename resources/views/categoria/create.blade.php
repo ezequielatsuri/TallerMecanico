@@ -26,7 +26,7 @@
                 <div class="row g-4">
 
                     <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre:</label>
+                        <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
                         <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>

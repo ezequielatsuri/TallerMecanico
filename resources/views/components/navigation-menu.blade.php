@@ -1,13 +1,14 @@
 <div id="layoutSidenav_nav">
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-        <div class="sb-sidenav-menu">
+        <div class="sb-sidenav-menu bg-dark">
             <div class="nav">
-
+           
                 <div class="sb-sidenav-menu-heading">Inicio</div>
                 <a class="nav-link" href="{{ route('panel') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Panel
                 </a>
+              
 
                 <!---div class="sb-sidenav-menu-heading">Interface</div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -56,6 +57,7 @@
                 <div class="sb-sidenav-menu-heading">Modulos</div>
 
                 <!----Compras---->
+               
                 @can('ver-compra')
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCompras" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-store"></i></div>
@@ -93,6 +95,8 @@
                 </div>
                 @endcan
 
+           
+
                 @can('ver-categoria')
                 <a class="nav-link" href="{{ route('categorias.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-tag"></i></div>
@@ -118,6 +122,13 @@
                 <a class="nav-link" href="{{route('productos.index')}}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                     Productos
+                </a>
+                @endcan
+                
+                @can('ver-servicio')
+                <a class="nav-link" href="{{route('productos.index')}}">
+                    <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
+                    Servicios
                 </a>
                 @endcan
 

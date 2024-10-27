@@ -10,6 +10,7 @@ use App\Http\Controllers\marcaController;
 use App\Http\Controllers\fabricanteController;
 use App\Http\Controllers\presentacioneController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\servicioController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\proveedorController;
 use App\Http\Controllers\roleController;
@@ -35,6 +36,7 @@ Route::resources([
     'presentaciones' => presentacioneController::class,
     'marcas' => marcaController::class,
     'productos' => ProductoController::class,
+    'servicios' => servicioController::class,
     'clientes' => clienteController::class,
     'proveedores' => proveedorController::class,
     'compras' => compraController::class,
