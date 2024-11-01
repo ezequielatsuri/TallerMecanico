@@ -97,7 +97,7 @@
             </div>
             <!-- Sección derecha con el formulario -->
             <div class="login-right">
-                <h3>Login</h3>
+                <h3>¡Bienvenido!</h3>
                 @if ($errors->any())
                 @foreach ($errors->all() as $item)
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">

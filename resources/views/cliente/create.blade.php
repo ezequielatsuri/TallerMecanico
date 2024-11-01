@@ -27,23 +27,23 @@
 
                 <div class="row g-3">
 
-                    <!----Tipo de persona----->
+                    <!----Tipo de persona-----> 
                     <div class="col-md-6">
-                        <label for="tipo_persona" class="form-label">Tipo de cliente:</label>
+                        <label for="tipo_persona" class="form-label"><strong>Tipo de cliente:</strong></label>
                         <select class="form-select" name="tipo_persona" id="tipo_persona">
                             <option value="" selected disabled>Seleccione una opción</option>
-                            <option value="natural" {{ old('tipo_persona') == 'natural' ? 'selected' : '' }}>Persona natural</option>
-                            <option value="juridica" {{ old('tipo_persona') == 'juridica' ? 'selected' : '' }}>Persona jurídica</option>
+                            <option value="fisica" {{ old('tipo_persona') == 'fisica' ? 'selected' : '' }}>Persona Física</option>
+                            <option value="moral" {{ old('tipo_persona') == 'moral' ? 'selected' : '' }}>Persona Moral</option>
                         </select>
                         @error('tipo_persona')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
 
-                    <!-------Razón social------->
+                    <!-------Razón social-------> 
                     <div class="col-12" id="box-razon-social">
-                        <label id="label-natural" for="razon_social" class="form-label">Nombres y apellidos:</label>
-                        <label id="label-juridica" for="razon_social" class="form-label">Nombre de la empresa:</label>
+                        <label id="label-fisica" for="razon_social" class="form-label"><strong>Nombres y apellidos:</strong></label>
+                        <label id="label-moral" for="razon_social" class="form-label"><strong>Nombre de la empresa:</strong></label>
 
                         <input required type="text" name="razon_social" id="razon_social" class="form-control" value="{{old('razon_social')}}">
 
@@ -54,16 +54,16 @@
 
                     <!------Dirección---->
                     <div class="col-12">
-                        <label for="direccion" class="form-label">Dirección:</label>
+                        <label for="direccion" class="form-label"><strong>Dirección:</strong></label>
                         <input required type="text" name="direccion" id="direccion" class="form-control" value="{{old('direccion')}}">
                         @error('direccion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
 
-                    <!--------------Documento------->
+                    <!--------------Documento-------> 
                     <div class="col-md-6">
-                        <label for="documento_id" class="form-label">Tipo de documento:</label>
+                        <label for="documento_id" class="form-label"><strong>Tipo de documento:</strong></label>
                         <select class="form-select" name="documento_id" id="documento_id">
                             <option value="" selected disabled>Seleccione una opción</option>
                             @foreach ($documentos as $item)
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="numero_documento" class="form-label">Numero de documento:</label>
+                        <label for="numero_documento" class="form-label"><strong>Numero de documento:</strong></label>
                         <input required type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{old('numero_documento')}}">
                         @error('numero_documento')
                         <small class="text-danger">{{'*'.$message}}</small>
@@ -90,27 +90,86 @@
             </div>
         </form>
     </div>
-
-
 </div>
 @endsection
 
 @push('js')
 <script>
     $(document).ready(function() {
+        // Mostrar/Ocultar los labels según el tipo de cliente seleccionado
         $('#tipo_persona').on('change', function() {
             let selectValue = $(this).val();
-            //natural //juridica
-            if (selectValue == 'natural') {
-                $('#label-juridica').hide();
-                $('#label-natural').show();
+            if (selectValue == 'fisica') {
+                $('#label-moral').hide();
+                $('#label-fisica').show();
             } else {
-                $('#label-natural').hide();
-                $('#label-juridica').show();
+                $('#label-fisica').hide();
+                $('#label-moral').show();
             }
-
             $('#box-razon-social').show();
+        });
+
+        // Validación de Razon Social / Nombres en tiempo real
+        $('#razon_social').on('input', function() {
+            let value = $(this).val();
+            let isValid = /^[a-zA-Z\s]+$/.test(value); // Solo letras y espacios
+
+            if (!isValid) {
+                $(this).addClass('is-invalid');
+                $('#razon_social-error').remove();
+                $(this).after('<small id="razon_social-error" class="text-danger">Solo se permiten letras y espacios.</small>');
+            } else {
+                $(this).removeClass('is-invalid');
+                $('#razon_social-error').remove();
+            }
+        });
+
+        // Validación de Dirección en tiempo real
+        $('#direccion').on('input', function() {
+            if ($(this).val().length < 10) {
+                $(this).addClass('is-invalid');
+                $('#direccion-error').remove();
+                $(this).after('<small id="direccion-error" class="text-danger">La dirección debe tener al menos 10 caracteres.</small>');
+            } else {
+                $(this).removeClass('is-invalid');
+                $('#direccion-error').remove();
+            }
+        });
+
+        // Validación del Número de Documento en tiempo real (solo números)
+        $('#numero_documento').on('input', function() {
+            let value = $(this).val();
+            if (!/^\d+$/.test(value)) {
+                $(this).addClass('is-invalid');
+                $('#numero_documento-error').remove();
+                $(this).after('<small id="numero_documento-error" class="text-danger">Solo se permiten números.</small>');
+            } else {
+                $(this).removeClass('is-invalid');
+                $('#numero_documento-error').remove();
+            }
+        });
+
+        // Validación al cambiar Tipo de Documento
+        $('#documento_id').on('change', function() {
+            if ($(this).val() === "") {
+                $(this).addClass('is-invalid');
+                $('#documento_id-error').remove();
+                $(this).after('<small id="documento_id-error" class="text-danger">Debe seleccionar un tipo de documento.</small>');
+            } else {
+                $(this).removeClass('is-invalid');
+                $('#documento_id-error').remove();
+            }
+        });
+
+        // Validación antes de enviar el formulario
+        $('form').on('submit', function(e) {
+            let tipoPersona = $('#tipo_persona').val();
+            if (!tipoPersona) {
+                e.preventDefault();
+                alert('Debe seleccionar un tipo de cliente.');
+            }
         });
     });
 </script>
 @endpush
+

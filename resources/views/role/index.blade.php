@@ -22,7 +22,7 @@
     @can('crear-role')
     <div class="mb-4">
         <a href="{{route('roles.create')}}">
-            <button type="button" class="btn btn-primary">Añadir nuevo rol</button>
+            <button type="button" class="btn btn-primary">Agregar nuevo rol</button>
         </a>
     </div>
     @endcan

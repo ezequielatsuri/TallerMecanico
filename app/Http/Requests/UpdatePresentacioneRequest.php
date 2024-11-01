@@ -25,8 +25,19 @@ class UpdatePresentacioneRequest extends FormRequest
         $caracteristicaId = $fabricante->caracteristica->id;
 
         return [
-            'nombre' => 'required|max:60|unique:caracteristicas,nombre,'.$caracteristicaId,
-            'descripcion' => 'nullable|max:255'
+            'nombre' => 'required|max:60|unique:caracteristicas,nombre,' . $caracteristicaId . '|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/',
+            'descripcion' => 'nullable|max:255',
+        ];
+    }
+    
+    public function messages(): array
+    {
+        return [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no debe exceder los 60 caracteres.',
+            'nombre.unique' => 'El nombre ya está en uso. Por favor elija otro.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+            'descripcion.max' => 'La descripción no debe exceder los 255 caracteres.',
         ];
     }
 }

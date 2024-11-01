@@ -24,7 +24,7 @@
     @can('crear-categoria')
     <div class="mb-4">
         <a href="{{route('categorias.create')}}">
-            <button type="button" class="btn btn-primary">Añadir nuevo registro</button>
+            <button type="button" class="btn btn-primary">Agregar nuevo registro</button>
         </a>
     </div>
     @endcan
@@ -57,25 +57,20 @@
                             @if ($categoria->caracteristica->estado == 1)
                             <span class="badge rounded-pill text-bg-success">activo</span>
                             @else
-                            <span class="badge rounded-pill text-bg-danger">eliminado</span>
+                            <span class="badge rounded-pill text-bg-danger">inactivo</span>
                             @endif
                         </td>
                         <td>
                             <div class="d-flex justify-content-around">
 
-                                <div>
-                                    <button title="Opciones" class="btn btn-datatable btn-icon btn-transparent-dark me-2" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg class="svg-inline--fa fa-ellipsis-vertical" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-vertical" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" data-fa-i2svg="">
-                                            <path fill="currentColor" d="M56 472a56 56 0 1 1 0-112 56 56 0 1 1 0 112zm0-160a56 56 0 1 1 0-112 56 56 0 1 1 0 112zM0 96a56 56 0 1 1 112 0A56 56 0 1 1 0 96z"></path>
-                                        </svg>
-                                    </button>
-                                    <ul class="dropdown-menu text-bg-light" style="font-size: small;">
-                                        <!-----Editar categoría--->
-                                        @can('editar-categoria')
-                                        <li><a class="dropdown-item" href="{{route('categorias.edit',['categoria'=>$categoria])}}">Editar</a></li>
-                                        @endcan
-                                    </ul>
-                                </div>
+                            <div>
+                                <a title="Editar categoría" class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="{{ route('categorias.edit', ['categoria' => $categoria]) }}">
+                                 <svg class="svg-inline--fa fa-pencil-alt" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pencil-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                 <path fill="currentColor" d="M290.74 93.06l126.57 126.57-22.06 22.06L268.68 115.12l22.06-22.06c11.22-11.22 29.34-11.22 40.66 0zM0 384V512h128l294.93-294.93-126.56-126.57L0 384z"></path>
+                                </svg>
+                                 </a>
+                            </div>
+
 
                                 <div>
                                     <!----Separador----->

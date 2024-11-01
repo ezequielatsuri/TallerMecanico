@@ -22,8 +22,24 @@ class StoreCaracteristicaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|max:60|unique:caracteristicas,nombre',
-            'descripcion' => 'nullable|max:255'
+            'nombre' => 'required|max:60|unique:caracteristicas,nombre|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/',
+            'descripcion' => 'nullable|max:255',
+        ];
+    }
+
+    /**
+     * Get the validation messages.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no debe exceder los 60 caracteres.',
+            'nombre.unique' => 'El nombre ya está en uso. Por favor elija otro.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+            'descripcion.max' => 'La descripción no debe exceder los 255 caracteres.',
         ];
     }
 }

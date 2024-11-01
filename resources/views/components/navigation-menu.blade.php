@@ -4,73 +4,27 @@
             <div class="nav">
            
                 <div class="sb-sidenav-menu-heading">Inicio</div>
-                <a class="nav-link" href="{{ route('panel') }}">
+                <a class="nav-link {{ request()->routeIs('panel') ? 'active' : '' }}" href="{{ route('panel') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Panel
                 </a>
-              
-
-                <!---div class="sb-sidenav-menu-heading">Interface</div>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                    Layouts
-                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                        <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
-                    </nav>
-                </div>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                    Pages
-                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                            Authentication
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="login.html">Login</a>
-                                <a class="nav-link" href="register.html">Register</a>
-                                <a class="nav-link" href="password.html">Forgot Password</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                            Error
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="401.html">401 Page</a>
-                                <a class="nav-link" href="404.html">404 Page</a>
-                                <a class="nav-link" href="500.html">500 Page</a>
-                            </nav>
-                        </div>
-                    </nav>
-                </div--->
 
                 <div class="sb-sidenav-menu-heading">Modulos</div>
 
                 <!----Compras---->
-               
                 @can('ver-compra')
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCompras" aria-expanded="false" aria-controls="collapseLayouts">
+                <a class="nav-link collapsed {{ request()->routeIs('compras.*') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCompras" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-store"></i></div>
                     Compras
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseCompras" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse {{ request()->routeIs('compras.*') ? 'show' : '' }}" id="collapseCompras" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         @can('ver-compra')
-                        <a class="nav-link" href="{{ route('compras.index') }}">Ver</a>
+                        <a class="nav-link {{ request()->routeIs('compras.index') ? 'active' : '' }}" href="{{ route('compras.index') }}">Ver</a>
                         @endcan
                         @can('crear-compra')
-                        <a class="nav-link" href="{{ route('compras.create') }}">Crear</a>
+                        <a class="nav-link {{ request()->routeIs('compras.create') ? 'active' : '' }}" href="{{ route('compras.create') }}">Crear</a>
                         @endcan
                     </nav>
                 </div>
@@ -78,69 +32,67 @@
 
                 <!----Ventas---->
                 @can('ver-venta')
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVentas" aria-expanded="false" aria-controls="collapseLayouts">
+                <a class="nav-link collapsed {{ request()->routeIs('ventas.*') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVentas" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
                     Ventas
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseVentas" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse {{ request()->routeIs('ventas.*') ? 'show' : '' }}" id="collapseVentas" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         @can('ver-venta')
-                        <a class="nav-link" href="{{ route('ventas.index') }}">Ver</a>
+                        <a class="nav-link {{ request()->routeIs('ventas.index') ? 'active' : '' }}" href="{{ route('ventas.index') }}">Ver</a>
                         @endcan
-                        @can('crear-compra')
-                        <a class="nav-link" href="{{ route('ventas.create') }}">Crear</a>
+                        @can('crear-venta')
+                        <a class="nav-link {{ request()->routeIs('ventas.create') ? 'active' : '' }}" href="{{ route('ventas.create') }}">Crear</a>
                         @endcan
                     </nav>
                 </div>
                 @endcan
 
-           
-
                 @can('ver-categoria')
-                <a class="nav-link" href="{{ route('categorias.index') }}">
+                <a class="nav-link {{ request()->routeIs('categorias.index') ? 'active' : '' }}" href="{{ route('categorias.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-tag"></i></div>
                     Categorías
                 </a>
                 @endcan
 
                 @can('ver-fabricante')
-                <a class="nav-link" href="{{ route('fabricantes.index') }}">
+                <a class="nav-link {{ request()->routeIs('fabricantes.index') ? 'active' : '' }}" href="{{ route('fabricantes.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-box-archive"></i></div>
                     Fabricantes
                 </a>
                 @endcan
 
                 @can('ver-marca')
-                <a class="nav-link" href="{{ route('marcas.index') }}">
+                <a class="nav-link {{ request()->routeIs('marcas.index') ? 'active' : '' }}" href="{{ route('marcas.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-bullhorn"></i></div>
                     Marcas
                 </a>
                 @endcan
 
                 @can('ver-producto')
-                <a class="nav-link" href="{{route('productos.index')}}">
+                <a class="nav-link {{ request()->routeIs('productos.index') ? 'active' : '' }}" href="{{ route('productos.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                     Productos
                 </a>
                 @endcan
                 
                 @can('ver-servicio')
-                <a class="nav-link" href="{{route('productos.index')}}">
+                <a class="nav-link {{ request()->routeIs('servicios.index') ? 'active' : '' }}" href="{{ route('servicios.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                     Servicios
                 </a>
                 @endcan
 
                 @can('ver-cliente')
-                <a class="nav-link" href="{{ route('clientes.index') }}">
+                <a class="nav-link {{ request()->routeIs('clientes.index') ? 'active' : '' }}" href="{{ route('clientes.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                     Clientes
                 </a>
                 @endcan
 
                 @can('ver-proveedore')
-                <a class="nav-link" href="{{ route('proveedores.index') }}">
+                <a class="nav-link {{ request()->routeIs('proveedores.index') ? 'active' : '' }}" href="{{ route('proveedores.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user-group"></i></div>
                     Proveedores
                 </a>
@@ -151,25 +103,41 @@
                 @endhasrole
 
                 @can('ver-user')
-                <a class="nav-link" href="{{ route('users.index') }}">
+                <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
                     Usuarios
                 </a>
                 @endcan
 
                 @can('ver-role')
-                <a class="nav-link" href="{{ route('roles.index') }}">
+                <a class="nav-link {{ request()->routeIs('roles.index') ? 'active' : '' }}" href="{{ route('roles.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-person-circle-plus"></i></div>
                     Roles
                 </a>
                 @endcan
 
-
             </div>
-        </div>
-        <div class="sb-sidenav-footer">
-            <div class="small">Bienvenido:</div>
-            {{ auth()->user()->name }}
         </div>
     </nav>
 </div>
+
+<style>
+    /* <----- Cambios realizados aquí: Estilos para el hover redondeado y el estado activo */
+    .nav-link {
+        border-radius: 0.375rem; /* Bordes redondeados */
+        transition: background-color 0.3s ease; /* Transición suave */
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Color de fondo en hover */
+    }
+
+    .nav-link.active {
+        background-color: rgba(0, 123, 255, 0.3); /* Color de fondo para el módulo activo */
+        color: #fff; /* Color del texto para el módulo activo */
+    }
+
+    .nav-link.collapsed:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Color de fondo para enlaces colapsados */
+    }
+</style>

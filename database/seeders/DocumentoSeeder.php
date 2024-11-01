@@ -20,7 +20,7 @@ class DocumentoSeeder extends Seeder
                 'tipo_documento' => 'Pasaporte',
             ],
             [
-                'tipo_documento' => 'Registro federal de contribuyentes',
+                'tipo_documento' => 'RFC',
             ],
         ]);
     }

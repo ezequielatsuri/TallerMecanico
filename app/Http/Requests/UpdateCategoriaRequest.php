@@ -21,12 +21,19 @@ class UpdateCategoriaRequest extends FormRequest
      */
     public function rules(): array
     {
-        $categoria = $this->route('categoria');
-        $caracteristicaId = $categoria->caracteristica->id;
-
         return [
-            'nombre' => 'required|max:60|unique:caracteristicas,nombre,'.$caracteristicaId,
-            'descripcion' => 'nullable|max:255'
+            'nombre' => 'required|string|max:30|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/',
+            'descripcion' => 'nullable|string|max:80',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no debe exceder los 30 caracteres.',
+            'nombre.regex' => 'El nombre solo debe contener letras y espacios.',
+            'descripcion.max' => 'La descripción no debe exceder los 80 caracteres.',
         ];
     }
 }
