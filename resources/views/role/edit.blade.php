@@ -25,7 +25,7 @@
                 @csrf
                 <!---Nombre de rol---->
                 <div class="row mb-4">
-                    <label for="name" class="col-md-auto col-form-label">Nombre del rol:</label>
+                    <label for="name" class="col-md-auto col-form-label" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required>Nombre del rol:</label>
                     <div class="col-md-4">
                         <input type="text" name="name" id="name" class="form-control" value="{{old('name',$role->name)}}">
                     </div>

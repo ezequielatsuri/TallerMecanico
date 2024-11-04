@@ -22,11 +22,12 @@ class UpdateServicioRequest extends FormRequest
     public function rules(): array
     {
         $servicio = $this->route('servicio');
-        
+
         return [
             'codigo' => 'required|unique:servicios,codigo,' . $servicio->id . '|max:50',
             'nombre' => 'required|unique:servicios,nombre,' . $servicio->id . '|max:80',
             'descripcion' => 'nullable|max:255',
+            'precio' => 'nullable'
         ];
     }
 
@@ -40,6 +41,7 @@ class UpdateServicioRequest extends FormRequest
         return [
             'codigo' => 'código',
             'nombre' => 'nombre del servicio',
+            'precio' => 'precio'
         ];
     }
 

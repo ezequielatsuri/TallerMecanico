@@ -94,7 +94,7 @@
                         </div>
                         <script>
                             document.getElementById("btn_servicios").addEventListener("click", function() {
-                                va r tabla = document.getElementById("tabla_servicios_extras");
+                                var tabla = document.getElementById("tabla_servicios_extras");
                                 if (tabla.style.display === "none") {
                                     tabla.style.display = "block"; // Muestra la tabla
                                 } else {

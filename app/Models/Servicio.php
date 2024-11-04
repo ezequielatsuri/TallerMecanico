@@ -14,6 +14,7 @@ class Servicio extends Model
         'codigo',
         'nombre',
         'descripcion',
+        'precio',
     ];
 
 

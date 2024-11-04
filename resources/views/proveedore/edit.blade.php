@@ -49,7 +49,7 @@
                         @enderror
                     </div>
 
-                    <!--------------Documento-------> 
+                    <!--------------Documento------->
                     <div class="col-md-6">
                         <label for="documento_id" class="form-label">Tipo de documento:</label>
                         <select class="form-select" name="documento_id" id="documento_id">
@@ -91,7 +91,7 @@
         const direccionInput = document.getElementById("direccion");
         const numeroDocumentoInput = document.getElementById("numero_documento");
         const submitButton = document.getElementById("submit-button");
-        
+
         const razonSocialError = document.createElement("small");
         const direccionError = document.createElement("small");
         const numeroDocumentoError = document.createElement("small");
@@ -102,7 +102,7 @@
 
         // Función para verificar si hay errores
         function checkErrors() {
-            const hasErrors = razonSocialInput.classList.contains("is-invalid") || 
+            const hasErrors = razonSocialInput.classList.contains("is-invalid") ||
                               direccionInput.classList.contains("is-invalid") ||
                               numeroDocumentoInput.classList.contains("is-invalid");
             submitButton.disabled = hasErrors;

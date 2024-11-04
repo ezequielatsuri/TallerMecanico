@@ -29,7 +29,7 @@
 
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre',$marca->caracteristica->nombre)}}">
+                        <input type="text" name="nombre" id="nombre" class="form-control" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required value="{{old('nombre',$marca->caracteristica->nombre)}}">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -37,7 +37,7 @@
 
                     <div class="col-12">
                         <label for="descripcion" class="form-label">Descripción:</label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{old('descripcion',$marca->caracteristica->descripcion)}}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '');" required>{{old('descripcion',$marca->caracteristica->descripcion)}}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror

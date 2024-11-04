@@ -284,7 +284,7 @@
             descuento = 0;
         }
 
-        //Validaciones 
+        //Validaciones
         //1.Para que los campos no esten vacíos
         if (idProducto != '' && cantidad != '') {
 

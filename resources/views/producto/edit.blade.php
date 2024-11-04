@@ -31,7 +31,8 @@
                     <!----Codigo---->
                     <div class="col-md-6">
                         <label for="codigo" class="form-label">Código:</label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo',$producto->codigo)}}">
+                        <input type="text" name="codigo" id="codigo" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required
+                        value="{{old('codigo',$producto->codigo)}}">
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -40,7 +41,7 @@
                     <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre',$producto->nombre)}}">
+                        <input type="text" name="nombre" id="nombre" class="form-control"  oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required value="{{old('nombre',$producto->nombre)}}">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -49,7 +50,7 @@
                     <!---Descripción---->
                     <div class="col-12">
                         <label for="descripcion" class="form-label">Descripción:</label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{old('descripcion',$producto->descripcion)}}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '');" required class="form-control">{{old('descripcion',$producto->descripcion)}}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror

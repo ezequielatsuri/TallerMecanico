@@ -6,6 +6,7 @@ use App\Models\Servicio;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreServicioRequest;
 use App\Http\Requests\UpdateServicioRequest;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ServicioController extends Controller
@@ -47,6 +48,7 @@ class ServicioController extends Controller
                 'codigo' => $request->codigo,
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
+                'precio' => $request->precio
             ]);
             $servicio->save();
             DB::commit();
@@ -77,6 +79,7 @@ class ServicioController extends Controller
                 'codigo' => $request->codigo,
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
+                'precio' => $request->precio,
             ]);
             $servicio->save();
             DB::commit();

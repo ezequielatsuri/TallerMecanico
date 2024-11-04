@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('codigo',50);
             $table->string('nombre',80);
             $table->string('descripcion',255)->nullable();
+            $table->decimal('precio',8,2);
             $table->tinyInteger('estado')->default(1);
             $table->timestamps();
         });

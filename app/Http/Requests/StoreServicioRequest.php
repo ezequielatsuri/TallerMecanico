@@ -39,6 +39,7 @@ class StoreServicioRequest extends FormRequest
             'codigo' => 'código',
             'nombre' => 'nombre del servicio',
             'descripcion' => 'nullable|max:255',
+            'precio' => 'nullable'
         ];
     }
 

@@ -2,7 +2,7 @@
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
         <div class="sb-sidenav-menu bg-dark">
             <div class="nav">
-           
+
                 <div class="sb-sidenav-menu-heading">Inicio</div>
                 <a class="nav-link {{ request()->routeIs('panel') ? 'active' : '' }}" href="{{ route('panel') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -76,7 +76,7 @@
                     Productos
                 </a>
                 @endcan
-                
+
                 @can('ver-servicio')
                 <a class="nav-link {{ request()->routeIs('servicios.index') ? 'active' : '' }}" href="{{ route('servicios.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
