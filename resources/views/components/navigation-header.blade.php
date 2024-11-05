@@ -1,7 +1,7 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
     <img src="{{ asset('Recursos/Logo.png')}}" alt="IconodeUsuario" width="50px">
-
+    
     <a class="navbar-brand ps-3" href="{{ route('panel') }}">Taller Los Leones</a>
 
     <!-- Sidebar Toggle-->

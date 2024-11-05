@@ -3,7 +3,7 @@
 @section('title','Crear usuario')
 
 @push('css')
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 @endpush
 
 @section('content')
@@ -16,7 +16,7 @@
     </ol>
 
     <div class="card text-bg-light">
-        <form action="{{ route('users.store') }}" method="post">
+        <form action="{{ route('users.store') }}" method="post" id="createUserForm">
             @csrf
             <div class="card-header">
                 <p class="">Nota: Los usuarios son los que pueden ingresar al sistema</p>
@@ -27,7 +27,7 @@
                 <div class="row mb-4">
                     <label for="name" class="col-lg-2 col-form-label" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required>Nombres:</label>
                     <div class="col-lg-4">
-                        <input autocomplete="off" type="text" name="name" id="name" class="form-control" value="{{old('name')}}" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" requiredaria-labelledby="nameHelpBlock">
+                        <input autocomplete="off" type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required pattern="[A-Za-z\s]+" title="Solo se permiten letras y espacios.">
                     </div>
                     <div class="col-lg-4">
                         <div class="form-text" id="nameHelpBlock">
@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-lg-2">
                         @error('name')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -45,16 +45,16 @@
                 <div class="row mb-4">
                     <label for="email" class="col-lg-2 col-form-label">Email:</label>
                     <div class="col-lg-4">
-                        <input autocomplete="off" type="email" name="email" id="email" class="form-control" value="{{old('email')}}" aria-labelledby="emailHelpBlock">
+                        <input autocomplete="off" type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
                     </div>
                     <div class="col-lg-4">
                         <div class="form-text" id="emailHelpBlock">
-                            Dirección de correo eléctronico
+                            Dirección de correo electrónico
                         </div>
                     </div>
                     <div class="col-lg-2">
                         @error('email')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -63,16 +63,16 @@
                 <div class="row mb-4">
                     <label for="password" class="col-lg-2 col-form-label">Contraseña:</label>
                     <div class="col-lg-4">
-                        <input type="password" name="password" id="password" class="form-control" aria-labelledby="passwordHelpBlock">
+                        <input type="password" name="password" id="password" class="form-control" required minlength="8" pattern="(?=.*[0-9])(?=.*[A-Za-z]).{8,}" title="La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.">
                     </div>
                     <div class="col-lg-4">
                         <div class="form-text" id="passwordHelpBlock">
-                            Escriba una constraseña segura. Debe incluir números.
+                            Escriba una contraseña segura. Debe incluir números y tener al menos 8 caracteres.
                         </div>
                     </div>
                     <div class="col-lg-2">
                         @error('password')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 <div class="row mb-4">
                     <label for="password_confirm" class="col-lg-2 col-form-label">Confirmar:</label>
                     <div class="col-lg-4">
-                        <input type="password" name="password_confirm" id="password_confirm" class="form-control" aria-labelledby="passwordConfirmHelpBlock">
+                        <input type="password" name="password_confirm" id="password_confirm" class="form-control" required minlength="8">
                     </div>
                     <div class="col-lg-4">
                         <div class="form-text" id="passwordConfirmHelpBlock">
@@ -90,7 +90,7 @@
                     </div>
                     <div class="col-lg-2">
                         @error('password_confirm')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -99,10 +99,10 @@
                 <div class="row mb-4">
                     <label for="role" class="col-lg-2 col-form-label">Rol:</label>
                     <div class="col-lg-4">
-                        <select name="role" id="role" class="form-select" aria-labelledby="rolHelpBlock">
+                        <select name="role" id="role" class="form-select" required>
                             <option value="" selected disabled>Seleccione:</option>
                             @foreach ($roles as $item)
-                            <option value="{{$item->name}}" @selected(old('role')==$item->name)>{{$item->name}}</option>
+                            <option value="{{ $item->name }}" @selected(old('role') == $item->name)>{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="col-lg-2">
                         @error('role')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -124,11 +124,42 @@
             </div>
         </form>
     </div>
-
-
 </div>
+
 @endsection
 
 @push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('createUserForm');
 
+        form.addEventListener('submit', function (event) {
+            let valid = true;
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('password_confirm').value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            // Validación de coincidencia de contraseñas
+            if (password !== passwordConfirm) {
+                valid = false;
+                alert('Las contraseñas no coinciden.');
+            }
+
+            // Validación de nombre (solo letras y espacios)
+            const namePattern = /^[A-Za-z\s]+$/;
+            if (!namePattern.test(name)) {
+                valid = false;
+                alert('El nombre solo debe contener letras y espacios.');
+            }
+
+            // Validación de email (ya incluido por el atributo type="email")
+
+            // Si no es válido, prevenir el envío del formulario
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
 @endpush

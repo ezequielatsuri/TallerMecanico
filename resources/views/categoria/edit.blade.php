@@ -56,5 +56,40 @@
 @endsection
 
 @push('js')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const nombreInput = document.getElementById("nombre");
+        const descripcionInput = document.getElementById("descripcion");
+        const nombreError = document.createElement("small");
+        const descripcionError = document.createElement("small");
+        nombreError.classList.add("text-danger");
+        descripcionError.classList.add("text-danger");
+
+        // Validar campo de nombre
+        nombreInput.addEventListener("input", function() {
+            const regex = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+            if (!regex.test(nombreInput.value) || nombreInput.value.length > 30) {
+                nombreError.textContent = "El nombre solo debe contener letras y un máximo de 30 caracteres.";
+                nombreInput.classList.add("is-invalid");
+                nombreInput.parentNode.appendChild(nombreError);
+            } else {
+                nombreInput.classList.remove("is-invalid");
+                nombreError.textContent = "";
+            }
+        });
+
+        // Validar campo de descripción
+        descripcionInput.addEventListener("input", function() {
+            if (descripcionInput.value.length > 80) {
+                descripcionError.textContent = "La descripción no debe exceder los 80 caracteres.";
+                descripcionInput.classList.add("is-invalid");
+                descripcionInput.parentNode.appendChild(descripcionError);
+            } else {
+                descripcionInput.classList.remove("is-invalid");
+                descripcionError.textContent = "";
+            }
+        });
+    });
+</script>
 
 @endpush
