@@ -13,12 +13,12 @@
 
                 <!----Compras---->
                 @can('ver-compra')
-                <a class="nav-link collapsed {{ request()->routeIs('compras.*') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCompras" aria-expanded="false" aria-controls="collapseLayouts">
+                <a class="nav-link collapsed {{ request()->is('compras*') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCompras" aria-expanded="false" aria-controls="collapseCompras">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-store"></i></div>
                     Compras
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse {{ request()->routeIs('compras.*') ? 'show' : '' }}" id="collapseCompras" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse {{ request()->is('compras*') ? 'show' : '' }}" id="collapseCompras" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         @can('ver-compra')
                         <a class="nav-link {{ request()->routeIs('compras.index') ? 'active' : '' }}" href="{{ route('compras.index') }}">Ver</a>
@@ -32,12 +32,12 @@
 
                 <!----Ventas---->
                 @can('ver-venta')
-                <a class="nav-link collapsed {{ request()->routeIs('ventas.*') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVentas" aria-expanded="false" aria-controls="collapseLayouts">
+                <a class="nav-link collapsed {{ request()->is('ventas*') ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVentas" aria-expanded="false" aria-controls="collapseVentas">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
                     Ventas
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse {{ request()->routeIs('ventas.*') ? 'show' : '' }}" id="collapseVentas" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse {{ request()->is('ventas*') ? 'show' : '' }}" id="collapseVentas" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         @can('ver-venta')
                         <a class="nav-link {{ request()->routeIs('ventas.index') ? 'active' : '' }}" href="{{ route('ventas.index') }}">Ver</a>
@@ -50,49 +50,49 @@
                 @endcan
 
                 @can('ver-categoria')
-                <a class="nav-link {{ request()->routeIs('categorias.index') ? 'active' : '' }}" href="{{ route('categorias.index') }}">
+                <a class="nav-link {{ request()->is('categorias*') ? 'active' : '' }}" href="{{ route('categorias.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-tag"></i></div>
                     Categorías
                 </a>
                 @endcan
 
                 @can('ver-fabricante')
-                <a class="nav-link {{ request()->routeIs('fabricantes.index') ? 'active' : '' }}" href="{{ route('fabricantes.index') }}">
+                <a class="nav-link {{ request()->is('fabricantes*') ? 'active' : '' }}" href="{{ route('fabricantes.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-box-archive"></i></div>
                     Fabricantes
                 </a>
                 @endcan
 
                 @can('ver-marca')
-                <a class="nav-link {{ request()->routeIs('marcas.index') ? 'active' : '' }}" href="{{ route('marcas.index') }}">
+                <a class="nav-link {{ request()->is('marcas*') ? 'active' : '' }}" href="{{ route('marcas.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-bullhorn"></i></div>
                     Marcas
                 </a>
                 @endcan
 
                 @can('ver-producto')
-                <a class="nav-link {{ request()->routeIs('productos.index') ? 'active' : '' }}" href="{{ route('productos.index') }}">
+                <a class="nav-link {{ request()->is('productos*') ? 'active' : '' }}" href="{{ route('productos.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                     Productos
                 </a>
                 @endcan
 
                 @can('ver-servicio')
-                <a class="nav-link {{ request()->routeIs('servicios.index') ? 'active' : '' }}" href="{{ route('servicios.index') }}">
+                <a class="nav-link {{ request()->is('servicios*') ? 'active' : '' }}" href="{{ route('servicios.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                     Servicios
                 </a>
                 @endcan
 
                 @can('ver-cliente')
-                <a class="nav-link {{ request()->routeIs('clientes.index') ? 'active' : '' }}" href="{{ route('clientes.index') }}">
+                <a class="nav-link {{ request()->is('clientes*') ? 'active' : '' }}" href="{{ route('clientes.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                     Clientes
                 </a>
                 @endcan
 
                 @can('ver-proveedore')
-                <a class="nav-link {{ request()->routeIs('proveedores.index') ? 'active' : '' }}" href="{{ route('proveedores.index') }}">
+                <a class="nav-link {{ request()->is('proveedores*') ? 'active' : '' }}" href="{{ route('proveedores.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user-group"></i></div>
                     Proveedores
                 </a>
@@ -103,14 +103,14 @@
                 @endhasrole
 
                 @can('ver-user')
-                <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">
+                <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
                     Usuarios
                 </a>
                 @endcan
 
                 @can('ver-role')
-                <a class="nav-link {{ request()->routeIs('roles.index') ? 'active' : '' }}" href="{{ route('roles.index') }}">
+                <a class="nav-link {{ request()->is('roles*') ? 'active' : '' }}" href="{{ route('roles.index') }}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-person-circle-plus"></i></div>
                     Roles
                 </a>
