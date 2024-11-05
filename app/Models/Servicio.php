@@ -15,8 +15,8 @@ class Servicio extends Model
         'nombre',
         'descripcion',
         'precio',
+        'estado'  // Añade 'estado' aquí para permitir la asignación masiva.
     ];
-
 
     public function ventas()
     {

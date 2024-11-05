@@ -3,6 +3,12 @@
 @section('title', 'Crear cliente')
 
 @push('css')
+<style>
+    #descripcion {
+        resize: none;
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 @endpush
 
@@ -56,8 +62,8 @@
 
                     <!-- Dirección -->
                     <div class="col-12">
-                        <label for="direccion" class="form-label">Dirección:</label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '');" value="{{ old('direccion') }}">
+                        <label for="direccion" the="form-label">Dirección:</label>
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}">
                         @error('direccion')
                         <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
@@ -73,16 +79,16 @@
                             @endforeach
                         </select>
                         @error('documento_id')
-                        <small class="text-danger">{{ '*' . $message }}</small>
+                        <small class="text-danger">{{ '*' . the_message }}</small>
                         @enderror
                     </div>
 
                     <!-- Número de documento -->
                     <div class="col-md-6">
                         <label for="numero_documento" class="form-label">Número de documento:</label>
-                        <input type="text" name="numero_documento" id="numero_documento" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ old('numero_documento') }}">
+                        <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{ old('numero_documento') }}">
                         @error('numero_documento')
-                        <small class="text-danger">{{ '*' . $message }}</small>
+                        <small class="text-danger">{{ '*' . the_message }}</small>
                         @enderror
                     </div>
                 </div>
@@ -98,35 +104,40 @@
 
 @push('js')
 <script>
-    document.getElementById("tipo_persona").addEventListener("change", function() {
-        var tipoPersona = this.value;
+    document.addEventListener('DOMContentLoaded', function() {
+        var tipoPersonaSelect = document.getElementById("tipo_persona");
+        var fisicaDiv = document.getElementById("fisica");
+        var moralDiv = document.getElementById("moral");
+        var nombreInput = document.getElementById("nombre");
+        var apellidoPInput = document.getElementById("apellidoP");
+        var apellidoMInput = document.getElementById("apellidoM");
+        var razonSocialInput = document.getElementById("razon_social");
 
-        // Obtener los elementos
-        var fisica = document.getElementById("fisica");
-        var moral = document.getElementById("moral");
-        var razonSocial = document.getElementById("razon_social");
-        var nombre = document.getElementById("nombre");
-        var apellidoP = document.getElementById("apellidoP");
-        var apellidoM = document.getElementById("apellidoM");
+        tipoPersonaSelect.addEventListener("change", function() {
+            var tipoPersona = this.value;
 
-        // Ocultar ambos bloques y eliminar el atributo required
-        fisica.style.display = "none";
-        moral.style.display = "none";
-        razonSocial.removeAttribute("required");
-        nombre.removeAttribute("required");
-        apellidoP.removeAttribute("required");
-        apellidoM.removeAttribute("required");
+            fisicaDiv.style.display = "none";
+            moralDiv.style.display = "none";
 
-        // Mostrar el bloque correcto y agregar el atributo required
-        if (tipoPersona === "fisica") {
-            fisica.style.display = "block";
-            nombre.setAttribute("required", "true");
-            apellidoP.setAttribute("required", "true");
-            apellidoM.setAttribute("required", "true");
-        } else if (tipoPersona === "moral") {
-            moral.style.display = "block";
-            razonSocial.setAttribute("required", "true");
+            if (tipoPersona === "fisica") {
+                fisicaDiv.style.display = "block";
+                updateRazonSocial();
+            } else if (tipoPersona === "moral") {
+                moralDiv.style.display = "block";
+            }
+        });
+
+        function updateRazonSocial() {
+            razonSocialInput.value = nombreInput.value + ' ' + apellidoPInput.value + ' ' + apellidoMInput.value;
         }
+
+        [nombreInput, apellidoPInput, apellidoMInput].forEach(function(input) {
+            input.addEventListener('input', function() {
+                if (tipoPersonaSelect.value === "fisica") {
+                    updateRazonSocial();
+                }
+            });
+        });
     });
 </script>
 @endpush

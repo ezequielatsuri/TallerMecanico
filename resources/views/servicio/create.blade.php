@@ -25,10 +25,17 @@
             <div class="card-body text-bg-light">
 
                 <div class="row g-4">
+                    <div class="col-md-6">
+                        <label for="codigo" class="form-label">Código:</label>
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{ old('codigo') }}" required>
+                        @error('codigo')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
 
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}" required>
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -36,16 +43,19 @@
 
                     <div class="col-12">
                         <label for="descripcion" class="form-label">Descripción:</label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{old('descripcion')}}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{ old('descripcion') }}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
-                    <div class="col-12">
-                        <label for="precio" class="form-label">Precio de servicio:</label>
-                        <input type="number" name="precio" id="precio" class="form-control" step="0.1">
-                    </div>
 
+                    <div class="col-md-6">
+                        <label for="precio" class="form-label">Precio de servicio:</label>
+                        <input type="number" name="precio" id="precio" class="form-control" step="0.01" value="{{ old('precio') }}" required>
+                        @error('precio')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -54,7 +64,6 @@
             </div>
         </form>
     </div>
-
 </div>
 @endsection
 

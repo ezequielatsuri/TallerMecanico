@@ -59,30 +59,23 @@
                     </td>
                     <td>
                         <div class="d-flex justify-content-around">
-                            <div>
-                                <button title="Opciones" class="btn btn-datatable btn-icon btn-transparent-dark me-2" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg class="svg-inline--fa fa-ellipsis-vertical" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-vertical" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512" data-fa-i2svg="">
-                                        <path fill="currentColor" d="M56 472a56 56 0 1 1 0-112 56 56 0 1 1 0 112zm0-160a56 56 0 1 1 0-112 56 56 0 1 1 0 112zM0 96a56 56 0 1 1 112 0A56 56 0 1 1 0 96z"></path>
-                                    </svg>
-                                </button>
-                                <ul class="dropdown-menu text-bg-light" style="font-size: small;">
-                                    @can('editar-servicio')
-                                    <li><a class="dropdown-item" href="{{ route('servicios.edit', ['servicio' => $servicio]) }}">Editar</a></li>
-                                    @endcan
-                                </ul>
-                            </div>
+                            @can('editar-servicio')
+                            <a href="{{ route('servicios.edit', ['servicio' => $servicio->id]) }}" class="btn btn-datatable btn-icon btn-transparent-dark">
+                                <svg class="svg-inline--fa fa-pencil-alt" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pencil-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                    <path fill="currentColor" d="M497.9 74.16L437.8 14.06c-18.75-18.75-49.14-18.75-67.88 0L43.94 340c-2.75 2.75-5 5.94-6.69 9.5L0 484c-2.81 10.94 .94 22.56 10.06 29.56 7.06 5.5 17 6.88 25.88 3.5l134.44-37.44c3.56-1.69 6.75-3.94 9.5-6.69L497.9 142c18.75-18.75 18.75-49.12 0-67.84zM64.07 446.94c-1.5 1.5-3.5 1.88-5.25 1.5l-92.25 25.69 25.69-92.25c.38-1.75 .06-3.75-1.44-5.25l-21.25-21.25 306.06-306.12 115.31 115.31L64.07 446.94zM432.3 144.6l-90.5-90.56L412.2 73.9c3.12-3.12 8.19-3.12 11.31 0l21.25 21.25c3.12 3.12 3.12 8.19 0 11.31l-12.46 12.44z"></path>
+                                </svg>
+                            </a>
+                            @endcan
                             <div><div class="vr"></div></div>
                             <div>
                                 @can('eliminar-servicio')
                                 @if ($servicio->estado == 1)
                                 <button title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ $servicio->id }}" class="btn btn-datatable btn-icon btn-transparent-dark">
-                                    <svg class="svg-inline--fa fa-trash-can" aria-hidden="true" focusable="false" data-prefix="far" data-icon="trash-can" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                        <path fill="currentColor" d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"></path>
-                                    </svg>
+                                    <i class="fa fa-trash-alt"></i>
                                 </button>
                                 @else
                                 <button title="Restaurar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ $servicio->id }}" class="btn btn-datatable btn-icon btn-transparent-dark">
-                                    <i class="fa-solid fa-rotate"></i>
+                                    <i class="fa fa-sync"></i>
                                 </button>
                                 @endif
                                 @endcan

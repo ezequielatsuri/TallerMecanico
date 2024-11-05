@@ -22,16 +22,15 @@
     </ol>
 
     <div class="card text-bg-light">
-<form action="{{ route('servicios.update', ['servicio' => $servicio->id]) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('servicios.update', ['servicio' => $servicio->id]) }}" method="post" enctype="multipart/form-data">
             @method('PATCH')
             @csrf
             <div class="card-body">
-
                 <div class="row g-4">
-                    <!----Codigo---->
+                    <!---Código---->
                     <div class="col-md-6">
                         <label for="codigo" class="form-label">Código:</label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo',$servicio->codigo)}}">
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo', $servicio->codigo)}}">
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -40,7 +39,7 @@
                     <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre',$servicio->nombre)}}">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre', $servicio->nombre)}}">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -49,12 +48,22 @@
                     <!---Descripción---->
                     <div class="col-12">
                         <label for="descripcion" class="form-label">Descripción:</label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{old('descripcion',$servicio->descripcion)}}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{old('descripcion', $servicio->descripcion)}}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
 
+                    <!---Precio---->
+                    <div class="col-md-6">
+                        <label for="precio" class="form-label">Precio:</label>
+                        <input type="number" name="precio" id="precio" class="form-control" value="{{old('precio', $servicio->precio)}}" step="0.01">
+                        @error('precio')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
+
+                </div>
             </div>
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-primary">Guardar</button>
@@ -62,8 +71,6 @@
             </div>
         </form>
     </div>
-
-
 
 </div>
 @endsection

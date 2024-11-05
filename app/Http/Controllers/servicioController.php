@@ -48,16 +48,16 @@ class ServicioController extends Controller
                 'codigo' => $request->codigo,
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
-                'precio' => $request->precio
+                'precio' => $request->precio,
+                'estado' => 1  // Estado activo por defecto
             ]);
             $servicio->save();
             DB::commit();
+            return redirect()->route('servicios.index')->with('success', 'Servicio registrado');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors('Error al registrar el servicio');
         }
-
-        return redirect()->route('servicios.index')->with('success', 'Servicio registrado');
     }
 
     /**
