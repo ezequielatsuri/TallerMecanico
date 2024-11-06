@@ -70,10 +70,49 @@
                             <input type="number" name="descuento" id="descuento" class="form-control">
                         </div>
 
-                        <!-----botón para agregar--->
-                        <div class="col-12 text-end">
+                        <!-- Botón para mostrar/ocultar el selector de servicios extras -->
+                        <div class="col-12 mb-4 mt-2 text-end">
                             <button id="btn_agregar" class="btn btn-primary" type="button">Agregar</button>
+
+                            <button id="btn_servicios" class="btn btn-primary" type="button">Servicios Extras</button>
                         </div>
+
+                        <!-- Contenedor de servicios que se muestra/oculta -->
+                        <div class="col-xl-8" id="buscar_servicios" style="display: none;">
+
+                            <!-- Selector de servicios con búsqueda -->
+                            <div class="mb-3">
+                                <label for="servicios_id" class="form-label">Busque su servicio aquí:</label>
+                                <select name="servicios_id" id="servicios_id" class="form-control selectpicker" data-live-search="true" data-size="1" title="Seleccione un servicio">
+                                    @foreach ($servicios as $item)
+                                    <option value="{{$item->id}}-{{$item->nombre}}-{{$item->precio}}">{{$item->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Contenedor para el nombre y el precio del servicio seleccionado, alineado en una fila -->
+                            <div class="row">
+                                <!-- Nombre de servicio -->
+                                <div class="col-sm-6 mb-3">
+                                    <label for="nombre" class="form-label">Nombre de servicio:</label>
+                                    <input disabled type="text" name="nombre" id="nombre" class="form-control">
+                                </div>
+
+                                <!-- Precio de servicio -->
+                                <div class="col-sm-6 mb-3">
+                                    <label for="precio" class="form-label">Precio de servicio:</label>
+                                    <input disabled type="number" name="precio" id="precio" class="form-control" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Script para mostrar/ocultar el contenedor de servicios -->
+                        <script>
+                            document.getElementById("btn_servicios").addEventListener("click", function() {
+                                var ser = document.getElementById("buscar_servicios");
+                                ser.style.display = ser.style.display === "none" ? "block" : "none";
+                            });
+                        </script>
 
                         <!-----Tabla para el detalle de la venta--->
                         <div class="col-12">
@@ -166,14 +205,20 @@
                             @enderror
                         </div>
 
-                        <!--Numero de comprobante-->
+                        <!-- Numero de comprobante -->
                         <div class="col-12">
                             <label for="numero_comprobante" class="form-label">Numero de comprobante:</label>
-                            <input required type="text" name="numero_comprobante" id="numero_comprobante" class="form-control">
+                            <input required type="number" name="numero_comprobante" id="numero_comprobante" class="form-control" oninput="validateNumberInput(this)">
                             @error('numero_comprobante')
                             <small class="text-danger">{{ '*'.$message }}</small>
                             @enderror
                         </div>
+
+                        <script>
+                            function validateNumberInput(input) {
+                                input.value = input.value.replace(/[^0-9]/g, '');
+                            }
+                        </script>
 
                         <!--Impuesto---->
                         <div class="col-sm-6">
@@ -240,6 +285,7 @@
 
         $('#producto_id').change(mostrarValores);
 
+        $('#servicios_id').change(mostrarValoresS);
 
         $('#btn_agregar').click(function() {
             agregarProducto();
@@ -262,7 +308,7 @@
     let total = 0;
 
     //Constantes
-    const impuesto = 18;
+    const impuesto = 16;
 
     function mostrarValores() {
         let dataProducto = document.getElementById('producto_id').value.split('-');
@@ -270,9 +316,40 @@
         $('#precio_venta').val(dataProducto[2]);
     }
 
+    function mostrarValoresS() {
+        let dataServicios = document.getElementById('servicios_id').value.split('-');
+        $('#nombre').val(dataServicios[1]);
+        $('#precio').val(dataServicios[2]);
+    }
+    document.getElementById('servicios_id').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex].value.split('-');
+        const servicioId = selectedOption[0];
+        const nombreServicio = selectedOption[1];
+        const precioServicio = parseFloat(selectedOption[2]);
+
+        // Agregar fila de servicio a la tabla
+        const tabla = document.getElementById('tabla_detalle').getElementsByTagName('tbody')[0];
+        const newRow = tabla.insertRow();
+        newRow.innerHTML = `
+        <tr>
+            <th>${servicioId}</th>
+            <td>${nombreServicio}</td>
+            <td>1</td>
+            <td>${precioServicio.toFixed(2)}</td>
+            <td>0</td>
+            <td>${precioServicio.toFixed(2)}</td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
+        </tr>
+    `;
+
+        // Llamar a actualizarTotales después de agregar el servicio
+        actualizarTotales();
+    });
+
     function agregarProducto() {
+        let dataServicios = document.getElementById('servicios_id').value.split('-');
         let dataProducto = document.getElementById('producto_id').value.split('-');
-        //Obtener valores de los campos
+        // Obtener valores de los campos
         let idProducto = dataProducto[0];
         let nameProducto = $('#producto_id option:selected').text();
         let cantidad = $('#cantidad').val();
@@ -280,26 +357,31 @@
         let descuento = $('#descuento').val();
         let stock = $('#stock').val();
 
+        // Obtener precio del servicio
+        let precioServicio = parseFloat(dataServicios[2]);
+
         if (descuento == '') {
             descuento = 0;
         }
 
-        //Validaciones
-        //1.Para que los campos no esten vacíos
+        // Validaciones
         if (idProducto != '' && cantidad != '') {
-
-            //2. Para que los valores ingresados sean los correctos
             if (parseInt(cantidad) > 0 && (cantidad % 1 == 0) && parseFloat(descuento) >= 0) {
-
-                //3. Para que la cantidad no supere el stock
                 if (parseInt(cantidad) <= parseInt(stock)) {
-                    //Calcular valores
+                    // Calcular subtotal solo para productos
                     subtotal[cont] = round(cantidad * precioVenta - descuento);
                     sumas += subtotal[cont];
+
+                    // Si el precioServicio existe, agregarlo a la suma (cuando se agregue un servicio)
+                    if (!isNaN(precioServicio)) {
+                        sumas += precioServicio; // Se agrega el precio del servicio solo si está presente
+                    }
+
+                    // Calcular IGV y total
                     igv = round(sumas / 100 * impuesto);
                     total = round(sumas + igv);
 
-                    //Crear la fila
+                    // Crear la fila
                     let fila = '<tr id="fila' + cont + '">' +
                         '<th>' + (cont + 1) + '</th>' +
                         '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>' +
@@ -310,13 +392,14 @@
                         '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
                         '</tr>';
 
-                    //Acciones después de añadir la fila
+                    // Acciones después de añadir la fila
                     $('#tabla_detalle').append(fila);
                     limpiarCampos();
+                    limpiarCamposS()
                     cont++;
                     disableButtons();
 
-                    //Mostrar los campos calculados
+                    // Mostrar los campos calculados
                     $('#sumas').html(sumas);
                     $('#igv').html(igv);
                     $('#total').html(total);
@@ -325,15 +408,12 @@
                 } else {
                     showModal('Cantidad incorrecta');
                 }
-
             } else {
                 showModal('Valores incorrectos');
             }
-
         } else {
             showModal('Le faltan campos por llenar');
         }
-
     }
 
     function eliminarProducto(indice) {
@@ -386,6 +466,7 @@
         $('#inputTotal').val(total);
 
         limpiarCampos();
+        limpiarCamposS();
         disableButtons();
     }
 
@@ -406,6 +487,13 @@
         $('#precio_venta').val('');
         $('#descuento').val('');
         $('#stock').val('');
+    }
+
+    function limpiarCamposS() {
+        let select = $('#servicios_id');
+        select.val('').change();
+        $('#nombre').val('');
+        $('#precio').val('');
     }
 
     function showModal(message, icon = 'error') {

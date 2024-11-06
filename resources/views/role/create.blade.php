@@ -23,7 +23,7 @@
                 @csrf
                 <!-- Nombre del rol -->
                 <div class="row mb-4">
-                    <label for="name" class="col-md-auto col-form-label">Nombre del rol:</label>
+                    <label for="name" class="col-md-auto col-form-label"><strong>Nombre del rol:</strong></label>
                     <div class="col-md-4">
                         <input autocomplete="off" type="text" name="name" id="name" class="form-control" value="{{old('name')}}" required>
                     </div>
@@ -41,6 +41,7 @@
                         <!-- Aquí separamos los permisos por secciones para agruparlos -->
                         <div class="col-md-6 mb-3">
                             <label>Permisos de categoría:</label>
+
                             <div class="btn-group" role="group">
                                 <input type="checkbox" class="btn-check" id="ver-categoria" name="permission[]" value="ver-categoria">
                                 <label class="btn btn-outline-primary" for="ver-categoria">Ver</label>
@@ -93,68 +94,100 @@
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Productos:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-productos" name="permission[]" value="ver-productos">
-                                <label class="btn btn-outline-primary" for="ver-productos">Ver</label>
+                                <input type="checkbox" class="btn-check" id="ver-producto" name="permission[]" value="ver-producto">
+                                <label class="btn btn-outline-primary" for="ver-producto">Ver</label>
 
-                                <input type="checkbox" class="btn-check" id="crear-productos" name="permission[]" value="crear-productos">
-                                <label class="btn btn-outline-success" for="crear-productos">Crear</label>
+                                <input type="checkbox" class="btn-check" id="crear-producto" name="permission[]" value="crear-producto">
+                                <label class="btn btn-outline-success" for="crear-producto">Crear</label>
 
-                                <input type="checkbox" class="btn-check" id="editar-productos" name="permission[]" value="editar-productos">
-                                <label class="btn btn-outline-warning" for="editar-productos">Editar</label>
+                                <input type="checkbox" class="btn-check" id="editar-producto" name="permission[]" value="editar-producto">
+                                <label class="btn btn-outline-warning" for="editar-producto">Editar</label>
 
-                                <input type="checkbox" class="btn-check" id="eliminar-productos" name="permission[]" value="eliminar-productos">
-                                <label class="btn btn-outline-danger" for="eliminar-productos">Eliminar</label>
+                                <input type="checkbox" class="btn-check" id="eliminar-producto" name="permission[]" value="eliminar-producto">
+                                <label class="btn btn-outline-danger" for="eliminar-producto">Eliminar</label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Marcas:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-marcas" name="permission[]" value="ver-marcas">
-                                <label class="btn btn-outline-primary" for="ver-marcas">Ver</label>
+                                <input type="checkbox" class="btn-check" id="ver-marca" name="permission[]" value="ver-marca">
+                                <label class="btn btn-outline-primary" for="ver-marca">Ver</label>
 
-                                <input type="checkbox" class="btn-check" id="crear-marcas" name="permission[]" value="crear-marcas">
-                                <label class="btn btn-outline-success" for="crear-marcas">Crear</label>
+                                <input type="checkbox" class="btn-check" id="crear-marca" name="permission[]" value="crear-marca">
+                                <label class="btn btn-outline-success" for="crear-marca">Crear</label>
 
-                                <input type="checkbox" class="btn-check" id="editar-marcas" name="permission[]" value="editar-marcas">
-                                <label class="btn btn-outline-warning" for="editar-marcas">Editar</label>
+                                <input type="checkbox" class="btn-check" id="editar-marca" name="permission[]" value="editar-marca">
+                                <label class="btn btn-outline-warning" for="editar-marca">Editar</label>
 
-                                <input type="checkbox" class="btn-check" id="eliminar-marcas" name="permission[]" value="eliminar-marcas">
-                                <label class="btn btn-outline-danger" for="eliminar-marcas">Eliminar</label>
+                                <input type="checkbox" class="btn-check" id="eliminar-marca" name="permission[]" value="eliminar-marca">
+                                <label class="btn btn-outline-danger" for="eliminar-marca">Eliminar</label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Proveedores:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-proveedores" name="permission[]" value="ver-proveedores">
-                                <label class="btn btn-outline-primary" for="ver-proveedores">Ver</label>
+                                <input type="checkbox" class="btn-check" id="ver-proveedore" name="permission[]" value="ver-proveedore">
+                                <label class="btn btn-outline-primary" for="ver-proveedore">Ver</label>
 
-                                <input type="checkbox" class="btn-check" id="crear-proveedores" name="permission[]" value="crear-proveedores">
-                                <label class="btn btn-outline-success" for="crear-proveedores">Crear</label>
+                                <input type="checkbox" class="btn-check" id="crear-proveedore" name="permission[]" value="crear-proveedore">
+                                <label class="btn btn-outline-success" for="crear-proveedore">Crear</label>
 
-                                <input type="checkbox" class="btn-check" id="editar-proveedores" name="permission[]" value="editar-proveedores">
-                                <label class="btn btn-outline-warning" for="editar-proveedores">Editar</label>
+                                <input type="checkbox" class="btn-check" id="editar-proveedore" name="permission[]" value="editar-proveedore">
+                                <label class="btn btn-outline-warning" for="editar-proveedore">Editar</label>
 
-                                <input type="checkbox" class="btn-check" id="eliminar-proveedores" name="permission[]" value="eliminar-proveedores">
-                                <label class="btn btn-outline-danger" for="eliminar-proveedores">Eliminar</label>
+                                <input type="checkbox" class="btn-check" id="eliminar-proveedore" name="permission[]" value="eliminar-proveedore">
+                                <label class="btn btn-outline-danger" for="eliminar-proveedore">Eliminar</label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Servicios:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-servicios" name="permission[]" value="ver-servicios">
-                                <label class="btn btn-outline-primary" for="ver-servicios">Ver</label>
+                                <input type="checkbox" class="btn-check" id="ver-servicio" name="permission[]" value="ver-servicios">
+                                <label class="btn btn-outline-primary" for="ver-servicio">Ver</label>
 
-                                <input type="checkbox" class="btn-check" id="crear-servicios" name="permission[]" value="crear-servicios">
-                                <label class="btn btn-outline-success" for="crear-servicios">Crear</label>
+                                <input type="checkbox" class="btn-check" id="crear-servicio" name="permission[]" value="crear-servicios">
+                                <label class="btn btn-outline-success" for="crear-servicio">Crear</label>
 
-                                <input type="checkbox" class="btn-check" id="editar-servicios" name="permission[]" value="editar-servicios">
-                                <label class="btn btn-outline-warning" for="editar-servicios">Editar</label>
+                                <input type="checkbox" class="btn-check" id="editar-servicio" name="permission[]" value="editar-servicios">
+                                <label class="btn btn-outline-warning" for="editar-servicio">Editar</label>
 
-                                <input type="checkbox" class="btn-check" id="eliminar-servicios" name="permission[]" value="eliminar-servicios">
-                                <label class="btn btn-outline-danger" for="eliminar-servicios">Eliminar</label>
+                                <input type="checkbox" class="btn-check" id="eliminar-servicio" name="permission[]" value="eliminar-servicios">
+                                <label class="btn btn-outline-danger" for="eliminar-servicio">Eliminar</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Permisos de Usuarios:</label>
+                            <div class="btn-group" role="group">
+                                <input type="checkbox" class="btn-check" id="ver-user" name="permission[]" value="ver-cliente">
+                                <label class="btn btn-outline-primary" for="ver-user">Ver</label>
+
+                                <input type="checkbox" class="btn-check" id="crear-user" name="permission[]" value="crear-user">
+                                <label class="btn btn-outline-success" for="crear-user">Crear</label>
+
+                                <input type="checkbox" class="btn-check" id="editar-user" name="permission[]" value="editar-user">
+                                <label class="btn btn-outline-warning" for="editar-user">Editar</label>
+
+                                <input type="checkbox" class="btn-check" id="eliminar-user" name="permission[]" value="eliminar-user">
+                                <label class="btn btn-outline-danger" for="eliminar-user">Eliminar</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Permisos de Roles:</label>
+                            <div class="btn-group" role="group">
+                                <input type="checkbox" class="btn-check" id="ver-role" name="permission[]" value="ver-cliente">
+                                <label class="btn btn-outline-primary" for="ver-role">Ver</label>
+
+                                <input type="checkbox" class="btn-check" id="crear-role" name="permission[]" value="crear-role">
+                                <label class="btn btn-outline-success" for="crear-role">Crear</label>
+
+                                <input type="checkbox" class="btn-check" id="editar-role" name="permission[]" value="editar-role">
+                                <label class="btn btn-outline-warning" for="editar-role">Editar</label>
+
+                                <input type="checkbox" class="btn-check" id="eliminar-role" name="permission[]" value="eliminar-role">
+                                <label class="btn btn-outline-danger" for="eliminar-role">Eliminar</label>
                             </div>
                         </div>
                         <!-- Puedes agregar más grupos de permisos de manera similar -->

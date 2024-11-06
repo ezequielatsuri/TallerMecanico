@@ -26,7 +26,7 @@
 
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <label for="codigo" class="form-label">Código:</label>
+                        <label for="codigo" class="form-label"><strong>Código:</strong></label>
                         <input type="text" name="codigo" id="codigo" class="form-control" value="{{ old('codigo') }}" required>
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre:</label>
+                        <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
                         <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}" required>
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="descripcion" class="form-label">Descripción:</label>
+                        <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
                         <textarea name="descripcion" id="descripcion" rows="3" class="form-control">{{ old('descripcion') }}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="precio" class="form-label">Precio de servicio:</label>
+                        <label for="precio" class="form-label"><strong>Precio de servicio:</strong></label>
                         <input type="number" name="precio" id="precio" class="form-control" step="0.01" value="{{ old('precio') }}" required>
                         @error('precio')
                         <small class="text-danger">{{'*'.$message}}</small>

@@ -25,7 +25,7 @@
 
                 <!---Nombre---->
                 <div class="row mb-4">
-                    <label for="name" class="col-lg-2 col-form-label" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required>Nombres:</label>
+                    <label for="name" class="col-lg-2 col-form-label" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required><strong>Nombres:</strong></label>
                     <div class="col-lg-4">
                         <input autocomplete="off" type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required pattern="[A-Za-z\s]+" title="Solo se permiten letras y espacios.">
                     </div>
@@ -43,7 +43,7 @@
 
                 <!---Email---->
                 <div class="row mb-4">
-                    <label for="email" class="col-lg-2 col-form-label">Email:</label>
+                    <label for="email" class="col-lg-2 col-form-label"><strong>Email:</strong></label>
                     <div class="col-lg-4">
                         <input autocomplete="off" type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
                     </div>
@@ -61,7 +61,7 @@
 
                 <!---Password---->
                 <div class="row mb-4">
-                    <label for="password" class="col-lg-2 col-form-label">Contraseña:</label>
+                    <label for="password" class="col-lg-2 col-form-label"><strong>Contraseña:</strong></label>
                     <div class="col-lg-4">
                         <input type="password" name="password" id="password" class="form-control" required minlength="8" pattern="(?=.*[0-9])(?=.*[A-Za-z]).{8,}" title="La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.">
                     </div>
@@ -79,7 +79,7 @@
 
                 <!---Confirm_Password---->
                 <div class="row mb-4">
-                    <label for="password_confirm" class="col-lg-2 col-form-label">Confirmar:</label>
+                    <label for="password_confirm" class="col-lg-2 col-form-label"><strong>Confirmar:</strong></label>
                     <div class="col-lg-4">
                         <input type="password" name="password_confirm" id="password_confirm" class="form-control" required minlength="8">
                     </div>
@@ -97,10 +97,10 @@
 
                 <!---Roles---->
                 <div class="row mb-4">
-                    <label for="role" class="col-lg-2 col-form-label">Rol:</label>
+                    <label for="role" class="col-lg-2 col-form-label"><strong>Rol:</strong></label>
                     <div class="col-lg-4">
                         <select name="role" id="role" class="form-select" required>
-                            <option value="" selected disabled>Seleccione:</option>
+                            <option value="" selected disabled><strong>Seleccione:</strong></option>
                             @foreach ($roles as $item)
                             <option value="{{ $item->name }}" @selected(old('role') == $item->name)>{{ $item->name }}</option>
                             @endforeach

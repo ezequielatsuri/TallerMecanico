@@ -8181,6 +8181,8 @@ textarea.form-control-lg {
   background-color: #011E34 !important;
 }
 
+
+
 .bg-black {
   --bs-bg-opacity: 1;
   background-color: rgba(var(--bs-black-rgb), var(--bs-bg-opacity)) !important;
@@ -11031,7 +11033,7 @@ body {
   color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color:black;
+  color:white;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
   color: #fff;

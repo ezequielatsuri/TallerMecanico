@@ -43,10 +43,10 @@
                     <div class="col-12" id="fisica" style="display: none;">
                         <label for="nombre" class="form-label">Nombre:</label>
                         <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}">
-                        
+
                         <label for="apellidoP" class="form-label">Apellido Paterno:</label>
                         <input type="text" name="apellidoP" id="apellidoP" class="form-control" value="{{ old('apellidoP') }}">
-                        
+
                         <label for="apellidoM" class="form-label">Apellido Materno:</label>
                         <input type="text" name="apellidoM" id="apellidoM" class="form-control" value="{{ old('apellidoM') }}">
                     </div>
@@ -62,7 +62,7 @@
 
                     <!-- Dirección -->
                     <div class="col-12">
-                        <label for="direccion" the="form-label">Dirección:</label>
+                        <label for="direccion" the="form-label"><strong>Dirección:</strong></label>
                         <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}">
                         @error('direccion')
                         <small class="text-danger">{{ '*' . $message }}</small>
@@ -85,7 +85,7 @@
 
                     <!-- Número de documento -->
                     <div class="col-md-6">
-                        <label for="numero_documento" class="form-label">Número de documento:</label>
+                        <label for="numero_documento" class="form-label"><strong>Número de documento:</strong></label>
                         <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{ old('numero_documento') }}">
                         @error('numero_documento')
                         <small class="text-danger">{{ '*' . the_message }}</small>

@@ -36,6 +36,7 @@
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                         <small id="codigoError" class="text-danger d-none">El código es requerido y debe ser único.</small>
+                        <small id="codigoNumero" class="text-danger d-none">El código debe ser solamente de números.</small>
                     </div>
 
                     <!---Nombre---->
@@ -124,14 +125,26 @@
     function validarCodigo(input) {
         const errorMessage = document.getElementById('codigoError');
         const submitButton = document.getElementById('submitBtn');
+        const errorNumero = document.getElementById('codigoNumero');
+
+
+        const regex = /^[0-9]+$/;
+
 
         // El código debe ser único y no puede estar vacío
-        if (input.value.trim() !== '') {
-            errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
-            submitButton.disabled = false; // Habilitar el botón de guardar
-        } else {
-            errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error
-            submitButton.disabled = true; // Deshabilitar el botón de guardar
+        if (input.value.trim() == '') {
+            errorMessage.classList.remove('d-none'); // Ocultar el mensaje de error
+            errorNumero.classList.add('d-none');
+            submitButton.disabled = true; // Habilitar el botón de guardar
+        }else if(!regex.test(input.value)){
+            errorMessage.classList.add('d-none');
+            errorNumero.classList.remove('d-none');
+            submitButton.disabled = true;
+        }
+        else {
+            errorNumero.classList.add('d-none')
+            errorMessage.classList.add('d-none'); // Mostrar el mensaje de error
+            submitButton.disabled = false; // Deshabilitar el botón de guardar
         }
     }
 
