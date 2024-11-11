@@ -7,6 +7,7 @@
 @endpush
 @push('css')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
     .row-not-space {
         width: 110px;
@@ -81,23 +82,23 @@
                             {{$totalVenta}}
                         </td>
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-
+                            <div class="d-flex align-items-center" role="group" aria-label="Basic mixed styles example">
                                 @can('mostrar-venta')
-                                <form action="{{route('ventas.show', ['venta'=>$item]) }}" method="get">
-                                    <button type="submit" class="btn btn-success">
-                                        Ver
-                                    </button>
-                                </form>
+                                    <a href="{{ route('ventas.show', ['venta' => $item]) }}" class="text-success mx-3" title="Ver">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
                                 @endcan
+                                |
                                 @can('imprimir-venta')
-                                     <form action="{{ route('ventas.imprimir', ['venta' => $item]) }}" method="get" target="_blank">
-                                     <button type="submit" class="btn btn-primary">Imprimir</button>
-                                     </form>
+                                    <a href="{{ route('ventas.imprimir', ['venta' => $item]) }}" target="_blank" class="text-primary mx-3" title="Imprimir">
+                                        <i class="fas fa-print"></i>
+                                    </a>
                                 @endcan
-
+                                |
                                 @can('eliminar-venta')
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+                                    <a href="#" class="text-danger mx-3" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 @endcan
                             </div>
                         </td>
