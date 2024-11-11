@@ -145,23 +145,23 @@
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Servicios:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-servicio" name="permission[]" value="ver-servicios">
+                                <input type="checkbox" class="btn-check" id="ver-servicio" name="permission[]" value="ver-servicio">
                                 <label class="btn btn-outline-primary" for="ver-servicio">Ver</label>
 
-                                <input type="checkbox" class="btn-check" id="crear-servicio" name="permission[]" value="crear-servicios">
+                                <input type="checkbox" class="btn-check" id="crear-servicio" name="permission[]" value="crear-servicio">
                                 <label class="btn btn-outline-success" for="crear-servicio">Crear</label>
 
-                                <input type="checkbox" class="btn-check" id="editar-servicio" name="permission[]" value="editar-servicios">
+                                <input type="checkbox" class="btn-check" id="editar-servicio" name="permission[]" value="editar-servicio">
                                 <label class="btn btn-outline-warning" for="editar-servicio">Editar</label>
 
-                                <input type="checkbox" class="btn-check" id="eliminar-servicio" name="permission[]" value="eliminar-servicios">
+                                <input type="checkbox" class="btn-check" id="eliminar-servicio" name="permission[]" value="eliminar-servicio">
                                 <label class="btn btn-outline-danger" for="eliminar-servicio">Eliminar</label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Usuarios:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-user" name="permission[]" value="ver-cliente">
+                                <input type="checkbox" class="btn-check" id="ver-user" name="permission[]" value="ver-user">
                                 <label class="btn btn-outline-primary" for="ver-user">Ver</label>
 
                                 <input type="checkbox" class="btn-check" id="crear-user" name="permission[]" value="crear-user">
@@ -177,7 +177,7 @@
                         <div class="col-md-6 mb-3">
                             <label>Permisos de Roles:</label>
                             <div class="btn-group" role="group">
-                                <input type="checkbox" class="btn-check" id="ver-role" name="permission[]" value="ver-cliente">
+                                <input type="checkbox" class="btn-check" id="ver-role" name="permission[]" value="ver-role">
                                 <label class="btn btn-outline-primary" for="ver-role">Ver</label>
 
                                 <input type="checkbox" class="btn-check" id="crear-role" name="permission[]" value="crear-role">
@@ -188,6 +188,38 @@
 
                                 <input type="checkbox" class="btn-check" id="eliminar-role" name="permission[]" value="eliminar-role">
                                 <label class="btn btn-outline-danger" for="eliminar-role">Eliminar</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Permisos de Compras:</label>
+                            <div class="btn-group" role="group">
+                                <input type="checkbox" class="btn-check" id="ver-compra" name="permission[]" value="ver-compra">
+                                <label class="btn btn-outline-primary" for="ver-compra">Ver</label>
+
+                                <input type="checkbox" class="btn-check" id="crear-compra" name="permission[]" value="crear-compra">
+                                <label class="btn btn-outline-success" for="crear-compra">Crear</label>
+
+                                <input type="checkbox" class="btn-check" id="mostrar-compra" name="permission[]" value="mostrar-compra">
+                                <label class="btn btn-outline-warning" for="mostrar-compra">Editar</label>
+
+                                <input type="checkbox" class="btn-check" id="eliminar-compra" name="permission[]" value="eliminar-compra">
+                                <label class="btn btn-outline-danger" for="eliminar-compra">Eliminar</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Permisos de Ventas:</label>
+                            <div class="btn-group" role="group">
+                                <input type="checkbox" class="btn-check" id="ver-venta" name="permission[]" value="ver-venta">
+                                <label class="btn btn-outline-primary" for="ver-venta">Ver</label>
+
+                                <input type="checkbox" class="btn-check" id="crear-venta" name="permission[]" value="crear-venta">
+                                <label class="btn btn-outline-success" for="crear-venta">Crear</label>
+
+                                <input type="checkbox" class="btn-check" id="mostrar-venta" name="permission[]" value="mostrar-venta">
+                                <label class="btn btn-outline-warning" for="mostrar-venta">Editar</label>
+
+                                <input type="checkbox" class="btn-check" id="eliminar-venta" name="permission[]" value="eliminar-venta">
+                                <label class="btn btn-outline-danger" for="eliminar-venta">Eliminar</label>
                             </div>
                         </div>
                         <!-- Puedes agregar más grupos de permisos de manera similar -->
