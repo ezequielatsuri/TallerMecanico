@@ -85,7 +85,7 @@
                                 <label for="servicios_id" class="form-label">Busque su servicio aquí:</label>
                                 <select name="servicios_id" id="servicios_id" class="form-control selectpicker" data-live-search="true" data-size="1" title="Seleccione un servicio">
                                     @foreach ($servicios as $item)
-                                    <option value="{{$item->id}}-{{$item->nombre}}-{{$item->precio}}">{{$item->nombre}}</option>
+                                    <option value="{{$item->id}}-{{$item->nombre}}-{{$item->precio}}">{{$item->codigo.' '.$item->nombre}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -103,7 +103,56 @@
                                     <label for="precio" class="form-label">Precio de servicio:</label>
                                     <input disabled type="number" name="precio" id="precio" class="form-control" step="0.1">
                                 </div>
+
+                                <div class="col-sm-4">
+                            <label for="descuentoS" class="form-label">Descuento de servicios:</label>
+                            <input type="number" name="descuentoS" id="descuentoS" class="form-control">
+                        </div>
                             </div>
+                            <div class="col-12">
+                          <div class="table-responsive">
+                                <table id="tabla_detalle_servicios" class="table table-hover">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th class="text-white">#</th>
+                                            <th class="text-white">Servicio</th>
+                                            <th class="text-white">Precio</th>
+                                            <th class="text-white">Descuento</th>
+                                            <th class="text-white">Subtotal</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th></th>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th colspan="4">Sumas</th>
+                                            <th colspan="2"><span id="precioS">0</span></th>
+                                        </tr>
+                                          <tr>
+                                            <th></th>
+                                            <th colspan="4">IGV %</th>
+                                            <th colspan="2"><span id="igvS">0</span></th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th colspan="4">Total</th>
+                                            <th colspan="2"> <input type="hidden" name="total" value="0" id="inputTotalS"> <span id="totalS">0</span></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
                         </div>
 
                         <!-- Script para mostrar/ocultar el contenedor de servicios -->
@@ -116,7 +165,7 @@
 
                         <!-----Tabla para el detalle de la venta--->
                         <div class="col-12">
-                            <div class="table-responsive">
+                          <div class="table-responsive">
                                 <table id="tabla_detalle" class="table table-hover">
                                     <thead class="bg-primary">
                                         <tr>
@@ -146,7 +195,7 @@
                                             <th colspan="4">Sumas</th>
                                             <th colspan="2"><span id="sumas">0</span></th>
                                         </tr>
-                                        <tr>
+                                          <tr>
                                             <th></th>
                                             <th colspan="4">IGV %</th>
                                             <th colspan="2"><span id="igv">0</span></th>
@@ -164,7 +213,7 @@
                         <!--Boton para cancelar venta--->
                         <div class="col-12">
                             <button id="cancelar" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Cancelar venta
+                                Cancelar servicio
                             </button>
                         </div>
 
@@ -277,37 +326,51 @@
 
 </form>
 @endsection
-
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script>
     $(document).ready(function() {
-
         $('#producto_id').change(mostrarValores);
-
         $('#servicios_id').change(mostrarValoresS);
-
         $('#btn_agregar').click(function() {
+        console.log("Botón de agregar presionado.");
+
+        if ($('#producto_id').val() !== '') {
             agregarProducto();
-        });
-
+        } else if ($('#servicios_id').val() !== '') {
+            agregarServicios();
+        } else {
+            showModal('Por favor, selecciona un producto o servicio para agregar.');
+        }
+    });
         $('#btnCancelarVenta').click(function() {
+            console.log("Botón de cancelar venta presionado.");
+
             cancelarVenta();
+
         });
-
         disableButtons();
-
         $('#impuesto').val(impuesto + '%');
     });
+    function validarDatosProducto() {
+    let precioVenta = parseFloat($('#precio_venta').val());
+    return precioVenta > 0 && $('#producto_id').val() !== '';
+}
 
-    //Variables
+// Función para validar datos de servicio
+function validarDatosServicio() {
+    let precioServicio = parseFloat($('#precio').val());
+    return precioServicio > 0 && $('#servicios_id').val() !== '';
+}
+    // Variables globales
     let cont = 0;
     let subtotal = [];
     let sumas = 0;
     let igv = 0;
     let total = 0;
+    let precioS = 0;
 
-    //Constantes
+    // Constantes
     const impuesto = 16;
 
     function mostrarValores() {
@@ -320,68 +383,79 @@
         let dataServicios = document.getElementById('servicios_id').value.split('-');
         $('#nombre').val(dataServicios[1]);
         $('#precio').val(dataServicios[2]);
+        console.log("Valores de servicio mostrados.");
     }
-    document.getElementById('servicios_id').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex].value.split('-');
-        const servicioId = selectedOption[0];
-        const nombreServicio = selectedOption[1];
-        const precioServicio = parseFloat(selectedOption[2]);
 
-        // Agregar fila de servicio a la tabla
-        const tabla = document.getElementById('tabla_detalle').getElementsByTagName('tbody')[0];
-        const newRow = tabla.insertRow();
-        newRow.innerHTML = `
-        <tr>
-            <th>${servicioId}</th>
-            <td>${nombreServicio}</td>
-            <td>1</td>
-            <td>${precioServicio.toFixed(2)}</td>
-            <td>0</td>
-            <td>${precioServicio.toFixed(2)}</td>
-            <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button></td>
-        </tr>
-    `;
+    function agregarServicios() {
+        let dataServicio = document.getElementById('servicios_id').value.split('-');
+        let idServicios = dataServicio[0];
+        let nameServicio = $('#servicios_id option:selected').text();
+        let precioServicio = $('#precio').val();
+        let descuentoS = $('#descuentoS').val();
+        console.log("Datos de servicio - ID:", idServicios, "Nombre:", nameServicio, "Precio:", precioServicio, "Descuento:", descuentoS);
+        if (nameServicio && precioServicio > 0) {
+            subtotal[cont] = round(precioServicio * 1 - descuentoS);
+            precioS += subtotal[cont];
+            igv = round(precioS / 100 * impuesto);
+            total = round(precioS + igv);
 
-        // Llamar a actualizarTotales después de agregar el servicio
-        actualizarTotales();
-    });
+            let fila = '<tr id="fila' + cont + '">' +
+                        '<th>' + (cont + 1) + '</th>' +
+                        '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
+                        '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio + '</td>' +
+                        '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS + '</td>' +
+                        '<td>' + subtotal[cont] + '</td>' +
+                        '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+                        '</tr>';
+
+            $('#tabla_detalle_servicios').append(fila);
+            limpiarCamposS();
+            cont++;
+            disableButtons();
+
+            // Mostrar los totales calculados
+            $('#precioS').html(precioS);
+            $('#igvS').html(igv);
+            $('#totalS').html(total);
+            $('#impuestos').val(igv);
+            $('#inputTotalS').val(total);
+        } else {
+            showModal('Valores Incorrectos');
+        }
+    }
+
+    function eliminarServicio(indice) {
+        precioS -= round(subtotal[indice]);
+        igv = round(precioS / 100 * impuesto);
+        total = round(precioS + igv);
+
+        $('#precioS').html(precioS);
+        $('#igvS').html(igv);
+        $('#totalS').html(total);
+        $('#impuestos').val(igv);
+        $('#inputTotalS').val(total);
+
+        $('#fila' + indice).remove();
+        disableButtons();
+    }
 
     function agregarProducto() {
-        let dataServicios = document.getElementById('servicios_id').value.split('-');
         let dataProducto = document.getElementById('producto_id').value.split('-');
-        // Obtener valores de los campos
         let idProducto = dataProducto[0];
         let nameProducto = $('#producto_id option:selected').text();
         let cantidad = $('#cantidad').val();
         let precioVenta = $('#precio_venta').val();
-        let descuento = $('#descuento').val();
+        let descuento = parseFloat($('#descuento').val()) || 0;
         let stock = $('#stock').val();
 
-        // Obtener precio del servicio
-        let precioServicio = parseFloat(dataServicios[2]);
-
-        if (descuento == '') {
-            descuento = 0;
-        }
-
-        // Validaciones
-        if (idProducto != '' && cantidad != '') {
-            if (parseInt(cantidad) > 0 && (cantidad % 1 == 0) && parseFloat(descuento) >= 0) {
+        if (idProducto && cantidad) {
+            if (parseInt(cantidad) > 0 && cantidad % 1 === 0 && descuento >= 0) {
                 if (parseInt(cantidad) <= parseInt(stock)) {
-                    // Calcular subtotal solo para productos
                     subtotal[cont] = round(cantidad * precioVenta - descuento);
                     sumas += subtotal[cont];
-
-                    // Si el precioServicio existe, agregarlo a la suma (cuando se agregue un servicio)
-                    if (!isNaN(precioServicio)) {
-                        sumas += precioServicio; // Se agrega el precio del servicio solo si está presente
-                    }
-
-                    // Calcular IGV y total
                     igv = round(sumas / 100 * impuesto);
                     total = round(sumas + igv);
 
-                    // Crear la fila
                     let fila = '<tr id="fila' + cont + '">' +
                         '<th>' + (cont + 1) + '</th>' +
                         '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>' +
@@ -392,14 +466,12 @@
                         '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
                         '</tr>';
 
-                    // Acciones después de añadir la fila
                     $('#tabla_detalle').append(fila);
                     limpiarCampos();
-                    limpiarCamposS()
+                    //limpiarCamposS();
                     cont++;
                     disableButtons();
 
-                    // Mostrar los campos calculados
                     $('#sumas').html(sumas);
                     $('#igv').html(igv);
                     $('#total').html(total);
@@ -417,29 +489,23 @@
     }
 
     function eliminarProducto(indice) {
-        //Calcular valores
         sumas -= round(subtotal[indice]);
         igv = round(sumas / 100 * impuesto);
         total = round(sumas + igv);
 
-        //Mostrar los campos calculados
         $('#sumas').html(sumas);
         $('#igv').html(igv);
         $('#total').html(total);
         $('#impuesto').val(igv);
-        $('#InputTotal').val(total);
+        $('#inputTotal').val(total);
 
-        //Eliminar el fila de la tabla
         $('#fila' + indice).remove();
-
         disableButtons();
     }
 
     function cancelarVenta() {
-        //Elimar el tbody de la tabla
         $('#tabla_detalle tbody').empty();
 
-        //Añadir una nueva fila a la tabla
         let fila = '<tr>' +
             '<th></th>' +
             '<td></td>' +
@@ -451,14 +517,12 @@
             '</tr>';
         $('#tabla_detalle').append(fila);
 
-        //Reiniciar valores de las variables
         cont = 0;
         subtotal = [];
         sumas = 0;
         igv = 0;
         total = 0;
 
-        //Mostrar los campos calculados
         $('#sumas').html(sumas);
         $('#igv').html(igv);
         $('#total').html(total);
@@ -518,15 +582,12 @@
     function round(num, decimales = 2) {
         var signo = (num >= 0 ? 1 : -1);
         num = num * signo;
-        if (decimales === 0) //con 0 decimales
+        if (decimales === 0)
             return signo * Math.round(num);
-        // round(x * 10 ^ decimales)
         num = num.toString().split('e');
         num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
-        // x * 10 ^ (-decimales)
         num = num.toString().split('e');
         return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     }
-    //Fuente: https://es.stackoverflow.com/questions/48958/redondear-a-dos-decimales-cuando-sea-necesario
 </script>
 @endpush

@@ -72,8 +72,8 @@
                     @foreach ($compras as $item)
                     <tr>
                         <td>
-                            <p class="fw-semibold mb-1">{{ $item->comprobante->tipo_comprobante }}</p>
-                            <p class="text-muted mb-0">{{ $item->numero_comprobante }}</p>
+                        <p class="fw-semibold mb-1">{{$item->comprobante->tipo_comprobante ?? 'Comprobante no disponible'}}</p>
+                        <p class="text-muted mb-0">{{ $item->numero_comprobante }}</p>
                         </td>
                         <td>
                             <p class="fw-semibold mb-1">{{ ucfirst($item->proveedore->persona->tipo_persona) }}</p>
