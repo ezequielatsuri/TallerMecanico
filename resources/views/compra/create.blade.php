@@ -61,47 +61,6 @@
                         <div class="col-12 mb-4 mt-2 text-end">
                             <button id="btn_agregar" class="btn btn-primary" type="button">Agregar</button>
                         </div>
-                        <!----botón para agregar servicios--->
-                        <div class="col-12 mb-4 mt-2 text-end">
-                            <button id="btn_servicios" class="btn btn-primary" type="button">Servicios Extras</button>
-                        </div>
-
-                        <!-----Tabla de servicios extras inicialmente oculta--->
-                        <div id="tabla_servicios_extras" class="col-12" style="display: none;">
-                            <div class="table-responsive">
-                                <table id="tabla_detalle_servicios" class="table table-hover">
-                                    <thead class="bg-secondary">
-                                        <tr>
-                                            <th class="text-white">#</th>
-                                            <th class="text-white">Servicio</th>
-                                            <th class="text-white">Descripción</th>
-                                            <th class="text-white">Precio</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>1</th>
-                                            <td>Servicio 1</td>
-                                            <td>Descripción del servicio 1</td>
-                                            <td>$100.00</td>
-                                            <td></td>
-                                        </tr>
-                                        <!-- Aquí puedes agregar dinámicamente más filas si lo deseas -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <script>
-                            document.getElementById("btn_servicios").addEventListener("click", function() {
-                                var tabla = document.getElementById("tabla_servicios_extras");
-                                if (tabla.style.display === "none") {
-                                    tabla.style.display = "block"; // Muestra la tabla
-                                } else {
-                                    tabla.style.display = "none"; // Oculta la tabla
-                                }
-                            });
-                        </script>
 
                         <!-----Tabla para el detalle de la compra--->
                         <div class="col-12">
@@ -283,7 +242,7 @@
     let total = 0;
 
     //Constantes
-    const impuesto = 18;
+    const impuesto = 16;
 
     function cancelarCompra() {
         //Elimar el tbody de la tabla

@@ -52,9 +52,16 @@
                 </thead>
                 <tbody>
                     @foreach ($ventas as $item)
+                    @php
+                    $totalServicios = 0;
+                    foreach ($item->servicios as $item2) {
+                    $totalServicios += ($item2->pivot->precio - $item2->pivot->descuento);
+                    }
+                    $totalVenta = $item->total + $totalServicios;
+                    @endphp
                     <tr>
                         <td>
-                            <p class="fw-semibold mb-1">{{$item->comprobante->tipo_comprobante}}</p>
+                            <p class="fw-semibold mb-1">{{$item->comprobante->tipo_comprobante ?? 'Comprobante no disponible'}}</p>
                             <p class="text-muted mb-0">{{$item->numero_comprobante}}</p>
                         </td>
                         <td>
@@ -71,7 +78,7 @@
                             {{$item->user->name}}
                         </td>
                         <td>
-                            {{$item->total}}
+                            {{$totalVenta}}
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
