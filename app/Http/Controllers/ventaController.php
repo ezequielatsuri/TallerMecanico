@@ -112,6 +112,12 @@ class VentaController extends Controller
         return redirect()->route('ventas.index')->with('success', 'Venta registrada exitosamente');
     }
 
+    public function imprimirFactura($id)
+    {
+        $venta = Venta::with('cliente', 'comprobante', 'user')->findOrFail($id);
+        return view('venta.factura', compact('venta'));
+    }
+
     public function show(Venta $venta)
     {
         return view('venta.show', compact('venta'));

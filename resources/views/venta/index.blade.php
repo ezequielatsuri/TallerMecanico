@@ -90,6 +90,11 @@
                                     </button>
                                 </form>
                                 @endcan
+                                @can('imprimir-venta')
+                                     <form action="{{ route('ventas.imprimir', ['venta' => $item]) }}" method="get" target="_blank">
+                                     <button type="submit" class="btn btn-primary">Imprimir</button>
+                                     </form>
+                                @endcan
 
                                 @can('eliminar-venta')
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
