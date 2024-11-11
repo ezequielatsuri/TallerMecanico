@@ -6,11 +6,12 @@
 @endpush
 @push('css')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
     .row-not-space {
         width: 110px;
     }
-    /* Ajuste para que solo los iconos aparezcan en los botones sin texto */
+    /* Estilos para los botones de solo íconos */
     .btn-icon-only {
         padding: 5px;
         width: 40px;
@@ -18,16 +19,22 @@
         background-color: transparent;
         border: none;
     }
-    /* Color gris claro para los iconos */
-    .btn-icon-only i {
-        color: #6c757d; /* Gris claro */
+    /* Colores específicos para cada ícono */
+    .btn-icon-view i {
+        color: #28a745; /* Verde para "Ver" */
+    }
+    .btn-icon-print i {
+        color: #007bff; /* Azul para "Imprimir" */
+    }
+    .btn-icon-delete i {
+        color: #dc3545; /* Rojo para "Eliminar" */
     }
     /* Estilo para el separador vertical */
     .icon-separator {
         width: 1px;
         height: 20px;
         background-color: #ccc; /* Gris claro para el separador */
-        margin: 0 5px;
+        margin: 0 8px;
         display: inline-block;
     }
 </style>
@@ -89,10 +96,10 @@
                             {{ $item->total }}
                         </td>
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                            <div class="d-flex align-items-center">
                                 @can('mostrar-compra')
                                 <form action="{{ route('compras.show', ['compra' => $item]) }}" method="get" style="display: inline;">
-                                    <button type="submit" class="btn btn-icon-only">
+                                    <button type="submit" class="btn btn-icon-only btn-icon-view" title="Ver">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </form>
@@ -102,7 +109,7 @@
 
                                 @can('imprimir-compra')
                                 <form action="{{ route('compras.print', ['compra' => $item]) }}" method="get" target="_blank" style="display: inline;">
-                                    <button type="submit" class="btn btn-icon-only">
+                                    <button type="submit" class="btn btn-icon-only btn-icon-print" title="Imprimir">
                                         <i class="fas fa-print"></i>
                                     </button>
                                 </form>
@@ -111,7 +118,7 @@
                                 <span class="icon-separator"></span>
 
                                 @can('eliminar-compra')
-                                <button type="button" class="btn btn-icon-only" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ $item->id }}">
+                                <button type="button" class="btn btn-icon-only btn-icon-delete" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ $item->id }}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                                 @endcan
