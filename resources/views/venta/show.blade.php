@@ -149,7 +149,7 @@
                         <span title="Impuesto" class="input-group-text" id="icon-form"><i class="fa-solid fa-percent"></i></span>
                         <input id="input-impuesto" disabled type="text" class="form-control" value="{{ $venta->impuesto }}">
                     </div>
-
+    <p>Sexo</p>
                 </div>
             </div>
         </div>
