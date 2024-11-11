@@ -51,6 +51,8 @@ Route::resources([
 
 // Ruta para imprimir factura de una compra específica
 Route::get('/compras/{compra}/print', [compraController::class, 'print'])->name('compras.print');
+Route::get('/ventas/{venta}/imprimir', [VentaController::class, 'imprimirFactura'])->name('ventas.imprimir');
+
 
 // Rutas de autenticación
 Route::get('/login', [loginController::class, 'index'])->name('login');
