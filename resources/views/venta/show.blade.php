@@ -149,7 +149,7 @@
                         <span title="Impuesto" class="input-group-text" id="icon-form"><i class="fa-solid fa-percent"></i></span>
                         <input id="input-impuesto" disabled type="text" class="form-control" value="{{ $venta->impuesto }}">
                     </div>
-    <p>Sexo</p>
+
                 </div>
             </div>
         </div>
@@ -195,6 +195,25 @@
                         </td>
                     </tr>
                     @endforeach
+                @foreach ($venta->servicios as $item)
+                <tr>
+                    <td>
+                        {{$item->nombre}}
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        {{$item->pivot->precio}}
+                    </td>
+                    <td>
+                        {{$item->pivot->descuento}}
+                    </td>
+                    <td class="td-subtotal">
+                        {{1 * ($item->pivot->precio) - ($item->pivot->descuento)}}
+                    </td>
+                </tr>
+                @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
