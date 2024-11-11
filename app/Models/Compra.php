@@ -26,8 +26,10 @@ class Compra extends Model
         return $this->belongsTo(Comprobante::class);
     }
 
-    public function productos(){
-        return $this->belongsToMany(Producto::class)->withTimestamps()
-        ->withPivot('cantidad','precio_compra','precio_venta');
+    public function productos()
+    {
+        return $this->belongsToMany(Producto::class, 'compra_producto')
+                    ->withPivot('cantidad', 'precio_compra', 'precio_venta');
     }
+    
 }

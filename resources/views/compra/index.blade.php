@@ -10,6 +10,26 @@
     .row-not-space {
         width: 110px;
     }
+    /* Ajuste para que solo los iconos aparezcan en los botones sin texto */
+    .btn-icon-only {
+        padding: 5px;
+        width: 40px;
+        height: 40px;
+        background-color: transparent;
+        border: none;
+    }
+    /* Color gris claro para los iconos */
+    .btn-icon-only i {
+        color: #6c757d; /* Gris claro */
+    }
+    /* Estilo para el separador vertical */
+    .icon-separator {
+        width: 1px;
+        height: 20px;
+        background-color: #ccc; /* Gris claro para el separador */
+        margin: 0 5px;
+        display: inline-block;
+    }
 </style>
 @endpush
 
@@ -26,7 +46,7 @@
 
     @can('crear-compra')
     <div class="mb-4">
-        <a href="{{route('compras.create')}}">
+        <a href="{{ route('compras.create') }}">
             <button type="button" class="btn btn-primary">Agregar nuevo registro</button>
         </a>
     </div>
@@ -52,44 +72,55 @@
                     @foreach ($compras as $item)
                     <tr>
                         <td>
-                            <p class="fw-semibold mb-1">{{$item->comprobante->tipo_comprobante}}</p>
-                            <p class="text-muted mb-0">{{$item->numero_comprobante}}</p>
+                            <p class="fw-semibold mb-1">{{ $item->comprobante->tipo_comprobante }}</p>
+                            <p class="text-muted mb-0">{{ $item->numero_comprobante }}</p>
                         </td>
                         <td>
                             <p class="fw-semibold mb-1">{{ ucfirst($item->proveedore->persona->tipo_persona) }}</p>
-                            <p class="text-muted mb-0">{{$item->proveedore->persona->razon_social}}</p>
+                            <p class="text-muted mb-0">{{ $item->proveedore->persona->razon_social }}</p>
                         </td>
                         <td>
                             <div class="row-not-space">
-                                <p class="fw-semibold mb-1"><span class="m-1"><i class="fa-solid fa-calendar-days"></i></span>{{\Carbon\Carbon::parse($item->fecha_hora)->format('d-m-Y')}}</p>
-                                <p class="fw-semibold mb-0"><span class="m-1"><i class="fa-solid fa-clock"></i></span>{{\Carbon\Carbon::parse($item->fecha_hora)->format('H:i')}}</p>
+                                <p class="fw-semibold mb-1"><span class="m-1"><i class="fa-solid fa-calendar-days"></i></span>{{ \Carbon\Carbon::parse($item->fecha_hora)->format('d-m-Y') }}</p>
+                                <p class="fw-semibold mb-0"><span class="m-1"><i class="fa-solid fa-clock"></i></span>{{ \Carbon\Carbon::parse($item->fecha_hora)->format('H:i') }}</p>
                             </div>
                         </td>
                         <td>
-                            {{$item->total}}
+                            {{ $item->total }}
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-
                                 @can('mostrar-compra')
-                                <form action="{{route('compras.show', ['compra'=>$item]) }}" method="get">
-                                    <button type="submit" class="btn btn-success">
-                                        Ver
+                                <form action="{{ route('compras.show', ['compra' => $item]) }}" method="get" style="display: inline;">
+                                    <button type="submit" class="btn btn-icon-only">
+                                        <i class="fas fa-eye"></i>
                                     </button>
                                 </form>
                                 @endcan
 
-                                @can('eliminar-compra')
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+                                <span class="icon-separator"></span>
+
+                                @can('imprimir-compra')
+                                <form action="{{ route('compras.print', ['compra' => $item]) }}" method="get" target="_blank" style="display: inline;">
+                                    <button type="submit" class="btn btn-icon-only">
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                </form>
                                 @endcan
 
+                                <span class="icon-separator"></span>
+
+                                @can('eliminar-compra')
+                                <button type="button" class="btn btn-icon-only" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ $item->id }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                @endcan
                             </div>
                         </td>
-
                     </tr>
 
                     <!-- Modal de confirmación-->
-                    <div class="modal fade" id="confirmModal-{{$item->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="confirmModal-{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -101,7 +132,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <form action="{{ route('compras.destroy',['compra'=>$item->id]) }}" method="post">
+                                    <form action="{{ route('compras.destroy', ['compra' => $item->id]) }}" method="post">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" class="btn btn-danger">Confirmar</button>

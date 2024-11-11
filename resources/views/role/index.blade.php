@@ -46,7 +46,7 @@
                         <td>
                             {{$item->name}}
                         </td>
-                        {{-- 
+                        
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
 
@@ -62,7 +62,7 @@
 
                             </div>
                         </td>
-                        --}}
+                        
                     </tr>
 
                     <!-- Modal de confirmación-->

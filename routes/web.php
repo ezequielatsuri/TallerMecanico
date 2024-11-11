@@ -28,8 +28,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/',[homeController::class,'index'])->name('panel');
 
+// Ruta principal (Home)
+Route::get('/', [homeController::class, 'index'])->name('panel');
+
+// Rutas de recursos
 Route::resources([
     'categorias' => categoriaController::class,
     'fabricantes' => fabricanteController::class,
@@ -46,10 +49,15 @@ Route::resources([
     'profile' => profileController::class
 ]);
 
-Route::get('/login',[loginController::class,'index'])->name('login');
-Route::post('/login',[loginController::class,'login']);
-Route::get('/logout',[logoutController::class,'logout'])->name('logout');
+// Ruta para imprimir factura de una compra específica
+Route::get('/compras/{compra}/print', [compraController::class, 'print'])->name('compras.print');
 
+// Rutas de autenticación
+Route::get('/login', [loginController::class, 'index'])->name('login');
+Route::post('/login', [loginController::class, 'login']);
+Route::get('/logout', [logoutController::class, 'logout'])->name('logout');
+
+// Rutas de errores
 Route::get('/401', function () {
     return view('pages.401');
 });

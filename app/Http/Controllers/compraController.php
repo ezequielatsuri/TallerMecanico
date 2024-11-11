@@ -100,6 +100,12 @@ class compraController extends Controller
         return redirect()->route('compras.index')->with('success','compra exitosa');
     }
 
+    public function print($id)
+    {
+        $compra = Compra::with(['comprobante', 'proveedore.persona', 'productos'])->findOrFail($id);
+        return view('compra.factura', compact('compra'));
+    }
+
     /**
      * Display the specified resource.
      */
