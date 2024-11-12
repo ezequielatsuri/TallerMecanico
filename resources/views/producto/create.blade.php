@@ -69,45 +69,166 @@
                         @enderror
                     </div>
 
-                    <!---Marca---->
+                    <!-- Botón para abrir el modal de creación de Marca -->
                     <div class="col-md-6">
                         <label for="marca_id" class="form-label"><strong>Marca:</strong></label>
-                        <select data-size="4" title="Seleccione una marca" data-live-search="true" name="marca_id" id="marca_id" class="form-control selectpicker show-tick">
-                            @foreach ($marcas as $item)
-                            <option value="{{$item->id}}" {{ old('marca_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select data-size="4" title="Seleccione una marca" data-live-search="true" name="marca_id" id="marca_id" class="form-control selectpicker show-tick">
+                                @foreach ($marcas as $item)
+                                <option value="{{$item->id}}" {{ old('marca_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCrearMarca">+</button>
+                        </div>
                         @error('marca_id')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
 
+                    <!-- Modal de creación de Marca -->
+                    <div class="modal fade" id="modalCrearMarca" tabindex="-1" aria-labelledby="modalCrearMarcaLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form id="crearMarcaForm">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalCrearMarcaLabel">Crear Marca</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="nombreMarca" class="form-label">Nombre de la Marca</label>
+                                            <input type="text" class="form-control" id="nombreMarca" name="nombre" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcionMarca" class="form-label">Descripción</label>
+                                            <textarea class="form-control" id="descripcionMarca" name="descripcion" rows="3" maxlength="255"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar Marca</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function() {
+                            $('#crearMarcaForm').on('submit', function(e) {
+                                e.preventDefault();
+
+                                $.ajax({
+                                    url: "{{ route('marcas.store') }}", // Ruta del controlador de marcas
+                                    method: "POST",
+                                    data: $(this).serialize(),
+                                    success: function(response) {
+                                        $('#modalCrearMarca').modal('hide');
+                                        $('#marca_id').append(new Option(response.nombre, response.id));
+                                        $('#marca_id').selectpicker('refresh'); // Actualizar el select
+                                    },
+                                    error: function(error) {
+                                        console.log(error);
+                                        alert('Error al crear la marca. Intenta nuevamente.');
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+
                     <!---Fabricante---->
                     <div class="col-md-6">
                         <label for="fabricante_id" class="form-label"><strong>Fabricante:</strong></label>
-                        <select data-size="4" title="Seleccione un fabricante" data-live-search="true" name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick">
-                            @foreach ($fabricantes as $item)
-                            <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select data-size="4" title="Seleccione un fabricante" data-live-search="true" name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick">
+                                @foreach ($fabricantes as $item)
+                                <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#crearFabricanteModal">+</button>
+                        </div>>
                         @error('fabricante_id')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
+                    <!-- Modal para Crear Fabricante -->
+                    <div class="modal fade" id="crearFabricanteModal" tabindex="-1" aria-labelledby="crearFabricanteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="{{ route('fabricantes.store') }}" method="POST" id="crearFabricanteForm">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="crearFabricanteModalLabel">Crear Fabricante</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="nombreFabricante" class="form-label">Nombre</label>
+                                            <input type="text" name="nombre" id="nombreFabricante" class="form-control" maxlength="60" required oninput="validarNombreFabricante(this)">
+                                            <small id="nombreFabricanteError" class="text-danger d-none">El nombre solo debe contener letras y un máximo de 60 caracteres.</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcionFabricante" class="form-label">Descripción</label>
+                                            <textarea name="descripcion" id="descripcionFabricante" class="form-control" rows="3" maxlength="255"></textarea>
+                                            <small id="descripcionFabricanteError" class="text-danger d-none">La descripción no debe exceder los 255 caracteres.</small>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary" id="guardarFabricanteBtn" disabled>Guardar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!---Categorías---->
                     <div class="col-md-6">
                         <label for="categorias" class="form-label"><strong>Categorías:</strong></label>
-                        <select data-size="4" title="Seleccione las categorías" data-live-search="true" name="categorias[]" id="categorias" class="form-control selectpicker show-tick" multiple>
-                            @foreach ($categorias as $item)
-                            <option value="{{$item->id}}" {{ (in_array($item->id , old('categorias',[]))) ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select data-size="4" title="Seleccione las categorías" data-live-search="true" name="categorias[]" id="categorias" class="form-control selectpicker show-tick" multiple>
+                                @foreach ($categorias as $item)
+                                <option value="{{$item->id}}" {{ (in_array($item->id , old('categorias',[]))) ? 'selected' : '' }}>{{$item->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#crearCategoriaModal">+</button>
+                        </div>
                         @error('categorias')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                     </div>
 
+                </div>
+            </div>
+            <!-- Modal para Crear Categoría -->
+            <div class="modal fade" id="crearCategoriaModal" tabindex="-1" aria-labelledby="crearCategoriaModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="{{ route('categorias.store') }}" method="POST" id="crearCategoriaForm">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="crearCategoriaModalLabel">Crear Categoría</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="nombreCategoria" class="form-label">Nombre</label>
+                                    <input type="text" name="nombre" id="nombreCategoria" class="form-control" maxlength="30" required oninput="validarNombreCategoria(this)">
+                                    <small id="nombreCategoriaError" class="text-danger d-none">El nombre solo debe contener letras y un máximo de 30 caracteres.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descripcionCategoria" class="form-label">Descripción</label>
+                                    <textarea name="descripcion" id="descripcionCategoria" class="form-control" rows="3" maxlength="80"></textarea>
+                                    <small id="descripcionCategoriaError" class="text-danger d-none">La descripción debe contener un máximo de 80 caracteres.</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" id="guardarCategoriaBtn" disabled>Guardar</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -120,8 +241,7 @@
 @endsection
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-<script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js">
     function validarCodigo(input) {
         const errorMessage = document.getElementById('codigoError');
         const submitButton = document.getElementById('submitBtn');
@@ -136,12 +256,11 @@
             errorMessage.classList.remove('d-none'); // Ocultar el mensaje de error
             errorNumero.classList.add('d-none');
             submitButton.disabled = true; // Habilitar el botón de guardar
-        }else if(!regex.test(input.value)){
+        } else if (!regex.test(input.value)) {
             errorMessage.classList.add('d-none');
             errorNumero.classList.remove('d-none');
             submitButton.disabled = true;
-        }
-        else {
+        } else {
             errorNumero.classList.add('d-none')
             errorMessage.classList.add('d-none'); // Mostrar el mensaje de error
             submitButton.disabled = false; // Deshabilitar el botón de guardar
