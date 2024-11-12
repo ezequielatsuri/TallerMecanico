@@ -28,10 +28,10 @@
 
                 <div class="row g-4">
 
-                    <!-- Código -->
+                    <!----Codigo---->
                     <div class="col-md-6">
                         <label for="codigo" class="form-label"><strong>Código:</strong></label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCodigo(this)" maxlength="20">
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCodigo(this)" maxlength="10">
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -39,7 +39,7 @@
                         <small id="codigoNumero" class="text-danger d-none">El código debe ser solamente de números.</small>
                     </div>
 
-                    <!-- Nombre -->
+                    <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
                         <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" oninput="validarNombre(this)" maxlength="50">
@@ -50,7 +50,7 @@
                         <small id="nombreNumError" class="text-danger d-none">El nombre no debe contener números.</small>
                     </div>
 
-                    <!-- Descripción -->
+                    <!---Descripción---->
                     <div class="col-12">
                         <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
                         <textarea name="descripcion" id="descripcion" rows="3" class="form-control" oninput="validarDescripcion(this)" maxlength="255">{{old('descripcion')}}</textarea>
@@ -60,7 +60,53 @@
                         <small id="descripcionError" class="text-danger d-none">La descripción no debe exceder los 255 caracteres.</small>
                     </div>
 
-                    <!-- Los demás campos siguen igual... -->
+                    <!---Imagen---->
+                    <div class="col-md-6">
+                        <label for="img_path" class="form-label"><strong>Imagen:</strong></label>
+                        <input type="file" name="img_path" id="img_path" class="form-control" accept="image/*">
+                        @error('img_path')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
+
+                    <!---Marca---->
+                    <div class="col-md-6">
+                        <label for="marca_id" class="form-label"><strong>Marca:</strong></label>
+                        <select data-size="4" title="Seleccione una marca" data-live-search="true" name="marca_id" id="marca_id" class="form-control selectpicker show-tick">
+                            @foreach ($marcas as $item)
+                            <option value="{{$item->id}}" {{ old('marca_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                            @endforeach
+                        </select>
+                        @error('marca_id')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
+
+                    <!---Fabricante---->
+                    <div class="col-md-6">
+                        <label for="fabricante_id" class="form-label"><strong>Fabricante:</strong></label>
+                        <select data-size="4" title="Seleccione un fabricante" data-live-search="true" name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick">
+                            @foreach ($fabricantes as $item)
+                            <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                            @endforeach
+                        </select>
+                        @error('fabricante_id')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
+
+                    <!---Categorías---->
+                    <div class="col-md-6">
+                        <label for="categorias" class="form-label"><strong>Categorías:</strong></label>
+                        <select data-size="4" title="Seleccione las categorías" data-live-search="true" name="categorias[]" id="categorias" class="form-control selectpicker show-tick" multiple>
+                            @foreach ($categorias as $item)
+                            <option value="{{$item->id}}" {{ (in_array($item->id , old('categorias',[]))) ? 'selected' : '' }}>{{$item->nombre}}</option>
+                            @endforeach
+                        </select>
+                        @error('categorias')
+                        <small class="text-danger">{{'*'.$message}}</small>
+                        @enderror
+                    </div>
 
                 </div>
             </div>
@@ -80,9 +126,11 @@
         const errorMessage = document.getElementById('codigoError');
         const submitButton = document.getElementById('submitBtn');
         const errorNumero = document.getElementById('codigoNumero');
-        const regex = /^[0-9,-]+$/;
 
-        if (input.value.trim() == '') {
+        const regex = /^[0-9]+$/;
+
+        // Validación de tipo y longitud
+        if (input.value.trim() == '' || input.value.length > 10) {
             errorMessage.classList.remove('d-none');
             errorNumero.classList.add('d-none');
             submitButton.disabled = true;
@@ -101,9 +149,10 @@
         const errorMessage = document.getElementById('nombreError');
         const errorNumMessage = document.getElementById('nombreNumError');
         const submitButton = document.getElementById('submitBtn');
+
         const regex = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
 
-        if (input.value.trim() === '') {
+        if (input.value.trim() === '' || input.value.length > 50) {
             errorMessage.classList.remove('d-none');
             errorNumMessage.classList.add('d-none');
             submitButton.disabled = true;
@@ -131,7 +180,6 @@
         }
     }
 
-    // Validación inicial al cargar la página
     window.onload = function() {
         validarCodigo(document.getElementById('codigo'));
         validarNombre(document.getElementById('nombre'));
