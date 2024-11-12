@@ -31,22 +31,22 @@
                     <!----Codigo---->
                     <div class="col-md-6">
                         <label for="codigo" class="form-label"><strong>Código:</strong></label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCodigo(this)">
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCampos()">
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
-                        <small id="codigoError" class="text-danger d-none">El código es requerido y debe ser único.</small>
+                        <small id="codigoError" class="text-danger d-none">El código no puede estar vacio y debe ser único.</small>
                         <small id="codigoNumero" class="text-danger d-none">El código debe ser solamente de números.</small>
                     </div>
 
                     <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" oninput="validarNombre(this)">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" oninput="validarCampos()">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
-                        <small id="nombreError" class="text-danger d-none">El nombre es requerido y debe ser único.</small>
+                        <small id="nombreError" class="text-danger d-none">El nombre no puede estar vacio y debe ser único.</small>
                         <small id="nombreNumError" class="text-danger d-none">El nombre no debe contener números.</small>
                     </div>
 
@@ -122,53 +122,51 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script>
-    function validarCodigo(input) {
-        const errorMessage = document.getElementById('codigoError');
-        const submitButton = document.getElementById('submitBtn');
-        const errorNumero = document.getElementById('codigoNumero');
+    function validarCampos() {
+        const codigoInput = document.getElementById("codigo");
+        const nombreInput = document.getElementById("nombre");
+        const codigoError = document.getElementById("codigoError");
+        const codigoNumero = document.getElementById("codigoNumero");
+        const nombreError = document.getElementById("nombreError");
+        const nombreNumError = document.getElementById("nombreNumError");
+        const submitButton = document.getElementById("submitBtn");
 
+        // Expresiones regulares para validaciones
+        const regexCodigo = /^[0-9]+$/;
+        const regexNombre = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
 
-        const regex = /^[0-9]+$/;
+        let valid = true;
 
-
-        // El código debe ser único y no puede estar vacío
-        if (input.value.trim() == '') {
-            errorMessage.classList.remove('d-none'); // Ocultar el mensaje de error
-            errorNumero.classList.add('d-none');
-            submitButton.disabled = true; // Habilitar el botón de guardar
-        }else if(!regex.test(input.value)){
-            errorMessage.classList.add('d-none');
-            errorNumero.classList.remove('d-none');
-            submitButton.disabled = true;
-        }
-        else {
-            errorNumero.classList.add('d-none')
-            errorMessage.classList.add('d-none'); // Mostrar el mensaje de error
-            submitButton.disabled = false; // Deshabilitar el botón de guardar
-        }
-    }
-
-    function validarNombre(input) {
-        const errorMessage = document.getElementById('nombreError');
-        const errorNumMessage = document.getElementById('nombreNumError');
-        const submitButton = document.getElementById('submitBtn');
-
-        // Expresión regular para permitir solo letras (incluyendo letras acentuadas)
-        const regex = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
-
-        if (input.value.trim() === '') {
-            errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error
-            errorNumMessage.classList.add('d-none'); // Ocultar mensaje de números
-            submitButton.disabled = true; // Deshabilitar el botón de guardar
-        } else if (!regex.test(input.value)) {
-            errorNumMessage.classList.remove('d-none'); // Mostrar mensaje de números
-            errorMessage.classList.add('d-none'); // Ocultar mensaje de error
-            submitButton.disabled = true; // Deshabilitar el botón de guardar
+        // Validación del campo "Código"
+        if (codigoInput.value.trim() === '') {
+            codigoError.classList.remove("d-none");
+            codigoNumero.classList.add("d-none");
+            valid = false;
+        } else if (!regexCodigo.test(codigoInput.value)) {
+            codigoError.classList.add("d-none");
+            codigoNumero.classList.remove("d-none");
+            valid = false;
         } else {
-            errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
-            errorNumMessage.classList.add('d-none'); // Ocultar mensaje de números
-            submitButton.disabled = false; // Habilitar el botón de guardar
+            codigoError.classList.add("d-none");
+            codigoNumero.classList.add("d-none");
         }
+
+        // Validación del campo "Nombre"
+        if (nombreInput.value.trim() === '') {
+            nombreError.classList.remove("d-none");
+            nombreNumError.classList.add("d-none");
+            valid = false;
+        } else if (!regexNombre.test(nombreInput.value)) {
+            nombreError.classList.add("d-none");
+            nombreNumError.classList.remove("d-none");
+            valid = false;
+        } else {
+            nombreError.classList.add("d-none");
+            nombreNumError.classList.add("d-none");
+        }
+
+        // Habilitar o deshabilitar el botón de envío
+        submitButton.disabled = !valid;
     }
 
     function validarDescripcion(textarea) {
@@ -177,17 +175,15 @@
 
         if (textarea.value.length <= 255) {
             errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
-            submitButton.disabled = false; // Habilitar el botón de guardar
         } else {
             errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error
-            submitButton.disabled = true; // Deshabilitar el botón de guardar
+            submitButton.disabled = true; // Deshabilitar el botón de guardar si la descripción es demasiado larga
         }
     }
 
     // Validación inicial al cargar la página
     window.onload = function() {
-        validarCodigo(document.getElementById('codigo'));
-        validarNombre(document.getElementById('nombre'));
+        validarCampos();
         validarDescripcion(document.getElementById('descripcion'));
     }
 </script>

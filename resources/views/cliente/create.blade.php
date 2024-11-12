@@ -1,11 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Crear cliente')
+@section('title', 'Crear Cliente')
 
 @push('css')
 <style>
     #descripcion {
         resize: none;
+    }
+    .error-message {
+        margin-bottom: 10px;
+        display: block;
     }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
@@ -22,14 +26,15 @@
     </ol>
 
     <div class="card">
-        <form action="{{ route('clientes.store') }}" method="post">
+        <form action="{{ route('clientes.store') }}" method="post" id="clienteForm">
             @csrf
             <div class="card-body text-bg-light">
                 <div class="row g-3">
+
                     <!-- Tipo de cliente -->
                     <div class="col-md-6">
                         <label for="tipo_persona" class="form-label"><strong>Tipo de cliente:</strong></label>
-                        <select class="form-select" name="tipo_persona" id="tipo_persona">
+                        <select class="form-select" name="tipo_persona" id="tipo_persona" onchange="mostrarCamposPersona()">
                             <option value="" selected disabled>Seleccione una opción</option>
                             <option value="fisica" {{ old('tipo_persona') == 'fisica' ? 'selected' : '' }}>Persona Física</option>
                             <option value="moral" {{ old('tipo_persona') == 'moral' ? 'selected' : '' }}>Persona Moral</option>
@@ -42,60 +47,60 @@
                     <!-- Información para Persona Física -->
                     <div class="col-12" id="fisica" style="display: none;">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}" oninput="validarCampos()">
+                        <small id="nombreErrorVacio" class="text-danger d-none error-message">El nombre no puede estar vacío.</small>
+                        <small id="nombreErrorFormato" class="text-danger d-none error-message">El nombre solo debe contener letras.</small>
 
                         <label for="apellidoP" class="form-label">Apellido Paterno:</label>
-                        <input type="text" name="apellidoP" id="apellidoP" class="form-control" value="{{ old('apellidoP') }}">
+                        <input type="text" name="apellidoP" id="apellidoP" class="form-control" value="{{ old('apellidoP') }}" oninput="validarCampos()">
+                        <small id="apellidoPErrorVacio" class="text-danger d-none error-message">El apellido paterno no puede estar vacío.</small>
+                        <small id="apellidoPErrorFormato" class="text-danger d-none error-message">El apellido paterno solo debe contener letras.</small>
 
                         <label for="apellidoM" class="form-label">Apellido Materno:</label>
-                        <input type="text" name="apellidoM" id="apellidoM" class="form-control" value="{{ old('apellidoM') }}">
+                        <input type="text" name="apellidoM" id="apellidoM" class="form-control" value="{{ old('apellidoM') }}" oninput="validarCampos()">
+                        <small id="apellidoMErrorVacio" class="text-danger d-none error-message">El apellido materno no puede estar vacío.</small>
+                        <small id="apellidoMErrorFormato" class="text-danger d-none error-message">El apellido materno solo debe contener letras.</small>
                     </div>
 
                     <!-- Información para Persona Moral -->
                     <div class="col-12" id="moral" style="display: none;">
                         <label for="razon_social" class="form-label">Nombre de la empresa:</label>
-                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}">
-                        @error('razon_social')
-                        <small class="text-danger">{{ '*' . $message }}</small>
-                        @enderror
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" oninput="validarCampos()">
+                        <small id="razonSocialErrorVacio" class="text-danger d-none error-message">El nombre de la empresa no puede estar vacío.</small>
+                        <small id="razonSocialErrorFormato" class="text-danger d-none error-message">El nombre de la empresa solo debe contener letras.</small>
                     </div>
 
                     <!-- Dirección -->
                     <div class="col-12">
-                        <label for="direccion" the="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}">
-                        @error('direccion')
-                        <small class="text-danger">{{ '*' . $message }}</small>
-                        @enderror
+                        <label for="direccion" class="form-label"><strong>Dirección:</strong></label>
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}" oninput="validarCampos()">
+                        <small id="direccionError" class="text-danger d-none error-message">La dirección no puede estar vacía.</small>
                     </div>
 
                     <!-- Tipo de documento -->
                     <div class="col-md-6">
                         <label for="documento_id" class="form-label"><strong>Tipo de documento:</strong></label>
-                        <select class="form-select" name="documento_id" id="documento_id">
+                        <select class="form-select" name="documento_id" id="documento_id" onchange="validarCampos()">
                             <option value="" selected disabled>Seleccione una opción</option>
                             @foreach ($documentos as $item)
                             <option value="{{ $item->id }}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>{{ $item->tipo_documento }}</option>
                             @endforeach
                         </select>
-                        @error('documento_id')
-                        <small class="text-danger">{{ '*' . the_message }}</small>
-                        @enderror
+                        <small id="documentoError" class="text-danger d-none error-message">Debe seleccionar un tipo de documento.</small>
                     </div>
 
                     <!-- Número de documento -->
                     <div class="col-md-6">
                         <label for="numero_documento" class="form-label"><strong>Número de documento:</strong></label>
-                        <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{ old('numero_documento') }}">
-                        @error('numero_documento')
-                        <small class="text-danger">{{ '*' . the_message }}</small>
-                        @enderror
+                        <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{ old('numero_documento') }}" oninput="validarCampos()">
+                        <small id="numeroDocumentoError" class="text-danger d-none error-message">El número de documento no puede estar vacío.</small>
                     </div>
+
                 </div>
             </div>
 
             <div class="card-footer text-center">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Guardar</button>
             </div>
         </form>
     </div>
@@ -139,5 +144,74 @@
             });
         });
     });
+</script>
+<script>
+    function mostrarCamposPersona() {
+        const tipoPersona = document.getElementById("tipo_persona").value;
+        document.getElementById("fisica").style.display = tipoPersona === "fisica" ? "block" : "none";
+        document.getElementById("moral").style.display = tipoPersona === "moral" ? "block" : "none";
+        validarCampos();
+    }
+
+    function validarCampos() {
+        const tipoPersona = document.getElementById("tipo_persona").value;
+        const direccion = document.getElementById("direccion").value.trim();
+        const documentoId = document.getElementById("documento_id").value;
+        const numeroDocumento = document.getElementById("numero_documento").value.trim();
+
+        const nombre = document.getElementById("nombre");
+        const apellidoP = document.getElementById("apellidoP");
+        const apellidoM = document.getElementById("apellidoM");
+        const razonSocial = document.getElementById("razon_social");
+
+        const nombreErrorVacio = document.getElementById("nombreErrorVacio");
+        const nombreErrorFormato = document.getElementById("nombreErrorFormato");
+        const apellidoPErrorVacio = document.getElementById("apellidoPErrorVacio");
+        const apellidoPErrorFormato = document.getElementById("apellidoPErrorFormato");
+        const apellidoMErrorVacio = document.getElementById("apellidoMErrorVacio");
+        const apellidoMErrorFormato = document.getElementById("apellidoMErrorFormato");
+        const razonSocialErrorVacio = document.getElementById("razonSocialErrorVacio");
+        const razonSocialErrorFormato = document.getElementById("razonSocialErrorFormato");
+        const direccionError = document.getElementById("direccionError");
+        const documentoError = document.getElementById("documentoError");
+        const numeroDocumentoError = document.getElementById("numeroDocumentoError");
+        const submitButton = document.getElementById("submitBtn");
+
+        const regexLetras = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+        let valid = true;
+
+        if (tipoPersona === "fisica") {
+            nombreErrorVacio.classList.toggle("d-none", nombre.value.trim() !== "");
+            nombreErrorFormato.classList.toggle("d-none", regexLetras.test(nombre.value) || nombre.value.trim() === "");
+
+            apellidoPErrorVacio.classList.toggle("d-none", apellidoP.value.trim() !== "");
+            apellidoPErrorFormato.classList.toggle("d-none", regexLetras.test(apellidoP.value) || apellidoP.value.trim() === "");
+
+            apellidoMErrorVacio.classList.toggle("d-none", apellidoM.value.trim() !== "");
+            apellidoMErrorFormato.classList.toggle("d-none", regexLetras.test(apellidoM.value) || apellidoM.value.trim() === "");
+
+            valid = valid && nombre.value.trim() !== "" && regexLetras.test(nombre.value);
+            valid = valid && apellidoP.value.trim() !== "" && regexLetras.test(apellidoP.value);
+            valid = valid && apellidoM.value.trim() !== "" && regexLetras.test(apellidoM.value);
+
+        } else if (tipoPersona === "moral") {
+            razonSocialErrorVacio.classList.toggle("d-none", razonSocial.value.trim() !== "");
+            razonSocialErrorFormato.classList.toggle("d-none", regexLetras.test(razonSocial.value) || razonSocial.value.trim() === "");
+
+            valid = valid && razonSocial.value.trim() !== "" && regexLetras.test(razonSocial.value);
+        }
+
+        direccionError.classList.toggle("d-none", direccion !== "");
+        documentoError.classList.toggle("d-none", documentoId !== "");
+        numeroDocumentoError.classList.toggle("d-none", numeroDocumento !== "");
+
+        valid = valid && direccion !== "" && documentoId !== "" && numeroDocumento !== "";
+
+        submitButton.disabled = !valid;
+    }
+
+    window.onload = function() {
+        mostrarCamposPersona();
+    }
 </script>
 @endpush
