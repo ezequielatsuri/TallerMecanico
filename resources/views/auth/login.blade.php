@@ -124,6 +124,35 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script>
+
+document.getElementById("inputEmail").addEventListener("input", function () {
+    const emailInput = this;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo|icloud)\.com$/;
+
+    if (emailPattern.test(emailInput.value)) {
+        emailInput.setCustomValidity(""); // Formato válido
+        emailInput.style.borderColor = "green";
+    } else {
+        emailInput.setCustomValidity("Por favor, introduce un correo electrónico válido de los dominios permitidos.");
+        emailInput.style.borderColor = "red";
+    }
+});
+        // Validación para la contraseña
+document.getElementById("inputPassword").addEventListener("input", function () {
+    const passwordInput = this;
+
+    if (passwordInput.value.trim() === "") {
+        passwordInput.setCustomValidity("La contraseña no puede estar vacía."); // Mensaje personalizado
+        passwordInput.style.borderColor = "red"; // Cambiar borde a rojo
+    } else {
+        passwordInput.setCustomValidity(""); // Formato válido
+        passwordInput.style.borderColor = ""; // Reiniciar el borde
+    }
+});
+
+
+</script>
 </body>
 
 </html>

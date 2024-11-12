@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Crear categoría')
+@section('title','Crear Categoría')
 
 @push('css')
 <style>
@@ -25,25 +25,28 @@
             <div class="card-body">
                 <div class="row g-4">
 
+                    <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" maxlength="30" oninput="validarNombre(this)">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" maxlength="30" oninput="validarCampos()">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
-                        <small id="nombreError" class="text-danger d-none">El nombre solo debe contener letras y un máximo de 30 caracteres.</small>
+                        <small id="nombreErrorVacio" class="text-danger d-none">El nombre no puede estar vacío.</small>
+                        <small id="nombreErrorFormato" class="text-danger d-none">El nombre solo debe contener letras y un máximo de 30 caracteres.</small>
                     </div>
 
+                    <!---Descripción---->
                     <div class="col-7">
                         <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" maxlength="80">{{old('descripcion')}}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" maxlength="80" oninput="validarDescripcion(this)">{{old('descripcion')}}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                         <small id="descripcionError" class="text-danger d-none">La descripción debe contener un máximo de 80 caracteres.</small>
                     </div>
-                </div>
 
+                </div>
             </div>
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Guardar</button>
@@ -55,36 +58,51 @@
 
 @push('js')
 <script>
-    function validarNombre(input) {
-        const errorMessage = document.getElementById('nombreError');
+    function validarCampos() {
+        const nombreInput = document.getElementById("nombre");
+        const nombreErrorVacio = document.getElementById("nombreErrorVacio");
+        const nombreErrorFormato = document.getElementById("nombreErrorFormato");
+        const submitButton = document.getElementById("submitBtn");
+
+        // Expresión regular para solo letras y espacios
+        const regexNombre = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+
+        let valid = true;
+
+        // Validación del campo "Nombre"
+        if (nombreInput.value.trim() === '') {
+            nombreErrorVacio.classList.remove("d-none");
+            nombreErrorFormato.classList.add("d-none");
+            valid = false;
+        } else if (!regexNombre.test(nombreInput.value) || nombreInput.value.length > 30) {
+            nombreErrorVacio.classList.add("d-none");
+            nombreErrorFormato.classList.remove("d-none");
+            valid = false;
+        } else {
+            nombreErrorVacio.classList.add("d-none");
+            nombreErrorFormato.classList.add("d-none");
+        }
+
+        // Habilitar o deshabilitar el botón de envío
+        submitButton.disabled = !valid;
+    }
+
+    function validarDescripcion(textarea) {
+        const errorMessage = document.getElementById('descripcionError');
         const submitButton = document.getElementById('submitBtn');
 
-        // Expresión regular para permitir solo letras (incluyendo letras acentuadas)
-        const regex = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
-
-        if (input.value.length <= 30 && regex.test(input.value)) {
+        if (textarea.value.length <= 80) {
             errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
-            submitButton.disabled = false; // Habilitar el botón de guardar
         } else {
             errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error
-            submitButton.disabled = true; // Deshabilitar el botón de guardar
+            submitButton.disabled = true; // Deshabilitar el botón de guardar si la descripción es demasiado larga
         }
     }
 
-    // Validar la longitud de la descripción (hasta 80 caracteres)
-    document.getElementById('descripcion').addEventListener('input', function() {
-        const descripcionError = document.getElementById('descripcionError');
-        const submitButton = document.getElementById('submitBtn');
-
-        if (this.value.length <= 80) {
-            descripcionError.classList.add('d-none'); // Ocultar el mensaje de error
-            if (document.getElementById('nombre').value.length <= 30 && /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/.test(document.getElementById('nombre').value)) {
-                submitButton.disabled = false; // Habilitar el botón de guardar
-            }
-        } else {
-            descripcionError.classList.remove('d-none'); // Mostrar el mensaje de error
-            submitButton.disabled = true; // Deshabilitar el botón de guardar
-        }
-    });
+    // Validación inicial al cargar la página
+    window.onload = function() {
+        validarCampos();
+        validarDescripcion(document.getElementById('descripcion'));
+    }
 </script>
 @endpush
