@@ -48,9 +48,9 @@
                     <div class="col-12" id="box-razon-social">
                         <label id="label-fisica" for="razon_social" class="form-label"><strong>Nombres y apellidos:</strong></label>
                         <label id="label-moral" for="razon_social" class="form-label"><strong>Nombre de la empresa:</strong></label>
-                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" oninput="validarCampos()">
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" maxlength="60" oninput="validarCampos()">
                         <small class="error-message" id="razonSocialErrorVacio">El campo no puede estar vacío.</small>
-                        <small class="error-message" id="razonSocialErrorFormato">Este campo solo debe contener letras.</small>
+                        <small class="error-message" id="razonSocialErrorFormato">Este campo solo debe contener letras y un maximo de 60 caracteres.</small>
                         @error('razon_social')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -59,7 +59,7 @@
                     <!-- Dirección -->
                     <div class="col-12">
                         <label for="direccion" class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}" oninput="validarCampos()">
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}" maxlength="80" oninput="validarCampos()">
                         <small class="error-message" id="direccionError">La dirección no puede estar vacía.</small>
                         @error('direccion')
                         <small class="text-danger">{{'*'.$message}}</small>

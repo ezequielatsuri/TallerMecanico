@@ -39,11 +39,11 @@
                     <!---Descripción---->
                     <div class="col-7">
                         <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" maxlength="255" oninput="validarDescripcion(this)">{{ old('descripcion') }}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" maxlength="200" oninput="validarDescripcion(this)">{{ old('descripcion') }}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
-                        <small id="descripcionError" class="text-danger d-none">La descripción no debe exceder los 255 caracteres.</small>
+                        <small id="descripcionError" class="text-danger d-none">La descripción no debe exceder los 200 caracteres.</small>
                     </div>
 
                 </div>
@@ -91,7 +91,7 @@
         const errorMessage = document.getElementById('descripcionError');
         const submitButton = document.getElementById('submitBtn');
 
-        if (textarea.value.length <= 255) {
+        if (textarea.value.length <= 200) {
             errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
         } else {
             errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error

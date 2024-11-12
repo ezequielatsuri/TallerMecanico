@@ -29,7 +29,7 @@
                     <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre', $categoria->caracteristica->nombre)}}"  oninput="validarCampos()">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre', $categoria->caracteristica->nombre)}}"  maxlength="30" oninput="validarCampos()">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
