@@ -3,7 +3,13 @@
 @section('title','Editar proveedor')
 
 @push('css')
-
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.875rem;
+        display: none;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -16,17 +22,17 @@
     </ol>
 
     <div class="card text-bg-light">
-        <form action="{{ route('proveedores.update',['proveedore'=>$proveedore]) }}" method="post">
+        <form action="{{ route('proveedores.update',['proveedore'=>$proveedore]) }}" method="post" id="editProviderForm">
             @method('PATCH')
             @csrf
             <div class="card-header">
-                <p>Tipo de proveedor: <span class="fw-bold">{{ strtoupper($proveedore->persona->tipo_persona)}}</span></p>
+                <p>Tipo de proveedor: <span class="fw-bold">{{ strtoupper($proveedore->persona->tipo_persona) }}</span></p>
             </div>
             <div class="card-body">
 
                 <div class="row g-3">
 
-                    <!-------Razón social------->
+                    <!-- Razón social o Nombres y apellidos -->
                     <div class="col-12">
                         @if ($proveedore->persona->tipo_persona == 'natural')
                         <label id="label-natural" for="razon_social" class="form-label">Nombres y apellidos:</label>
@@ -34,50 +40,53 @@
                         <label id="label-juridica" for="razon_social" class="form-label">Nombre de la empresa:</label>
                         @endif
 
-                        <input required type="text" name="razon_social" id="razon_social" class="form-control" value="{{old('razon_social',$proveedore->persona->razon_social)}}">
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $proveedore->persona->razon_social) }}" oninput="validarCampos()">
+                        <small id="razonSocialErrorVacio" class="error-message">Este campo no puede estar vacío.</small>
+                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras.</small>
                         @error('razon_social')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
 
-                    <!------Dirección---->
+                    <!-- Dirección -->
                     <div class="col-12">
                         <label for="direccion" class="form-label">Dirección:</label>
-                        <input required type="text" name="direccion" id="direccion" class="form-control" value="{{old('direccion',$proveedore->persona->direccion)}}">
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $proveedore->persona->direccion) }}" oninput="validarCampos()">
+                        <small id="direccionError" class="error-message">La dirección no puede estar vacía.</small>
                         @error('direccion')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
 
-                    <!--------------Documento-------> 
+                    <!-- Tipo de documento -->
                     <div class="col-md-6">
                         <label for="documento_id" class="form-label">Tipo de documento:</label>
-                        <select class="form-select" name="documento_id" id="documento_id">
+                        <select class="form-select" name="documento_id" id="documento_id" onchange="validarCampos()">
+                            <option value="" selected disabled>Seleccione una opción</option>
                             @foreach ($documentos as $item)
-                            @if ($proveedore->persona->documento_id == $item->id)
-                            <option selected value="{{$item->id}}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>{{$item->tipo_documento}}</option>
-                            @else
-                            <option value="{{$item->id}}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>{{$item->tipo_documento}}</option>
-                            @endif
+                            <option value="{{ $item->id }}" {{ (old('documento_id', $proveedore->persona->documento_id) == $item->id) ? 'selected' : '' }}>{{ $item->tipo_documento }}</option>
                             @endforeach
                         </select>
+                        <small id="documentoError" class="error-message">Debe seleccionar un tipo de documento.</small>
                         @error('documento_id')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
 
+                    <!-- Número de documento -->
                     <div class="col-md-6">
                         <label for="numero_documento" class="form-label">Número de documento:</label>
-                        <input required type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{old('numero_documento',$proveedore->persona->numero_documento)}}">
+                        <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{ old('numero_documento', $proveedore->persona->numero_documento) }}" oninput="validarCampos()">
+                        <small id="numeroDocumentoError" class="error-message">El número de documento no puede estar vacío.</small>
                         @error('numero_documento')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
                 </div>
 
             </div>
             <div class="card-footer text-center">
-                <button type="submit" id="submit-button" class="btn btn-primary">Guardar</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Guardar</button>
             </div>
         </form>
     </div>
@@ -86,72 +95,56 @@
 
 @push('js')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const razonSocialInput = document.getElementById("razon_social");
-        const direccionInput = document.getElementById("direccion");
-        const numeroDocumentoInput = document.getElementById("numero_documento");
-        const submitButton = document.getElementById("submit-button");
-        
-        const razonSocialError = document.createElement("small");
-        const direccionError = document.createElement("small");
-        const numeroDocumentoError = document.createElement("small");
+    function validarCampos() {
+        const tipoPersona = "{{ $proveedore->persona->tipo_persona }}";
+        const direccion = document.getElementById("direccion").value.trim();
+        const documentoId = document.getElementById("documento_id").value;
+        const numeroDocumento = document.getElementById("numero_documento").value.trim();
 
-        razonSocialError.classList.add("text-danger");
-        direccionError.classList.add("text-danger");
-        numeroDocumentoError.classList.add("text-danger");
+        const razonSocial = document.getElementById("razon_social");
+        const razonSocialErrorVacio = document.getElementById("razonSocialErrorVacio");
+        const razonSocialErrorFormato = document.getElementById("razonSocialErrorFormato");
+        const direccionError = document.getElementById("direccionError");
+        const documentoError = document.getElementById("documentoError");
+        const numeroDocumentoError = document.getElementById("numeroDocumentoError");
+        const submitButton = document.getElementById("submitBtn");
 
-        // Función para verificar si hay errores
-        function checkErrors() {
-            const hasErrors = razonSocialInput.classList.contains("is-invalid") || 
-                              direccionInput.classList.contains("is-invalid") ||
-                              numeroDocumentoInput.classList.contains("is-invalid");
-            submitButton.disabled = hasErrors;
+        const regexLetras = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+        let valid = true;
+
+        // Validación de "razón social" o "nombres y apellidos"
+        if (razonSocial.value.trim() === "") {
+            razonSocialErrorVacio.style.display = "block";
+            razonSocialErrorFormato.style.display = "none";
+            valid = false;
+        } else if (!regexLetras.test(razonSocial.value)) {
+            razonSocialErrorVacio.style.display = "none";
+            razonSocialErrorFormato.style.display = "block";
+            valid = false;
+        } else {
+            razonSocialErrorVacio.style.display = "none";
+            razonSocialErrorFormato.style.display = "none";
         }
 
-        // Validar campo de razón social
-        razonSocialInput.addEventListener("input", function() {
-            const regex = /^[A-Za-z\s]+$/; // Solo letras y espacios
-            if (!regex.test(razonSocialInput.value) || razonSocialInput.value.length > 60) {
-                razonSocialError.textContent = "La razón social solo debe contener letras y un máximo de 60 caracteres.";
-                razonSocialInput.classList.add("is-invalid");
-                razonSocialInput.parentNode.appendChild(razonSocialError);
-            } else {
-                razonSocialInput.classList.remove("is-invalid");
-                razonSocialError.textContent = "";
-            }
-            checkErrors(); // Verifica errores al validar
-        });
+        // Validación de dirección
+        direccionError.style.display = direccion === "" ? "block" : "none";
+        valid = valid && direccion !== "";
 
-        // Validar campo de dirección
-        direccionInput.addEventListener("input", function() {
-            const regex = /^[A-Za-z0-9\s#,.]+$/; // Permitir letras, números, espacios y algunos símbolos
-            if (!regex.test(direccionInput.value) || direccionInput.value.length > 80) {
-                direccionError.textContent = "La dirección solo debe contener letras, números, espacios y caracteres especiales (#,.).";
-                direccionInput.classList.add("is-invalid");
-                direccionInput.parentNode.appendChild(direccionError);
-            } else {
-                direccionInput.classList.remove("is-invalid");
-                direccionError.textContent = "";
-            }
-            checkErrors(); // Verifica errores al validar
-        });
+        // Validación de tipo de documento
+        documentoError.style.display = documentoId === "" ? "block" : "none";
+        valid = valid && documentoId !== "";
 
-        // Validar campo de número de documento
-        numeroDocumentoInput.addEventListener("input", function() {
-            const regex = /^[0-9A-Za-z-]+$/; // Permitir letras, números y guiones
-            if (!regex.test(numeroDocumentoInput.value)) {
-                numeroDocumentoError.textContent = "El número de documento solo debe contener letras, números y guiones.";
-                numeroDocumentoInput.classList.add("is-invalid");
-                numeroDocumentoInput.parentNode.appendChild(numeroDocumentoError);
-            } else {
-                numeroDocumentoInput.classList.remove("is-invalid");
-                numeroDocumentoError.textContent = "";
-            }
-            checkErrors(); // Verifica errores al validar
-        });
+        // Validación de número de documento
+        numeroDocumentoError.style.display = numeroDocumento === "" ? "block" : "none";
+        valid = valid && numeroDocumento !== "";
 
-        // Inicializar el estado del botón al cargar la página
-        checkErrors();
-    });
+        // Habilitar o deshabilitar el botón de envío
+        submitButton.disabled = !valid;
+    }
+
+    // Ejecutar la validación inicial cuando se carga la página
+    window.onload = function() {
+        validarCampos();
+    }
 </script>
 @endpush

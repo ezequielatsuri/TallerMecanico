@@ -3,6 +3,13 @@
 @section('title','Editar cliente')
 
 @push('css')
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.875rem;
+        display: none;
+    }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 @endpush
 
@@ -16,70 +23,68 @@
     </ol>
 
     <div class="card text-bg-light">
-        <form action="{{ route('clientes.update',['cliente'=>$cliente]) }}" method="post">
+        <form action="{{ route('clientes.update',['cliente'=>$cliente]) }}" method="post" id="editClientForm">
             @method('PATCH')
             @csrf
             <div class="card-header">
-                <p>Tipo de cliente: <span class="fw-bold">{{ strtoupper($cliente->persona->tipo_persona)}}</span></p>
+                <p>Tipo de cliente: <span class="fw-bold">{{ strtoupper($cliente->persona->tipo_persona) }}</span></p>
             </div>
             <div class="card-body">
-
                 <div class="row g-3">
-
-                    <!-------Razón social o Nombre de empresa ------->
+                    
+                    <!-- Nombre o Razón social -->
                     <div class="col-12">
                         @if ($cliente->persona->tipo_persona == 'fisica')
-                        <label id="label-fisica" for="razon_social" class="form-label">Nombres y apellidos:</label>
+                        <label for="razon_social" class="form-label">Nombres y apellidos:</label>
                         @else
-                        <label id="label-moral" for="razon_social" class="form-label">Nombre de la empresa:</label>
+                        <label for="razon_social" class="form-label">Nombre de la empresa:</label>
                         @endif
-
-                        <input required type="text" name="razon_social" id="razon_social" class="form-control" value="{{old('razon_social',$cliente->persona->razon_social)}}">
-
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $cliente->persona->razon_social) }}" oninput="validarCampos()">
+                        <small id="razonSocialErrorVacio" class="error-message">Este campo no puede estar vacío.</small>
+                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras.</small>
                         @error('razon_social')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
 
-                    <!------Dirección---->
+                    <!-- Dirección -->
                     <div class="col-12">
                         <label for="direccion" class="form-label">Dirección:</label>
-                        <input required type="text" name="direccion" id="direccion" class="form-control" value="{{old('direccion',$cliente->persona->direccion)}}">
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $cliente->persona->direccion) }}" oninput="validarCampos()">
+                        <small id="direccionError" class="error-message">La dirección no puede estar vacía.</small>
                         @error('direccion')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
 
-                    <!--------------Documento------->
+                    <!-- Tipo de documento -->
                     <div class="col-md-6">
                         <label for="documento_id" class="form-label">Tipo de documento:</label>
-                        <select class="form-select" name="documento_id" id="documento_id">
+                        <select class="form-select" name="documento_id" id="documento_id" onchange="validarCampos()">
+                            <option value="" selected disabled>Seleccione una opción</option>
                             @foreach ($documentos as $item)
-                            @if ($cliente->persona->documento_id == $item->id)
-                            <option selected value="{{$item->id}}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>{{$item->tipo_documento}}</option>
-                            @else
-                            <option value="{{$item->id}}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>{{$item->tipo_documento}}</option>
-                            @endif
+                            <option value="{{ $item->id }}" {{ (old('documento_id', $cliente->persona->documento_id) == $item->id) ? 'selected' : '' }}>{{ $item->tipo_documento }}</option>
                             @endforeach
                         </select>
+                        <small id="documentoError" class="error-message">Debe seleccionar un tipo de documento.</small>
                         @error('documento_id')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
 
+                    <!-- Número de documento -->
                     <div class="col-md-6">
-                        <label for="numero_documento" class="form-label">Numero de documento:</label>
-                        <input required type="text" name="numero_documento" id="numero_documento" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required value="{{old('numero_documento',$cliente->persona->numero_documento)}}">
+                        <label for="numero_documento" class="form-label">Número de documento:</label>
+                        <input type="text" name="numero_documento" id="numero_documento" class="form-control" value="{{ old('numero_documento', $cliente->persona->numero_documento) }}" oninput="validarCampos()">
+                        <small id="numeroDocumentoError" class="error-message">El número de documento no puede estar vacío.</small>
                         @error('numero_documento')
-                        <small class="text-danger">{{'*'.$message}}</small>
+                        <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
                     </div>
-
                 </div>
-
             </div>
             <div class="card-footer text-center">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Guardar</button>
             </div>
         </form>
     </div>
@@ -88,75 +93,56 @@
 
 @push('js')
 <script>
-    $(document).ready(function() {
-        console.log("jQuery está funcionando correctamente.");
-        
-        // Mostrar/Ocultar los labels según el tipo de cliente seleccionado
-        $('#tipo_persona').on('change', function() {
-            let selectValue = $(this).val();
-            if (selectValue == 'fisica') {
-                $('#label-moral').hide();
-                $('#label-fisica').show();
-            } else {
-                $('#label-fisica').hide();
-                $('#label-moral').show();
-            }
-        }).trigger('change'); // Ejecutar al cargar la página para mostrar el label adecuado
+    function validarCampos() {
+        const tipoPersona = "{{ $cliente->persona->tipo_persona }}";
+        const direccion = document.getElementById("direccion").value.trim();
+        const documentoId = document.getElementById("documento_id").value;
+        const numeroDocumento = document.getElementById("numero_documento").value.trim();
 
-        // Validación de Razón Social / Nombres en tiempo real
-        $('#razon_social').on('input', function() {
-            let value = $(this).val();
-            let isValid = /^[a-zA-Z\s]+$/.test(value); // Solo letras y espacios
+        const razonSocial = document.getElementById("razon_social");
+        const razonSocialErrorVacio = document.getElementById("razonSocialErrorVacio");
+        const razonSocialErrorFormato = document.getElementById("razonSocialErrorFormato");
+        const direccionError = document.getElementById("direccionError");
+        const documentoError = document.getElementById("documentoError");
+        const numeroDocumentoError = document.getElementById("numeroDocumentoError");
+        const submitButton = document.getElementById("submitBtn");
 
-            if (!isValid) {
-                $(this).addClass('is-invalid');
-                $('#razon_social-error').remove();
-                $(this).after('<small id="razon_social-error" class="text-danger">Solo se permiten letras y espacios.</small>');
-            } else {
-                $(this).removeClass('is-invalid');
-                $('#razon_social-error').remove();
-            }
-        });
+        const regexLetras = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+        let valid = true;
 
-        // Validación de Dirección en tiempo real
-        $('#direccion').on('input', function() {
-            if ($(this).val().length < 10) {
-                $(this).addClass('is-invalid');
-                $('#direccion-error').remove();
-                $(this).after('<small id="direccion-error" class="text-danger">La dirección debe tener al menos 10 caracteres.</small>');
-            } else {
-                $(this).removeClass('is-invalid');
-                $('#direccion-error').remove();
-            }
-        });
+        // Validación de "razón social" o "nombres y apellidos"
+        if (razonSocial.value.trim() === "") {
+            razonSocialErrorVacio.style.display = "block";
+            razonSocialErrorFormato.style.display = "none";
+            valid = false;
+        } else if (!regexLetras.test(razonSocial.value)) {
+            razonSocialErrorVacio.style.display = "none";
+            razonSocialErrorFormato.style.display = "block";
+            valid = false;
+        } else {
+            razonSocialErrorVacio.style.display = "none";
+            razonSocialErrorFormato.style.display = "none";
+        }
 
-        // Validación del Número de Documento en tiempo real (solo números)
-        $('#numero_documento').on('input', function() {
-            let value = $(this).val();
-            if (!/^\d+$/.test(value)) {
-                $(this).addClass('is-invalid');
-                $('#numero_documento-error').remove();
-                $(this).after('<small id="numero_documento-error" class="text-danger">Solo se permiten números.</small>');
-            } else {
-                $(this).removeClass('is-invalid');
-                $('#numero_documento-error').remove();
-            }
-        });
+        // Validación de dirección
+        direccionError.style.display = direccion === "" ? "block" : "none";
+        valid = valid && direccion !== "";
 
-        // Validación al cambiar Tipo de Documento
-        $('#documento_id').on('change', function() {
-            if ($(this).val() === "") {
-                $(this).addClass('is-invalid');
-                $('#documento_id-error').remove();
-                $(this).after('<small id="documento_id-error" class="text-danger">Debe seleccionar un tipo de documento.</small>');
-            } else {
-                $(this).removeClass('is-invalid');
-                $('#documento_id-error').remove();
-            }
-        });
+        // Validación de tipo de documento
+        documentoError.style.display = documentoId === "" ? "block" : "none";
+        valid = valid && documentoId !== "";
 
-       
-    });
+        // Validación de número de documento
+        numeroDocumentoError.style.display = numeroDocumento === "" ? "block" : "none";
+        valid = valid && numeroDocumento !== "";
+
+        // Habilitar o deshabilitar el botón de envío
+        submitButton.disabled = !valid;
+    }
+
+    // Ejecutar la validación inicial cuando se carga la página
+    window.onload = function() {
+        validarCampos();
+    }
 </script>
 @endpush
-

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Editar categoría')
+@section('title','Editar Categoría')
 
 @push('css')
 <style>
@@ -20,76 +20,91 @@
     </ol>
 
     <div class="card text-bg-light">
-        <form action="{{ route('categorias.update',['categoria'=>$categoria]) }}" method="post">
+        <form action="{{ route('categorias.update',['categoria'=>$categoria]) }}" method="post" id="categoriaForm">
             @method('PATCH')
             @csrf
             <div class="card-body">
                 <div class="row g-4">
 
+                    <!---Nombre---->
                     <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" oninput="this.value = this.value.toUpperCase();" pattern="[A-Za-z\s]+" required value="{{old('nombre',$categoria->caracteristica->nombre)}}">
+                        <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre', $categoria->caracteristica->nombre)}}"  oninput="validarCampos()">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
+                        <small id="nombreErrorVacio" class="text-danger d-none">El nombre no puede estar vacío.</small>
+                        <small id="nombreErrorFormato" class="text-danger d-none">El nombre solo debe contener letras y un máximo de 30 caracteres.</small>
                     </div>
 
-                    <div class="col-12">
-                        <label for="descripcion" class="form-label">Descripción:</label>
-                        <textarea name="descripcion" id="descripcion" rows="3" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '');" required class="form-control">{{old('descripcion',$categoria->caracteristica->descripcion)}}</textarea>
+                    <!---Descripción---->
+                    <div class="col-7">
+                        <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" maxlength="80" oninput="validarDescripcion(this)">{{old('descripcion', $categoria->caracteristica->descripcion)}}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
+                        <small id="descripcionError" class="text-danger d-none">La descripción debe contener un máximo de 80 caracteres.</small>
                     </div>
 
                 </div>
-
             </div>
             <div class="card-footer text-center">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Actualizar</button>
                 <button type="reset" class="btn btn-secondary">Reiniciar</button>
             </div>
         </form>
     </div>
-
 </div>
 @endsection
 
 @push('js')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    function validarCampos() {
         const nombreInput = document.getElementById("nombre");
-        const descripcionInput = document.getElementById("descripcion");
-        const nombreError = document.createElement("small");
-        const descripcionError = document.createElement("small");
-        nombreError.classList.add("text-danger");
-        descripcionError.classList.add("text-danger");
+        const nombreErrorVacio = document.getElementById("nombreErrorVacio");
+        const nombreErrorFormato = document.getElementById("nombreErrorFormato");
+        const submitButton = document.getElementById("submitBtn");
 
-        // Validar campo de nombre
-        nombreInput.addEventListener("input", function() {
-            const regex = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
-            if (!regex.test(nombreInput.value) || nombreInput.value.length > 30) {
-                nombreError.textContent = "El nombre solo debe contener letras y un máximo de 30 caracteres.";
-                nombreInput.classList.add("is-invalid");
-                nombreInput.parentNode.appendChild(nombreError);
-            } else {
-                nombreInput.classList.remove("is-invalid");
-                nombreError.textContent = "";
-            }
-        });
+        // Expresión regular para solo letras y espacios
+        const regexNombre = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
 
-        // Validar campo de descripción
-        descripcionInput.addEventListener("input", function() {
-            if (descripcionInput.value.length > 80) {
-                descripcionError.textContent = "La descripción no debe exceder los 80 caracteres.";
-                descripcionInput.classList.add("is-invalid");
-                descripcionInput.parentNode.appendChild(descripcionError);
-            } else {
-                descripcionInput.classList.remove("is-invalid");
-                descripcionError.textContent = "";
-            }
-        });
-    });
+        let valid = true;
+
+        // Validación del campo "Nombre"
+        if (nombreInput.value.trim() === '') {
+            nombreErrorVacio.classList.remove("d-none");
+            nombreErrorFormato.classList.add("d-none");
+            valid = false;
+        } else if (!regexNombre.test(nombreInput.value) || nombreInput.value.length > 30) {
+            nombreErrorVacio.classList.add("d-none");
+            nombreErrorFormato.classList.remove("d-none");
+            valid = false;
+        } else {
+            nombreErrorVacio.classList.add("d-none");
+            nombreErrorFormato.classList.add("d-none");
+        }
+
+        // Habilitar o deshabilitar el botón de envío
+        submitButton.disabled = !valid;
+    }
+
+    function validarDescripcion(textarea) {
+        const errorMessage = document.getElementById('descripcionError');
+        const submitButton = document.getElementById('submitBtn');
+
+        if (textarea.value.length <= 80) {
+            errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
+        } else {
+            errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error
+            submitButton.disabled = true; // Deshabilitar el botón de guardar si la descripción es demasiado larga
+        }
+    }
+
+    // Validación inicial al cargar la página
+    window.onload = function() {
+        validarCampos();
+        validarDescripcion(document.getElementById('descripcion'));
+    }
 </script>
-
 @endpush
