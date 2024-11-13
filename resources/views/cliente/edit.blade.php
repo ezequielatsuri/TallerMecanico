@@ -39,9 +39,9 @@
                         @else
                         <label for="razon_social" class="form-label">Nombre de la empresa:</label>
                         @endif
-                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $cliente->persona->razon_social) }}" oninput="validarCampos()">
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $cliente->persona->razon_social) }}" maxlength="60" oninput="validarCampos()">
                         <small id="razonSocialErrorVacio" class="error-message">Este campo no puede estar vacío.</small>
-                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras.</small>
+                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras y un maximo de 60 caracteres.</small>
                         @error('razon_social')
                         <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror

@@ -31,33 +31,33 @@
                     <!----Codigo---->
                     <div class="col-md-6">
                         <label for="codigo" class="form-label"><strong>Código:</strong></label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCampos()" maxlength="18">
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" maxlength="20" oninput="validarCampos()">
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                         <small id="codigoError" class="text-danger d-none">El código no puede estar vacio y debe ser único.</small>
-                        <small id="codigoNumero" class="text-danger d-none">El código debe ser solamente de números.</small>
+                        <small id="codigoNumero" class="text-danger d-none">El código debe ser solamente de números y maximo 20 numeros.</small>
                     </div>
 
                     <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" oninput="validarCampos()"  maxlength="50" >
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" maxlength="60" oninput="validarCampos()">
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
                         <small id="nombreError" class="text-danger d-none">El nombre no puede estar vacio y debe ser único.</small>
-                        <small id="nombreNumError" class="text-danger d-none">El nombre no debe contener números.</small>
+                        <small id="nombreNumError" class="text-danger d-none">El nombre solo debe contener letras y un maximo de 60 caracteres.</small>
                     </div>
 
                     <!---Descripción---->
                     <div class="col-12">
                         <label for="descripcion" class="form-label"><strong>Descripción:</strong></label>
-                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" oninput="validarDescripcion(this)" maxlength="255">{{old('descripcion')}}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control" maxlength="200" oninput="validarDescripcion(this)">{{old('descripcion')}}</textarea>
                         @error('descripcion')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
-                        <small id="descripcionError" class="text-danger d-none">La descripción no debe exceder los 255 caracteres.</small>
+                        <small id="descripcionError" class="text-danger d-none">La descripción no debe exceder los 200 caracteres.</small>
                     </div>
 
                     <!---Imagen---->
@@ -173,7 +173,7 @@
         const errorMessage = document.getElementById('descripcionError');
         const submitButton = document.getElementById('submitBtn');
 
-        if (textarea.value.length <= 255) {
+        if (textarea.value.length <= 200) {
             errorMessage.classList.add('d-none'); // Ocultar el mensaje de error
         } else {
             errorMessage.classList.remove('d-none'); // Mostrar el mensaje de error
