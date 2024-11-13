@@ -144,7 +144,7 @@
 
         const submitButton = document.getElementById("submitBtn");
 
-        const regexCodigo = /^[0-9]+$/;
+        const regexCodigo = /^[0-9,-]+$/;
         const regexNombre = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
 
         let valid = true;
