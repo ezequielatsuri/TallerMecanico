@@ -31,7 +31,7 @@
                     <!----Codigo---->
                     <div class="col-md-6">
                         <label for="codigo" class="form-label"><strong>Código:</strong></label>
-                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCampos()">
+                        <input type="text" name="codigo" id="codigo" class="form-control" value="{{old('codigo')}}" oninput="validarCampos()" maxlength="18">
                         @error('codigo')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -42,7 +42,7 @@
                     <!---Nombre---->
                     <div class="col-md-6">
                         <label for="nombre" class="form-label"><strong>Nombre:</strong></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" oninput="validarCampos()">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre')}}" oninput="validarCampos()"  maxlength="50" >
                         @error('nombre')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -132,7 +132,7 @@
         const submitButton = document.getElementById("submitBtn");
 
         // Expresiones regulares para validaciones
-        const regexCodigo = /^[0-9]+$/;
+        const regexCodigo = /^[0-9,-]+$/;
         const regexNombre = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
 
         let valid = true;
