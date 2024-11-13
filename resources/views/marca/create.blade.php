@@ -7,6 +7,15 @@
     #descripcion {
         resize: none;
     }
+
+    /* Estilos para la validación del campo de nombre */
+    .is-invalid {
+        border: 2px solid red;
+    }
+
+    .is-valid {
+        border: 2px solid green;
+    }
 </style>
 @endpush
 
@@ -73,14 +82,20 @@
         if (nombreInput.value.trim() === '') {
             nombreErrorVacio.classList.remove("d-none");
             nombreErrorFormato.classList.add("d-none");
+            nombreInput.classList.add("is-invalid");
+            nombreInput.classList.remove("is-valid");
             valid = false;
         } else if (!regexNombre.test(nombreInput.value) || nombreInput.value.length > 60) {
             nombreErrorVacio.classList.add("d-none");
             nombreErrorFormato.classList.remove("d-none");
+            nombreInput.classList.add("is-invalid");
+            nombreInput.classList.remove("is-valid");
             valid = false;
         } else {
             nombreErrorVacio.classList.add("d-none");
             nombreErrorFormato.classList.add("d-none");
+            nombreInput.classList.remove("is-invalid");
+            nombreInput.classList.add("is-valid");
         }
 
         // Habilitar o deshabilitar el botón de envío

@@ -11,6 +11,12 @@
         margin-bottom: 10px;
         display: block;
     }
+    .is-invalid {
+        border: 2px solid red;
+    }
+    .is-valid {
+        border: 2px solid green;
+    }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -49,17 +55,17 @@
                         <label for="nombre" class="form-label">Nombre:</label>
                         <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}" maxlength="20" oninput="validarCampos()">
                         <small id="nombreErrorVacio" class="text-danger d-none error-message">El nombre no puede estar vacío.</small>
-                        <small id="nombreErrorFormato" class="text-danger d-none error-message">El nombre solo debe contener letras y un maximo de 20 caracteres.</small>
+                        <small id="nombreErrorFormato" class="text-danger d-none error-message">El nombre solo debe contener letras y un máximo de 20 caracteres.</small>
 
                         <label for="apellidoP" class="form-label">Apellido Paterno:</label>
                         <input type="text" name="apellidoP" id="apellidoP" class="form-control" value="{{ old('apellidoP') }}" maxlength="20" oninput="validarCampos()">
                         <small id="apellidoPErrorVacio" class="text-danger d-none error-message">El apellido paterno no puede estar vacío.</small>
-                        <small id="apellidoPErrorFormato" class="text-danger d-none error-message">El apellido paterno solo debe contener letras y un maximo de 20 caracteres.</small>
+                        <small id="apellidoPErrorFormato" class="text-danger d-none error-message">El apellido paterno solo debe contener letras y un máximo de 20 caracteres.</small>
 
                         <label for="apellidoM" class="form-label">Apellido Materno:</label>
                         <input type="text" name="apellidoM" id="apellidoM" class="form-control" value="{{ old('apellidoM') }}" maxlength="20" oninput="validarCampos()">
                         <small id="apellidoMErrorVacio" class="text-danger d-none error-message">El apellido materno no puede estar vacío.</small>
-                        <small id="apellidoMErrorFormato" class="text-danger d-none error-message">El apellido materno solo debe contener letras y un maximo de 20 caracteres.</small>
+                        <small id="apellidoMErrorFormato" class="text-danger d-none error-message">El apellido materno solo debe contener letras y un máximo de 20 caracteres.</small>
                     </div>
 
                     <!-- Información para Persona Moral -->
@@ -67,13 +73,13 @@
                         <label for="razon_social" class="form-label">Nombre de la empresa:</label>
                         <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" maxlength="60" oninput="validarCampos()">
                         <small id="razonSocialErrorVacio" class="text-danger d-none error-message">El nombre de la empresa no puede estar vacío.</small>
-                        <small id="razonSocialErrorFormato" class="text-danger d-none error-message">El nombre de la empresa solo debe contener letras y un maximo de 60 caracteres.</small>
+                        <small id="razonSocialErrorFormato" class="text-danger d-none error-message">El nombre de la empresa solo debe contener letras y un máximo de 60 caracteres.</small>
                     </div>
 
                     <!-- Dirección -->
                     <div class="col-12">
                         <label for="direccion" class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}"maxlength="80" oninput="validarCampos()">
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}" maxlength="80" oninput="validarCampos()">
                         <small id="direccionError" class="text-danger d-none error-message">La dirección no puede estar vacía.</small>
                     </div>
 
@@ -155,9 +161,9 @@
 
     function validarCampos() {
         const tipoPersona = document.getElementById("tipo_persona").value;
-        const direccion = document.getElementById("direccion").value.trim();
-        const documentoId = document.getElementById("documento_id").value;
-        const numeroDocumento = document.getElementById("numero_documento").value.trim();
+        const direccion = document.getElementById("direccion");
+        const documentoId = document.getElementById("documento_id");
+        const numeroDocumento = document.getElementById("numero_documento");
 
         const nombre = document.getElementById("nombre");
         const apellidoP = document.getElementById("apellidoP");
@@ -181,33 +187,34 @@
         let valid = true;
 
         if (tipoPersona === "fisica") {
-            nombreErrorVacio.classList.toggle("d-none", nombre.value.trim() !== "");
-            nombreErrorFormato.classList.toggle("d-none", regexLetras.test(nombre.value) || nombre.value.trim() === "");
-
-            apellidoPErrorVacio.classList.toggle("d-none", apellidoP.value.trim() !== "");
-            apellidoPErrorFormato.classList.toggle("d-none", regexLetras.test(apellidoP.value) || apellidoP.value.trim() === "");
-
-            apellidoMErrorVacio.classList.toggle("d-none", apellidoM.value.trim() !== "");
-            apellidoMErrorFormato.classList.toggle("d-none", regexLetras.test(apellidoM.value) || apellidoM.value.trim() === "");
-
-            valid = valid && nombre.value.trim() !== "" && regexLetras.test(nombre.value);
-            valid = valid && apellidoP.value.trim() !== "" && regexLetras.test(apellidoP.value);
-            valid = valid && apellidoM.value.trim() !== "" && regexLetras.test(apellidoM.value);
-
+            applyValidation(nombre, nombreErrorVacio, nombreErrorFormato, nombre.value.trim() !== "", regexLetras.test(nombre.value));
+            applyValidation(apellidoP, apellidoPErrorVacio, apellidoPErrorFormato, apellidoP.value.trim() !== "", regexLetras.test(apellidoP.value));
+            applyValidation(apellidoM, apellidoMErrorVacio, apellidoMErrorFormato, apellidoM.value.trim() !== "", regexLetras.test(apellidoM.value));
+            valid = valid && nombre.classList.contains("is-valid") && apellidoP.classList.contains("is-valid") && apellidoM.classList.contains("is-valid");
         } else if (tipoPersona === "moral") {
-            razonSocialErrorVacio.classList.toggle("d-none", razonSocial.value.trim() !== "");
-            razonSocialErrorFormato.classList.toggle("d-none", regexLetras.test(razonSocial.value) || razonSocial.value.trim() === "");
-
-            valid = valid && razonSocial.value.trim() !== "" && regexLetras.test(razonSocial.value);
+            applyValidation(razonSocial, razonSocialErrorVacio, razonSocialErrorFormato, razonSocial.value.trim() !== "", regexLetras.test(razonSocial.value));
+            valid = valid && razonSocial.classList.contains("is-valid");
         }
 
-        direccionError.classList.toggle("d-none", direccion !== "");
-        documentoError.classList.toggle("d-none", documentoId !== "");
-        numeroDocumentoError.classList.toggle("d-none", numeroDocumento !== "");
+        applyValidation(direccion, direccionError, null, direccion.value.trim() !== "");
+        applyValidation(documentoId, documentoError, null, documentoId.value !== "");
+        applyValidation(numeroDocumento, numeroDocumentoError, null, numeroDocumento.value.trim() !== "");
 
-        valid = valid && direccion !== "" && documentoId !== "" && numeroDocumento !== "";
-
+        valid = valid && direccion.classList.contains("is-valid") && documentoId.classList.contains("is-valid") && numeroDocumento.classList.contains("is-valid");
         submitButton.disabled = !valid;
+    }
+
+    function applyValidation(element, emptyErrorElement, formatErrorElement, isNotEmpty, isValidFormat = true) {
+        emptyErrorElement.classList.toggle("d-none", isNotEmpty);
+        if (formatErrorElement) formatErrorElement.classList.toggle("d-none", isValidFormat || !isNotEmpty);
+        
+        if (isNotEmpty && isValidFormat) {
+            element.classList.add("is-valid");
+            element.classList.remove("is-invalid");
+        } else {
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+        }
     }
 
     window.onload = function() {

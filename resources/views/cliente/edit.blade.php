@@ -9,6 +9,12 @@
         font-size: 0.875rem;
         display: none;
     }
+    .is-invalid {
+        border: 2px solid red;
+    }
+    .is-valid {
+        border: 2px solid green;
+    }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 @endpush
@@ -41,7 +47,7 @@
                         @endif
                         <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $cliente->persona->razon_social) }}" maxlength="60" oninput="validarCampos()">
                         <small id="razonSocialErrorVacio" class="error-message">Este campo no puede estar vacío.</small>
-                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras y un maximo de 60 caracteres.</small>
+                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras y un máximo de 60 caracteres.</small>
                         @error('razon_social')
                         <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
@@ -95,9 +101,9 @@
 <script>
     function validarCampos() {
         const tipoPersona = "{{ $cliente->persona->tipo_persona }}";
-        const direccion = document.getElementById("direccion").value.trim();
-        const documentoId = document.getElementById("documento_id").value;
-        const numeroDocumento = document.getElementById("numero_documento").value.trim();
+        const direccion = document.getElementById("direccion");
+        const documentoId = document.getElementById("documento_id");
+        const numeroDocumento = document.getElementById("numero_documento");
 
         const razonSocial = document.getElementById("razon_social");
         const razonSocialErrorVacio = document.getElementById("razonSocialErrorVacio");
@@ -111,33 +117,36 @@
         let valid = true;
 
         // Validación de "razón social" o "nombres y apellidos"
-        if (razonSocial.value.trim() === "") {
-            razonSocialErrorVacio.style.display = "block";
-            razonSocialErrorFormato.style.display = "none";
-            valid = false;
-        } else if (!regexLetras.test(razonSocial.value)) {
-            razonSocialErrorVacio.style.display = "none";
-            razonSocialErrorFormato.style.display = "block";
-            valid = false;
-        } else {
-            razonSocialErrorVacio.style.display = "none";
-            razonSocialErrorFormato.style.display = "none";
-        }
+        applyValidation(razonSocial, razonSocialErrorVacio, razonSocialErrorFormato, razonSocial.value.trim() !== "", regexLetras.test(razonSocial.value));
+        valid = valid && razonSocial.classList.contains("is-valid");
 
         // Validación de dirección
-        direccionError.style.display = direccion === "" ? "block" : "none";
-        valid = valid && direccion !== "";
+        applyValidation(direccion, direccionError, null, direccion.value.trim() !== "");
+        valid = valid && direccion.classList.contains("is-valid");
 
         // Validación de tipo de documento
-        documentoError.style.display = documentoId === "" ? "block" : "none";
-        valid = valid && documentoId !== "";
+        applyValidation(documentoId, documentoError, null, documentoId.value !== "");
+        valid = valid && documentoId.classList.contains("is-valid");
 
         // Validación de número de documento
-        numeroDocumentoError.style.display = numeroDocumento === "" ? "block" : "none";
-        valid = valid && numeroDocumento !== "";
+        applyValidation(numeroDocumento, numeroDocumentoError, null, numeroDocumento.value.trim() !== "");
+        valid = valid && numeroDocumento.classList.contains("is-valid");
 
         // Habilitar o deshabilitar el botón de envío
         submitButton.disabled = !valid;
+    }
+
+    function applyValidation(element, emptyErrorElement, formatErrorElement, isNotEmpty, isValidFormat = true) {
+        emptyErrorElement.style.display = isNotEmpty ? "none" : "block";
+        if (formatErrorElement) formatErrorElement.style.display = isValidFormat ? "none" : "block";
+        
+        if (isNotEmpty && isValidFormat) {
+            element.classList.add("is-valid");
+            element.classList.remove("is-invalid");
+        } else {
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+        }
     }
 
     // Ejecutar la validación inicial cuando se carga la página
