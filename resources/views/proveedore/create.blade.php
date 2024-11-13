@@ -12,6 +12,12 @@
         font-size: 0.875rem;
         display: none;
     }
+    .is-invalid {
+        border: 2px solid red;
+    }
+    .is-valid {
+        border: 2px solid green;
+    }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 @endpush
@@ -39,6 +45,7 @@
                             <option value="fisica" {{ old('tipo_persona') == 'fisica' ? 'selected' : '' }}>Persona física</option>
                             <option value="moral" {{ old('tipo_persona') == 'moral' ? 'selected' : '' }}>Persona Moral</option>
                         </select>
+                        <small class="error-message" id="tipoPersonaError">Debe seleccionar un tipo de proveedor.</small>
                         @error('tipo_persona')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -50,7 +57,7 @@
                         <label id="label-moral" for="razon_social" class="form-label"><strong>Nombre de la empresa:</strong></label>
                         <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" maxlength="60" oninput="validarCampos()">
                         <small class="error-message" id="razonSocialErrorVacio">El campo no puede estar vacío.</small>
-                        <small class="error-message" id="razonSocialErrorFormato">Este campo solo debe contener letras y un maximo de 60 caracteres.</small>
+                        <small class="error-message" id="razonSocialErrorFormato">Este campo solo debe contener letras y un máximo de 60 caracteres.</small>
                         @error('razon_social')
                         <small class="text-danger">{{'*'.$message}}</small>
                         @enderror
@@ -113,12 +120,13 @@
     }
 
     function validarCampos() {
-        const tipoPersona = document.getElementById("tipo_persona").value;
-        const direccion = document.getElementById("direccion").value.trim();
-        const documentoId = document.getElementById("documento_id").value;
-        const numeroDocumento = document.getElementById("numero_documento").value.trim();
-
+        const tipoPersona = document.getElementById("tipo_persona");
         const razonSocial = document.getElementById("razon_social");
+        const direccion = document.getElementById("direccion");
+        const documentoId = document.getElementById("documento_id");
+        const numeroDocumento = document.getElementById("numero_documento");
+
+        const tipoPersonaError = document.getElementById("tipoPersonaError");
         const razonSocialErrorVacio = document.getElementById("razonSocialErrorVacio");
         const razonSocialErrorFormato = document.getElementById("razonSocialErrorFormato");
         const direccionError = document.getElementById("direccionError");
@@ -129,31 +137,71 @@
         const regexLetras = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
         let valid = true;
 
+        // Validación de "Tipo de proveedor"
+        if (tipoPersona.value === "") {
+
+            tipoPersonaError.style.display = "block";
+            valid = false;
+        } else {
+
+            tipoPersonaError.style.display = "none";
+        }
+
         // Validación de "razón social" o "nombres y apellidos"
         if (razonSocial.value.trim() === "") {
+            razonSocial.classList.add("is-invalid");
+            razonSocial.classList.remove("is-valid");
             razonSocialErrorVacio.style.display = "block";
             razonSocialErrorFormato.style.display = "none";
             valid = false;
-        } else if (!regexLetras.test(razonSocial.value)) {
+        } else if (!regexLetras.test(razonSocial.value) || razonSocial.value.length > 60) {
+            razonSocial.classList.add("is-invalid");
+            razonSocial.classList.remove("is-valid");
             razonSocialErrorVacio.style.display = "none";
             razonSocialErrorFormato.style.display = "block";
             valid = false;
         } else {
+            razonSocial.classList.remove("is-invalid");
+            razonSocial.classList.add("is-valid");
             razonSocialErrorVacio.style.display = "none";
             razonSocialErrorFormato.style.display = "none";
         }
 
-        // Validación de dirección
-        direccionError.style.display = direccion === "" ? "block" : "none";
-        valid = valid && direccion !== "";
+        // Validación de "Dirección"
+        if (direccion.value.trim() === "") {
+            direccion.classList.add("is-invalid");
+            direccion.classList.remove("is-valid");
+            direccionError.style.display = "block";
+            valid = false;
+        } else {
+            direccion.classList.remove("is-invalid");
+            direccion.classList.add("is-valid");
+            direccionError.style.display = "none";
+        }
 
-        // Validación de tipo de documento
-        documentoError.style.display = documentoId === "" ? "block" : "none";
-        valid = valid && documentoId !== "";
+        // Validación de "Tipo de documento"
+        if (documentoId.value === "") {
+            documentoId.classList.add("is-invalid");
+            documentoId.classList.remove("is-valid");
+            documentoError.style.display = "block";
+            valid = false;
+        } else {
+            documentoId.classList.remove("is-invalid");
+            documentoId.classList.add("is-valid");
+            documentoError.style.display = "none";
+        }
 
-        // Validación de número de documento
-        numeroDocumentoError.style.display = numeroDocumento === "" ? "block" : "none";
-        valid = valid && numeroDocumento !== "";
+        // Validación de "Número de documento"
+        if (numeroDocumento.value.trim() === "") {
+            numeroDocumento.classList.add("is-invalid");
+            numeroDocumento.classList.remove("is-valid");
+            numeroDocumentoError.style.display = "block";
+            valid = false;
+        } else {
+            numeroDocumento.classList.remove("is-invalid");
+            numeroDocumento.classList.add("is-valid");
+            numeroDocumentoError.style.display = "none";
+        }
 
         // Habilitar o deshabilitar el botón de envío
         submitButton.disabled = !valid;
