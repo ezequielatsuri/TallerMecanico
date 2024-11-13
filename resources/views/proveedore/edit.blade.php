@@ -40,9 +40,9 @@
                         <label id="label-juridica" for="razon_social" class="form-label">Nombre de la empresa:</label>
                         @endif
 
-                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $proveedore->persona->razon_social) }}" oninput="validarCampos()">
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social', $proveedore->persona->razon_social) }}"maxlength="60" oninput="validarCampos()">
                         <small id="razonSocialErrorVacio" class="error-message">Este campo no puede estar vacío.</small>
-                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras.</small>
+                        <small id="razonSocialErrorFormato" class="error-message">Este campo solo debe contener letras y un maximo de 60 caracteres.</small>
                         @error('razon_social')
                         <small class="text-danger">{{ '*' . $message }}</small>
                         @enderror
@@ -51,7 +51,7 @@
                     <!-- Dirección -->
                     <div class="col-12">
                         <label for="direccion" class="form-label">Dirección:</label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $proveedore->persona->direccion) }}" oninput="validarCampos()">
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $proveedore->persona->direccion) }}" maxlength="80" oninput="validarCampos()">
                         <small id="direccionError" class="error-message">La dirección no puede estar vacía.</small>
                         @error('direccion')
                         <small class="text-danger">{{ '*' . $message }}</small>

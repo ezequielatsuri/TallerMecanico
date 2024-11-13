@@ -47,33 +47,33 @@
                     <!-- Información para Persona Física -->
                     <div class="col-12" id="fisica" style="display: none;">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}" oninput="validarCampos()">
+                        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ old('nombre') }}" maxlength="20" oninput="validarCampos()">
                         <small id="nombreErrorVacio" class="text-danger d-none error-message">El nombre no puede estar vacío.</small>
-                        <small id="nombreErrorFormato" class="text-danger d-none error-message">El nombre solo debe contener letras.</small>
+                        <small id="nombreErrorFormato" class="text-danger d-none error-message">El nombre solo debe contener letras y un maximo de 20 caracteres.</small>
 
                         <label for="apellidoP" class="form-label">Apellido Paterno:</label>
-                        <input type="text" name="apellidoP" id="apellidoP" class="form-control" value="{{ old('apellidoP') }}" oninput="validarCampos()">
+                        <input type="text" name="apellidoP" id="apellidoP" class="form-control" value="{{ old('apellidoP') }}" maxlength="20" oninput="validarCampos()">
                         <small id="apellidoPErrorVacio" class="text-danger d-none error-message">El apellido paterno no puede estar vacío.</small>
-                        <small id="apellidoPErrorFormato" class="text-danger d-none error-message">El apellido paterno solo debe contener letras.</small>
+                        <small id="apellidoPErrorFormato" class="text-danger d-none error-message">El apellido paterno solo debe contener letras y un maximo de 20 caracteres.</small>
 
                         <label for="apellidoM" class="form-label">Apellido Materno:</label>
-                        <input type="text" name="apellidoM" id="apellidoM" class="form-control" value="{{ old('apellidoM') }}" oninput="validarCampos()">
+                        <input type="text" name="apellidoM" id="apellidoM" class="form-control" value="{{ old('apellidoM') }}" maxlength="20" oninput="validarCampos()">
                         <small id="apellidoMErrorVacio" class="text-danger d-none error-message">El apellido materno no puede estar vacío.</small>
-                        <small id="apellidoMErrorFormato" class="text-danger d-none error-message">El apellido materno solo debe contener letras.</small>
+                        <small id="apellidoMErrorFormato" class="text-danger d-none error-message">El apellido materno solo debe contener letras y un maximo de 20 caracteres.</small>
                     </div>
 
                     <!-- Información para Persona Moral -->
                     <div class="col-12" id="moral" style="display: none;">
                         <label for="razon_social" class="form-label">Nombre de la empresa:</label>
-                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" oninput="validarCampos()">
+                        <input type="text" name="razon_social" id="razon_social" class="form-control" value="{{ old('razon_social') }}" maxlength="60" oninput="validarCampos()">
                         <small id="razonSocialErrorVacio" class="text-danger d-none error-message">El nombre de la empresa no puede estar vacío.</small>
-                        <small id="razonSocialErrorFormato" class="text-danger d-none error-message">El nombre de la empresa solo debe contener letras.</small>
+                        <small id="razonSocialErrorFormato" class="text-danger d-none error-message">El nombre de la empresa solo debe contener letras y un maximo de 60 caracteres.</small>
                     </div>
 
                     <!-- Dirección -->
                     <div class="col-12">
                         <label for="direccion" class="form-label"><strong>Dirección:</strong></label>
-                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}" oninput="validarCampos()">
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion') }}"maxlength="80" oninput="validarCampos()">
                         <small id="direccionError" class="text-danger d-none error-message">La dirección no puede estar vacía.</small>
                     </div>
 
