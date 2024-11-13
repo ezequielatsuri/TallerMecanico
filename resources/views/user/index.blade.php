@@ -32,7 +32,7 @@
     <div class="card">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla de usuarios
+            Lista de usuarios
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped fs-6">
@@ -109,4 +109,11 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
+            perPageSelect: [10, 25, 50, 100]  // Opciones de cantidad de registros para mostrar
+        });
+    });
+</script>
 @endpush

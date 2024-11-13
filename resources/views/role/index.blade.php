@@ -1,11 +1,30 @@
 @extends('layouts.app')
 
-@section('title','roles')
+@section('title','Roles')
 @push('css-datatable')
 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
 @endpush
 @push('css')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .action-icon {
+        color: #555;
+        font-size: .8rem; /* Ajuste del tamaño del icono */
+        margin: 0 5px;
+        cursor: pointer;
+        background: none; /* Eliminar fondo */
+        border: none; /* Eliminar bordes */
+        padding: 0; /* Eliminar relleno */
+    }
+    .action-divider {
+        display: inline-block;
+        width: 1px;
+        height: 1rem;
+        background-color: #ddd;
+        margin: 0 5px;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -30,7 +49,7 @@
     <div class="card">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla roles
+            Lista roles
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped fs-6">
@@ -43,23 +62,23 @@
                 <tbody>
                     @foreach ($roles as $item)
                     <tr>
-                        <td>
-                            {{$item->name}}
-                        </td>
+                        <td>{{$item->name}}</td>
                         
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-
+                            <div class="d-flex align-items-center">
                                 @can('editar-role')
-                                <form action="{{route('roles.edit',['role'=>$item])}}" method="get">
-                                    <button type="submit" class="btn btn-warning">Editar</button>
-                                </form>
+                                <a href="{{route('roles.edit',['role'=>$item])}}" class="action-icon" title="Editar">
+                                    <i class="fas fa-pen"></i> <!-- Ícono de edición -->
+                                </a>
                                 @endcan
-
+                                
+                                <span class="action-divider"></span>
+                                
                                 @can('eliminar-role')
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">Eliminar</button>
+                                <button type="button" class="action-icon" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                    <i class="fas fa-trash"></i> <!-- Ícono de eliminación -->
+                                </button>
                                 @endcan
-
                             </div>
                         </td>
                         
@@ -92,8 +111,6 @@
             </table>
         </div>
     </div>
-
-
 </div>
 
 @endsection
@@ -101,4 +118,11 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
+            perPageSelect: [10, 25, 50, 100]  // Opciones de cantidad de registros para mostrar
+        });
+    });
+</script>
 @endpush
