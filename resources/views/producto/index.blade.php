@@ -8,10 +8,8 @@
 
 @push('css')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endpush
-
-
-
 
 @section('content')
 
@@ -191,14 +189,19 @@
 @endsection
 
 @push('js')
+
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
+<script src="{{ asset('js/notifications.js') }}"></script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
-            perPageSelect: [10,25, 50, 100]  // Opciones de cantidad de registros para mostrar
+            perPageSelect: [10, 25, 50, 100]  // Opciones de cantidad de registros para mostrar
         });
     });
+
 </script>
 
 @endpush

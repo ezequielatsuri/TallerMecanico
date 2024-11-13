@@ -32,7 +32,7 @@
     <div class="card">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla categorías
+            Lista categorías
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table-striped fs-6">

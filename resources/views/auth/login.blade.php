@@ -109,7 +109,7 @@
                 <form action="/login" method="post">
                     @csrf
                     <div class="form-floating mb-3">
-                        <input autofocus autocomplete="off" value="invitado@gmail.com" class="form-control" name="email" id="inputEmail" type="email" placeholder="name@example.com" />
+                        <input autofocus autocomplete="off" value="admin@gmail.com" class="form-control" name="email" id="inputEmail" type="email" placeholder="name@example.com" />
                         <label for="inputEmail">Correo electrónico</label>
                     </div>
                     <div class="form-floating mb-3">

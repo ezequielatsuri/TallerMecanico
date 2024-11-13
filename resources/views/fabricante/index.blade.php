@@ -30,7 +30,7 @@
     <div class="card">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Tabla fabricantes
+            Lista fabricantes
         </div>
         <div class="card-body">
             <table id="datatablesSimple" class="table table-striped fs-6">
