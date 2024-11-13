@@ -143,7 +143,8 @@
         const categoriasError = document.getElementById("categoriasError");
 
         const submitButton = document.getElementById("submitBtn");
-
+        
+        // Expresiones regulares para validaciones
         const regexCodigo = /^[0-9,-]+$/;
         const regexNombre = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
 
