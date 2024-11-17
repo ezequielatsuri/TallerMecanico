@@ -78,38 +78,47 @@
                         @enderror
                     </div>
 
-                    <!-- Marca -->
+                    <!-- Marca con botón "+" -->
                     <div class="col-md-6">
                         <label for="marca_id" class="form-label"><strong>Marca:</strong></label>
-                        <select name="marca_id" id="marca_id" class="form-control selectpicker show-tick" data-live-search="true" onchange="validarCampos()">
-                            <option value="">Seleccione una marca</option>
-                            @foreach ($marcas as $item)
-                                <option value="{{$item->id}}" {{ old('marca_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select name="marca_id" id="marca_id" class="form-control selectpicker show-tick" data-live-search="true" onchange="validarCampos()">
+                                <option value="">Seleccione una marca</option>
+                                @foreach ($marcas as $item)
+                                    <option value="{{$item->id}}" {{ old('marca_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addMarcaModal">+</button>
+                        </div>
                         <small id="marcaError" class="text-danger d-none">Debe seleccionar una marca.</small>
                     </div>
 
-                    <!-- Fabricante -->
+                    <!-- Fabricante con botón "+" -->
                     <div class="col-md-6">
                         <label for="fabricante_id" class="form-label"><strong>Fabricante:</strong></label>
-                        <select name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick" data-live-search="true" onchange="validarCampos()">
-                            <option value="">Seleccione un fabricante</option>
-                            @foreach ($fabricantes as $item)
-                                <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select name="fabricante_id" id="fabricante_id" class="form-control selectpicker show-tick" data-live-search="true" onchange="validarCampos()">
+                                <option value="">Seleccione un fabricante</option>
+                                @foreach ($fabricantes as $item)
+                                    <option value="{{$item->id}}" {{ old('fabricante_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addFabricanteModal">+</button>
+                        </div>
                         <small id="fabricanteError" class="text-danger d-none">Debe seleccionar un fabricante.</small>
                     </div>
 
-                    <!-- Categorías -->
+                    <!-- Categorías con botón "+" -->
                     <div class="col-md-6">
                         <label for="categorias" class="form-label"><strong>Categorías:</strong></label>
-                        <select name="categorias[]" id="categorias" class="form-control selectpicker show-tick" data-live-search="true" multiple onchange="validarCampos()">
-                            @foreach ($categorias as $item)
-                                <option value="{{$item->id}}" {{ (in_array($item->id , old('categorias',[]))) ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <select name="categorias[]" id="categorias" class="form-control selectpicker show-tick" data-live-search="true" multiple onchange="validarCampos()">
+                                @foreach ($categorias as $item)
+                                    <option value="{{$item->id}}" {{ (in_array($item->id , old('categorias',[]))) ? 'selected' : '' }}>{{$item->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addCategoriaModal">+</button>
+                        </div>
                         <small id="categoriasError" class="text-danger d-none">Debe seleccionar al menos una categoría.</small>
                     </div>
 
@@ -122,6 +131,97 @@
         </form>
     </div>
 </div>
+
+<!-- Modal para Agregar Marca -->
+<div class="modal fade" id="addMarcaModal" tabindex="-1" aria-labelledby="addMarcaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="addMarcaForm">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMarcaModalLabel">Agregar Nueva Marca</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="marca_nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="marca_nombre" name="nombre" required maxlength="60">
+            <div class="invalid-feedback" id="marca_nombre_error"></div>
+          </div>
+          <div class="mb-3">
+            <label for="marca_descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="marca_descripcion" name="descripcion" rows="3" maxlength="200"></textarea>
+            <div class="invalid-feedback" id="marca_descripcion_error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Agregar Marca</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para Agregar Fabricante -->
+<div class="modal fade" id="addFabricanteModal" tabindex="-1" aria-labelledby="addFabricanteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="addFabricanteForm">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addFabricanteModalLabel">Agregar Nuevo Fabricante</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="fabricante_nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="fabricante_nombre" name="nombre" required maxlength="60">
+            <div class="invalid-feedback" id="fabricante_nombre_error"></div>
+          </div>
+          <div class="mb-3">
+            <label for="fabricante_descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="fabricante_descripcion" name="descripcion" rows="3" maxlength="200"></textarea>
+            <div class="invalid-feedback" id="fabricante_descripcion_error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Agregar Fabricante</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para Agregar Categoría -->
+<div class="modal fade" id="addCategoriaModal" tabindex="-1" aria-labelledby="addCategoriaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="addCategoriaForm">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCategoriaModalLabel">Agregar Nueva Categoría</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="categoria_nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="categoria_nombre" name="nombre" required maxlength="60">
+            <div class="invalid-feedback" id="categoria_nombre_error"></div>
+          </div>
+          <div class="mb-3">
+            <label for="categoria_descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="categoria_descripcion" name="descripcion" rows="3" maxlength="200"></textarea>
+            <div class="invalid-feedback" id="categoria_descripcion_error"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Agregar Categoría</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 @endsection
 
 @push('js')
@@ -245,5 +345,152 @@
         validarCampos();
         validarDescripcion(document.getElementById('descripcion'));
     }
+
+    // Función para resetear formularios de los modales
+    function resetModalForm(formId) {
+        const form = document.getElementById(formId);
+        form.reset();
+        // Quitar clases de validación
+        $(form).find('.is-invalid').removeClass('is-invalid');
+        $(form).find('.is-valid').removeClass('is-valid');
+        // Ocultar mensajes de error
+        $(form).find('.invalid-feedback').text('').addClass('d-none');
+    }
+
+    // Manejar envío del formulario para agregar Marca
+    $('#addMarcaForm').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const nombre = $('#marca_nombre').val();
+        const descripcion = $('#marca_descripcion').val();
+
+        $.ajax({
+            url: "{{ route('marcas.store') }}",
+            method: "POST",
+            data: {
+                nombre: nombre,
+                descripcion: descripcion,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Asumiendo que la respuesta contiene el objeto Marca
+                $('#marca_id').append(new Option(response.nombre, response.id, true, true));
+                $('#marca_id').selectpicker('refresh');
+                // Cerrar el modal
+                $('#addMarcaModal').modal('hide');
+                // Resetear el formulario
+                resetModalForm('addMarcaForm');
+            },
+            error: function(xhr) {
+                if(xhr.status === 422){
+                    // Errores de validación
+                    const errors = xhr.responseJSON.errors;
+                    if(errors.nombre){
+                        $('#marca_nombre').addClass('is-invalid');
+                        $('#marca_nombre_error').text(errors.nombre[0]).removeClass('d-none');
+                    }
+                    if(errors.descripcion){
+                        $('#marca_descripcion').addClass('is-invalid');
+                        $('#marca_descripcion_error').text(errors.descripcion[0]).removeClass('d-none');
+                    }
+                } else {
+                    alert('Ocurrió un error al agregar la marca.');
+                }
+            }
+        });
+    });
+
+    // Manejar envío del formulario para agregar Fabricante
+    $('#addFabricanteForm').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const nombre = $('#fabricante_nombre').val();
+        const descripcion = $('#fabricante_descripcion').val();
+
+        $.ajax({
+            url: "{{ route('fabricantes.store') }}",
+            method: "POST",
+            data: {
+                nombre: nombre,
+                descripcion: descripcion,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Asumiendo que la respuesta contiene el objeto Fabricante
+                $('#fabricante_id').append(new Option(response.nombre, response.id, true, true));
+                $('#fabricante_id').selectpicker('refresh');
+                // Cerrar el modal
+                $('#addFabricanteModal').modal('hide');
+                // Resetear el formulario
+                resetModalForm('addFabricanteForm');
+            },
+            error: function(xhr) {
+                if(xhr.status === 422){
+                    // Errores de validación
+                    const errors = xhr.responseJSON.errors;
+                    if(errors.nombre){
+                        $('#fabricante_nombre').addClass('is-invalid');
+                        $('#fabricante_nombre_error').text(errors.nombre[0]).removeClass('d-none');
+                    }
+                    if(errors.descripcion){
+                        $('#fabricante_descripcion').addClass('is-invalid');
+                        $('#fabricante_descripcion_error').text(errors.descripcion[0]).removeClass('d-none');
+                    }
+                } else {
+                    alert('Ocurrió un error al agregar el fabricante.');
+                }
+            }
+        });
+    });
+
+    // Manejar envío del formulario para agregar Categoría
+    $('#addCategoriaForm').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const nombre = $('#categoria_nombre').val();
+        const descripcion = $('#categoria_descripcion').val();
+
+        $.ajax({
+            url: "{{ route('categorias.store') }}",
+            method: "POST",
+            data: {
+                nombre: nombre,
+                descripcion: descripcion,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Asumiendo que la respuesta contiene el objeto Categoría
+                $('#categorias').append(new Option(response.nombre, response.id, true, true));
+                $('#categorias').selectpicker('refresh');
+                // Cerrar el modal
+                $('#addCategoriaModal').modal('hide');
+                // Resetear el formulario
+                resetModalForm('addCategoriaForm');
+            },
+            error: function(xhr) {
+                if(xhr.status === 422){
+                    // Errores de validación
+                    const errors = xhr.responseJSON.errors;
+                    if(errors.nombre){
+                        $('#categoria_nombre').addClass('is-invalid');
+                        $('#categoria_nombre_error').text(errors.nombre[0]).removeClass('d-none');
+                    }
+                    if(errors.descripcion){
+                        $('#categoria_descripcion').addClass('is-invalid');
+                        $('#categoria_descripcion_error').text(errors.descripcion[0]).removeClass('d-none');
+                    }
+                } else {
+                    alert('Ocurrió un error al agregar la categoría.');
+                }
+            }
+        });
+    });
+
+    // Resetear formularios cuando se cierran los modales
+    $('#addMarcaModal, #addFabricanteModal, #addCategoriaModal').on('hidden.bs.modal', function () {
+        const formId = $(this).find('form').attr('id');
+        resetModalForm(formId);
+    });
+
 </script>
 @endpush

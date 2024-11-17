@@ -44,24 +44,26 @@ class fabricanteController extends Controller
     public function store(StoreCaracteristicaRequest $request)
     {
         try {
-            // Iniciar transacción
             DB::beginTransaction();
-            
-            // Crear una nueva característica
             $caracteristica = Caracteristica::create($request->validated());
-
-            // Asociar la característica con un nuevo fabricante
-            $caracteristica->fabricante()->create([
+            $fabricante = $caracteristica->fabricante()->create([
                 'caracteristica_id' => $caracteristica->id
             ]);
-
-            // Confirmar transacción
             DB::commit();
+    
+            if(request()->ajax()){
+                return response()->json([
+                    'id' => $fabricante->id,
+                    'nombre' => $caracteristica->nombre
+                ], 201);
+            }
         } catch (Exception $e) {
-            // Si ocurre un error, revertir la transacción
             DB::rollBack();
+            if(request()->ajax()){
+                return response()->json(['error' => 'Error al crear el fabricante.'], 500);
+            }
         }
-
+    
         return redirect()->route('fabricantes.index')->with('success', 'Fabricante registrado');
     }
 
