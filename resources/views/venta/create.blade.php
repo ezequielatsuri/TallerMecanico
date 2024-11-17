@@ -33,12 +33,13 @@
 
                         <!-----Producto---->
                         <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="8" title="Busque un producto aquí">
-                            @foreach ($productos as $item)
-                                <option value="{{ $item->id }}-{{ $item->stock }}-{{ $item->ultimaCompraProducto->precio_venta ?? '0' }}">
-                                    {{ $item->id . ' ' . $item->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
+    @foreach ($productos->unique('id') as $item) {{-- Evita duplicados --}}
+        <option value="{{ $item->id }}-{{ $item->stock }}-{{ $item->ultimaCompraProducto->precio_venta ?? '0' }}">
+            {{ $item->id . ' ' . $item->nombre }}
+        </option>
+    @endforeach
+</select>
+
 
                         <!-----Stock--->
                         <div class="d-flex justify-content-end">
