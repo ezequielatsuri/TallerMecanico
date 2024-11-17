@@ -22,14 +22,16 @@ class Producto extends Model
 
     public function compras()
     {
-        return $this->belongsToMany(Compra::class)->withTimestamps()
-            ->withPivot('cantidad', 'precio_compra', 'precio_venta');
+        return $this->belongsToMany(Compra::class)
+                    ->using(CompraProducto::class)
+                    ->withTimestamps()
+                    ->withPivot('cantidad', 'precio_compra', 'precio_venta');
     }
 
     public function ventas()
     {
         return $this->belongsToMany(Venta::class)->withTimestamps()
-            ->withPivot('cantidad', 'precio_venta', 'descuento');
+                    ->withPivot('cantidad', 'precio_venta', 'descuento');
     }
 
     public function categorias()
@@ -47,12 +49,17 @@ class Producto extends Model
         return $this->belongsTo(Fabricante::class);
     }
 
+    public function ultimaCompraProducto()
+    {
+        return $this->hasOne(CompraProducto::class)->latestOfMany();
+    }
+
     public function handleUploadImage($image)
     {
         $file = $image;
         $name = time() . $file->getClientOriginalName();
-       // $file->move(public_path() . '/img/productos/', $name);
-        Storage::putFileAs('/public/productos/',$file,$name,'public');
+        // $file->move(public_path() . '/img/productos/', $name);
+        Storage::putFileAs('/public/productos/', $file, $name, 'public');
 
         return $name;
     }
