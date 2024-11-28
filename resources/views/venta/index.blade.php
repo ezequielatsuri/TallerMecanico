@@ -55,8 +55,12 @@
                     @foreach ($ventas as $item)
                     @php
                     $totalServicios = 0;
+                    $precioServi = 0;
+                    $igv = 0;
                     foreach ($item->servicios as $item2) {
-                    $totalServicios += ($item2->pivot->precio - $item2->pivot->descuento);
+                    $precioServi += ($item2->pivot->precio - $item2->pivot->descuento);
+                    $igv += ($precioServi / 100 * 16);
+                    $totalServicios += ($precioServi + $igv);
                     }
                     $totalVenta = $item->total + $totalServicios;
                     @endphp
@@ -84,21 +88,21 @@
                         <td>
                             <div class="d-flex align-items-center" role="group" aria-label="Basic mixed styles example">
                                 @can('mostrar-venta')
-                                    <a href="{{ route('ventas.show', ['venta' => $item]) }}" class="text-success mx-3" title="Ver">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
+                                <a href="{{ route('ventas.show', ['venta' => $item]) }}" class="text-success mx-3" title="Ver">
+                                    <i class="fas fa-eye"></i>
+                                </a>
                                 @endcan
                                 |
                                 @can('imprimir-venta')
-                                    <a href="{{ route('ventas.imprimir', ['venta' => $item]) }}" target="_blank" class="text-primary mx-3" title="Imprimir">
-                                        <i class="fas fa-print"></i>
-                                    </a>
+                                <a href="{{ route('ventas.imprimir', ['venta' => $item]) }}" target="_blank" class="text-primary mx-3" title="Imprimir">
+                                    <i class="fas fa-print"></i>
+                                </a>
                                 @endcan
                                 |
                                 @can('eliminar-venta')
-                                    <a href="#" class="text-danger mx-3" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
+                                <a href="#" class="text-danger mx-3" title="Eliminar" data-bs-toggle="modal" data-bs-target="#confirmModal-{{$item->id}}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
                                 @endcan
                             </div>
                         </td>

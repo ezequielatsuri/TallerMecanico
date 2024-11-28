@@ -29,7 +29,8 @@ class StoreProductoRequest extends FormRequest
             'img_path' => 'nullable|image|mimes:png,jpg,jpeg|max:2048', // Limitar a 2 MB
             'marca_id' => 'required|integer|exists:marcas,id',
             'fabricante_id' => 'required|integer|exists:fabricantes,id',
-            'categoria_id' => 'required|integer|exists:categorias,id', // Cambiado de 'categorias' a 'categoria_id'
+            'categorias' => 'required|array',
+            'categorias.*' => 'exists:categorias,id', // Validar cada categoría seleccionada
         ];
     }
 
@@ -41,7 +42,7 @@ class StoreProductoRequest extends FormRequest
         return [
             'marca_id' => 'marca',
             'fabricante_id' => 'fabricante',
-            'categoria_id' => 'categoría', // Cambiado de 'categorias' a 'categoria'
+            'categorias' => 'categorías'
         ];
     }
 
@@ -67,9 +68,9 @@ class StoreProductoRequest extends FormRequest
             'marca_id.exists' => 'La marca seleccionada no es válida.',
             'fabricante_id.required' => 'El fabricante es obligatorio.',
             'fabricante_id.exists' => 'El fabricante seleccionado no es válido.',
-            'categoria_id.required' => 'Debe seleccionar una categoría.',
-            'categoria_id.integer' => 'La categoría seleccionada no es válida.',
-            'categoria_id.exists' => 'La categoría seleccionada no es válida.',
+            'categorias.required' => 'Se deben seleccionar al menos una categoría.',
+            'categorias.array' => 'Las categorías deben ser un array.',
+            'categorias.*.exists' => 'Una o más categorías seleccionadas no son válidas.'
         ];
     }
 }

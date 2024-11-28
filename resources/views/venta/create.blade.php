@@ -405,10 +405,10 @@
         console.log("Datos de servicio - ID:", idServicios, "Nombre:", nameServicio, "Precio:", precioServicio, "Descuento:", descuentoS);
 
         if (nameServicio && precioServicio > 0) {
-            subtotal[cont] = round(precioServicio - descuentoS);
+            subtotal[cont] = round(precioServicio * 1 - descuentoS);
             precioS += subtotal[cont];
-            igv = round(precioS * impuesto / 100);
-            total = round(sumas + igv); // Asegúrate de que 'sumas' es para servicios
+            igv = round(precioS / 100 * impuesto);
+            total = round(precioS + igv); // Asegúrate de que 'sumas' es para servicios
 
             let fila = '<tr id="filaS' + cont + '">' +
                 '<th>' + (cont + 1) + '</th>' +
@@ -444,7 +444,7 @@
         $('#precioS').html(precioS.toFixed(2));
         $('#igvS').html(igv.toFixed(2));
         $('#totalS').html(total.toFixed(2));
-        $('#impuesto').val(igv.toFixed(2));
+        $('#impuestos').val(igv.toFixed(2));
         $('#inputTotalS').val(total.toFixed(2));
 
         $('#filaS' + indice).remove();

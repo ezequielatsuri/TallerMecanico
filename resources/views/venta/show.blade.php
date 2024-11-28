@@ -195,27 +195,28 @@
                         </td>
                     </tr>
                     @endforeach
-                @foreach ($venta->servicios as $item)
-                <tr>
-                    <td>
-                        {{$item->nombre}}
-                    </td>
-                    <td>
-                        1
-                    </td>
-                    <td>
-                        {{$item->pivot->precio}}
-                    </td>
-                    <td>
-                        {{$item->pivot->descuento}}
-                    </td>
-                    <td class="td-subtotal">
-                        {{1 * ($item->pivot->precio) - ($item->pivot->descuento)}}
-                    </td>
-                </tr>
-                @endforeach
+                    @foreach ($venta->servicios as $item)
+                    <tr>
+                        <td>
+                            {{$item->nombre}}
+                        </td>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            {{$item->pivot->precio}}
+                        </td>
+                        <td>
+                            {{$item->pivot->descuento}}
+                        </td>
+                        <td class="td-subtotalS">
+                            {{1 * ($item->pivot->precio) - ($item->pivot->descuento)}}
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
                 <tfoot>
+
                     <tr>
                         <th colspan="5"></th>
                     </tr>
@@ -227,9 +228,32 @@
                         <th colspan="4">IGV:</th>
                         <th id="th-igv"></th>
                     </tr>
+                    @php
+                    $totalProductos = 0;
+                    $totalServicios = 0;
+                    $igv = 0;
+                    $igv2 = 0;
+                    $precioServi = 0;
+                    $precioProdu = 0;
+                    $impuesto = 16;
+
+                    foreach ($venta->productos as $item) {
+                    $precioProdu += ($item->pivot->precio_venta - $item->pivot->descuento) * $item->pivot->cantidad;
+                    $igv += ($precioProdu / 100 * 16);
+                    $totalProductos += ($precioProdu + $igv);
+                    }
+
+                    foreach ($venta->servicios as $servicio) {
+                    $precioServi += ($servicio->pivot->precio - $servicio->pivot->descuento);
+                    $igv2 += ($precioServi / 100 * 16);
+                    $totalServicios += ($precioServi + $igv2);
+                    }
+
+                    $totalVenta = $totalProductos + $totalServicios;
+                    @endphp
                     <tr>
                         <th colspan="4">Total:</th>
-                        <th id="th-total"></th>
+                        <th id="th-total">{{$totalVenta}}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -243,7 +267,9 @@
 <script>
     //Variables
     let filasSubtotal = document.getElementsByClassName('td-subtotal');
+    let filasSubtotalS = document.getElementsByClassName('td-subtotalS');
     let cont = 0;
+    let contS = 0;
     let impuesto = $('#input-impuesto').val();
 
     $(document).ready(function() {
@@ -254,10 +280,13 @@
         for (let i = 0; i < filasSubtotal.length; i++) {
             cont += parseFloat(filasSubtotal[i].innerHTML);
         }
+        for (let i = 0; i < filasSubtotalS.length; i++) {
+            contS += parseFloat(filasSubtotalS[i].innerHTML);
+        }
 
-        $('#th-suma').html(cont);
+        $('#th-suma').html(cont + contS);
         $('#th-igv').html(impuesto);
-        $('#th-total').html(round(cont + parseFloat(impuesto)));
+
     }
 
     function round(num, decimales = 2) {

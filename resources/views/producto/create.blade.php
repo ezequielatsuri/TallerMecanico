@@ -134,12 +134,14 @@
  <div class="col-md-6">
                         <label for="categorias" class="form-label"><strong>Categorías:</strong></label>
                         <div class="input-group">
-                        <select name="categoria_id" id="categoria_id" class="form-control show-tick" data-live-search="true" onchange="validarCampos()">
-                            <option value="">Seleccione una categoría</option>
-                                @foreach ($categorias as $item)
-                                    <option value="{{ $item->id }}" {{ old('categoria_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
-                                @endforeach
-                        </select>
+                        <select name="categorias[]" id="categorias" class="form-control selectpicker" multiple data-live-search="true" onchange="validarCampos()">
+    <option value="">Seleccione una categoria</option>
+    @foreach ($categorias as $item)
+        <option value="{{ $item->id }}" {{ (collect(old('categorias'))->contains($item->id)) ? 'selected' : '' }}>
+            {{ $item->nombre }}
+        </option>
+    @endforeach
+</select>
 
                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addCategoriaModal">+</button>
                         </div>

@@ -60,9 +60,10 @@ class ProductoController extends Controller
      */
     public function store(StoreProductoRequest $request)
     {
+        //dd($request);
         try {
             DB::beginTransaction();
-            // Tabla producto
+            //Tabla producto
             $producto = new Producto();
             if ($request->hasFile('img_path')) {
                 $name = $producto->handleUploadImage($request->file('img_path'));
@@ -82,16 +83,14 @@ class ProductoController extends Controller
 
             $producto->save();
 
-            // Tabla categoría producto - Asignar solo una categoría
-            $categoria_id = $request->get('categoria_id');
-            if ($categoria_id) {
-                $producto->categorias()->attach($categoria_id);
-            }
+            //Tabla categoría producto
+            $categorias = $request->get('categorias');
+            $producto->categorias()->attach($categorias);
+
 
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error al registrar el producto.');
         }
 
         return redirect()->route('productos.index')->with('success', 'Producto registrado');
@@ -139,7 +138,7 @@ class ProductoController extends Controller
             if ($request->hasFile('img_path')) {
                 $name = $producto->handleUploadImage($request->file('img_path'));
 
-                // Eliminar si existiese una imagen
+                //Eliminar si existiese una imagen
                 if(Storage::disk('public')->exists('productos/'.$producto->img_path)){
                     Storage::disk('public')->delete('productos/'.$producto->img_path);
                 }
@@ -160,18 +159,13 @@ class ProductoController extends Controller
 
             $producto->save();
 
-            // Tabla categoría producto - Sincronizar solo una categoría
-            $categoria_id = $request->get('categoria_id');
-            if ($categoria_id) {
-                $producto->categorias()->sync([$categoria_id]);
-            } else {
-                $producto->categorias()->detach();
-            }
+            //Tabla categoría producto
+            $categorias = $request->get('categorias');
+            $producto->categorias()->sync($categorias);
 
             DB::commit();
-        } catch(Exception $e){
+        }catch(Exception $e){
             DB::rollBack();
-            return redirect()->back()->with('error', 'Ocurrió un error al editar el producto.');
         }
 
         return redirect()->route('productos.index')->with('success','Producto editado');
