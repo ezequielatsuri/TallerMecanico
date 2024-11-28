@@ -33,12 +33,12 @@
 
                         <!-----Producto---->
                         <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="8" title="Busque un producto aquí">
-    @foreach ($productos->unique('id') as $item) {{-- Evita duplicados --}}
-        <option value="{{ $item->id }}-{{ $item->stock }}-{{ $item->ultimaCompraProducto->precio_venta ?? '0' }}">
-            {{ $item->id . ' ' . $item->nombre }}
-        </option>
-    @endforeach
-</select>
+                            @foreach ($productos->unique('id') as $item) {{-- Evita duplicados --}}
+                            <option value="{{ $item->id }}-{{ $item->stock }}-{{ $item->ultimaCompraProducto->precio_venta ?? '0' }}">
+                                {{ $item->id . ' ' . $item->nombre }}
+                            </option>
+                            @endforeach
+                        </select>
 
 
                         <!-----Stock--->
@@ -274,7 +274,9 @@
                             <label for="fecha" class="form-label">Fecha:</label>
                             <input readonly type="date" name="fecha" id="fecha" class="form-control border-success" value="<?php echo date("Y-m-d") ?>">
                             <?php
+
                             use Carbon\Carbon;
+
                             $fecha_hora = Carbon::now()->toDateTimeString();
                             ?>
                             <input type="hidden" name="fecha_hora" value="{{$fecha_hora}}">
@@ -409,13 +411,13 @@
             total = round(sumas + igv); // Asegúrate de que 'sumas' es para servicios
 
             let fila = '<tr id="filaS' + cont + '">' +
-                        '<th>' + (cont + 1) + '</th>' +
-                        '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
-                        '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio.toFixed(2) + '</td>' +
-                        '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS.toFixed(2) + '</td>' +
-                        '<td>' + subtotal[cont].toFixed(2) + '</td>' +
-                        '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
-                        '</tr>';
+                '<th>' + (cont + 1) + '</th>' +
+                '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
+                '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio.toFixed(2) + '</td>' +
+                '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS.toFixed(2) + '</td>' +
+                '<td>' + subtotal[cont].toFixed(2) + '</td>' +
+                '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+                '</tr>';
 
             $('#tabla_detalle_servicios tbody').append(fila); // Apuntar al tbody
             limpiarCamposS();
@@ -562,7 +564,7 @@
     function limpiarCampos() {
         let select = $('#producto_id');
         select.selectpicker('val', '');
-        select.selectpicker('refresh'); // Refrescar selectpicker
+        //select.selectpicker('refresh'); // Refrescar selectpicker
         $('#cantidad').val('');
         $('#precio_venta').val('');
         $('#descuento').val('');
@@ -573,7 +575,7 @@
     function limpiarCamposS() {
         let select = $('#servicios_id');
         select.val('').change();
-        select.selectpicker('refresh'); // Refrescar selectpicker
+        //select.selectpicker('refresh'); // Refrescar selectpicker
         $('#nombre').val('');
         $('#precio').val('');
         $('#descuentoS').val('');
@@ -601,7 +603,7 @@
 
     // Función para redondear números
     function round(num, decimales = 2) {
-        return +(Math.round(num + "e+" + decimales)  + "e-" + decimales);
+        return +(Math.round(num + "e+" + decimales) + "e-" + decimales);
     }
 </script>
 @endpush
