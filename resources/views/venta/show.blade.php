@@ -231,21 +231,17 @@
                     @php
                     $totalProductos = 0;
                     $totalServicios = 0;
-                    $igv = 0;
-                    $igv2 = 0;
-                    $precioServi = 0;
-                    $precioProdu = 0;
                     $impuesto = 16;
 
                     foreach ($venta->productos as $item) {
-                    $precioProdu += ($item->pivot->precio_venta - $item->pivot->descuento) * $item->pivot->cantidad;
-                    $igv += ($precioProdu / 100 * 16);
+                    $precioProdu = ($item->pivot->precio_venta - $item->pivot->descuento) * $item->pivot->cantidad;
+                    $igv = ($precioProdu * $impuesto / 100);
                     $totalProductos += ($precioProdu + $igv);
                     }
 
                     foreach ($venta->servicios as $servicio) {
-                    $precioServi += ($servicio->pivot->precio - $servicio->pivot->descuento);
-                    $igv2 += ($precioServi / 100 * 16);
+                    $precioServi = $servicio->pivot->precio - $servicio->pivot->descuento;
+                    $igv2 = $precioServi * $impuesto / 100;
                     $totalServicios += ($precioServi + $igv2);
                     }
 

@@ -55,14 +55,13 @@
                     @foreach ($ventas as $item)
                     @php
                     $totalServicios = 0;
-                    $precioServi = 0;
-                    $igv = 0;
-                    foreach ($item->servicios as $item2) {
-                    $precioServi += ($item2->pivot->precio - $item2->pivot->descuento);
-                    $igv += ($precioServi / 100 * 16);
-                    $totalServicios += ($precioServi + $igv);
+                    $impuesto = 16;
+                    foreach ($item->servicios as $item2){
+                        $precioServi = $item2->pivot->precio -$item2->pivot->descuento;
+                        $igv = $precioServi * $impuesto / 100;
+                        $totalServicios += $precioServi + $igv;
                     }
-                    $totalVenta = $item->total + $totalServicios;
+                        $totalVenta = $item->total + $totalServicios;
                     @endphp
                     <tr>
                         <td>
