@@ -120,8 +120,13 @@
             <p><strong>Nombre:</strong> {{ $compra->proveedore->persona->razon_social }}</p>
             <p><strong>Tipo de Persona:</strong> {{ ucfirst($compra->proveedore->persona->tipo_persona) }}</p>
             <p><strong>Dirección:</strong> {{ $compra->proveedore->persona->direccion }}</p>
-            <p><strong>Teléfono:</strong> {{ $compra->proveedore->persona->telefono ?? 'N/A' }}</p>
-            <p><strong>Email:</strong> {{ $compra->proveedore->persona->email ?? 'N/A' }}</p>
+            {{--
+                <p><strong>Teléfono:</strong> {{ $compra->proveedore->persona->telefono ?? 'N/A' }}</p>
+                <p><strong>Email:</strong> {{ $compra->proveedore->persona->email ?? 'N/A' }}</p>
+                
+                --}}
+
+           
         </div>
     </div>
 

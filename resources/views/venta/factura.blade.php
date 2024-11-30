@@ -62,6 +62,7 @@
         .items table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
         .items th, .items td {
             padding: 10px;
@@ -78,11 +79,13 @@
             font-weight: bold;
             padding: 10px;
         }
-        .items tfoot td:nth-child(3) {
+        .items tfoot td:nth-child(3),
+        .items tfoot td:nth-child(4) {
             text-align: right;
         }
         .items tfoot tr td:nth-child(1),
-        .items tfoot tr td:nth-child(3) {
+        .items tfoot tr td:nth-child(3),
+        .items tfoot tr td:nth-child(4) {
             border: none;
         }
 
@@ -127,7 +130,8 @@
         <table>
             <thead>
                 <tr>
-                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Producto/Servicio</th>
                     <th>Cantidad</th>
                     <th>Precio Unitario</th>
                     <th>Subtotal</th>
@@ -135,37 +139,57 @@
             </thead>
             <tbody>
                 @php 
-                    $total = 0; 
+                    $totalProductos = 0; 
+                    $totalServicios = 0;
                     $impuestoPorcentaje = 0.16; // 16% de impuesto
                 @endphp
+
+                <!-- Listado de Productos -->
                 @foreach($venta->productos as $producto)
                 @php
                     $subtotal = $producto->pivot->cantidad * $producto->pivot->precio_venta;
-                    $total += $subtotal;
+                    $totalProductos += $subtotal;
                 @endphp
                 <tr>
+                    <td>Producto</td>
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->pivot->cantidad }}</td>
                     <td>${{ number_format($producto->pivot->precio_venta, 2) }}</td>
                     <td>${{ number_format($subtotal, 2) }}</td>
                 </tr>
                 @endforeach
+
+                <!-- Listado de Servicios -->
+                @foreach($venta->servicios as $servicio)
+                @php
+                    $subtotalServicio = $servicio->pivot->precio; // Asumiendo cantidad = 1
+                    $totalServicios += $subtotalServicio;
+                @endphp
+                <tr>
+                    <td>Servicio</td>
+                    <td>{{ $servicio->nombre }}</td>
+                    <td>N/A</td>
+                    <td>${{ number_format($servicio->pivot->precio, 2) }}</td>
+                    <td>${{ number_format($subtotalServicio, 2) }}</td>
+                </tr>
+                @endforeach
             </tbody>
             <tfoot>
                 @php
-                    $impuesto = $total * $impuestoPorcentaje;
-                    $totalConImpuesto = $total + $impuesto;
+                    $subtotalGeneral = $totalProductos + $totalServicios;
+                    $impuesto = $subtotalGeneral * $impuestoPorcentaje;
+                    $totalConImpuesto = $subtotalGeneral + $impuesto;
                 @endphp
                 <tr>
-                    <td colspan="3" style="text-align: right;">Subtotal</td>
-                    <td>${{ number_format($total, 2) }}</td>
+                    <td colspan="4" style="text-align: right;">Subtotal</td>
+                    <td>${{ number_format($subtotalGeneral, 2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="text-align: right;">Impuesto ({{ $impuestoPorcentaje * 100 }}%)</td>
+                    <td colspan="4" style="text-align: right;">Impuesto ({{ $impuestoPorcentaje * 100 }}%)</td>
                     <td>${{ number_format($impuesto, 2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="text-align: right;">Total</td>
+                    <td colspan="4" style="text-align: right;">Total</td>
                     <td>${{ number_format($totalConImpuesto, 2) }}</td>
                 </tr>
             </tfoot>

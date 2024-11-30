@@ -43,14 +43,25 @@ class marcaController extends Controller
         try {
             DB::beginTransaction();
             $caracteristica = Caracteristica::create($request->validated());
-            $caracteristica->marca()->create([
+            $marca = $caracteristica->marca()->create([
                 'caracteristica_id' => $caracteristica->id
             ]);
             DB::commit();
+    
+            // Retornar respuesta JSON si es una solicitud AJAX
+            if(request()->ajax()){
+                return response()->json([
+                    'id' => $marca->id,
+                    'nombre' => $caracteristica->nombre
+                ], 201);
+            }
         } catch (Exception $e) {
             DB::rollBack();
+            if(request()->ajax()){
+                return response()->json(['error' => 'Error al crear la marca.'], 500);
+            }
         }
-
+    
         return redirect()->route('marcas.index')->with('success', 'Marca registrada');
     }
 

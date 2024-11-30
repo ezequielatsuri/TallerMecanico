@@ -13,32 +13,32 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permisos = [
-
-            //categorías
+            // Categorías
             'ver-categoria',
             'crear-categoria',
             'editar-categoria',
             'eliminar-categoria',
 
-            //Cliente
+            // Cliente
             'ver-cliente',
             'crear-cliente',
             'editar-cliente',
             'eliminar-cliente',
 
-            //Compra
+            // Compra
             'ver-compra',
             'crear-compra',
             'mostrar-compra',
             'eliminar-compra',
+            'imprimir-compra',
 
-            //Marca
+            // Marca
             'ver-marca',
             'crear-marca',
             'editar-marca',
             'eliminar-marca',
 
-            //Presentacione
+            // Presentaciones
             'ver-presentacione',
             'crear-presentacione',
             'editar-presentacione',
@@ -54,44 +54,47 @@ class PermissionSeeder extends Seeder
             'editar-servicio',
             'eliminar-servicio',
 
-
-            //Producto
+            // Producto
             'ver-producto',
             'crear-producto',
             'editar-producto',
             'eliminar-producto',
 
-            //Proveedore
+            // Proveedor
             'ver-proveedore',
             'crear-proveedore',
             'editar-proveedore',
             'eliminar-proveedore',
 
-            //Venta
+            // Venta
             'ver-venta',
             'crear-venta',
             'mostrar-venta',
             'eliminar-venta',
+            'imprimir-venta',
 
-            //Roles
+            // Roles
             'ver-role',
             'crear-role',
             'editar-role',
             'eliminar-role',
 
-            //User
+            // User
             'ver-user',
             'crear-user',
             'editar-user',
             'eliminar-user',
 
-            //Perfil
+            // Perfil
             'ver-perfil',
-            'editar-perfil'
+            'editar-perfil',
         ];
 
-        foreach($permisos as $permiso){
-            Permission::create(['name' => $permiso]);
+        foreach ($permisos as $permiso) {
+            Permission::updateOrCreate(
+                ['name' => $permiso, 'guard_name' => 'web'], // Condición para buscar
+                [] // No hay campos adicionales a actualizar
+            );
         }
     }
 }

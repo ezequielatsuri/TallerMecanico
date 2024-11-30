@@ -41,21 +41,33 @@ class categoriaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCaracteristicaRequest $request)
-    {
-        try {
-            DB::beginTransaction();
-            $caracteristica = Caracteristica::create($request->validated());
-            $caracteristica->categoria()->create([
-                'caracteristica_id' => $caracteristica->id
-            ]);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
+    // App\Http\Controllers\CategoriaController.php
 
-        return redirect()->route('categorias.index')->with('success', 'Categoría registrada');
+public function store(StoreCaracteristicaRequest $request)
+{
+    try {
+        DB::beginTransaction();
+        $caracteristica = Caracteristica::create($request->validated());
+        $categoria = $caracteristica->categoria()->create([
+            'caracteristica_id' => $caracteristica->id
+        ]);
+        DB::commit();
+
+        if(request()->ajax()){
+            return response()->json([
+                'id' => $categoria->id,
+                'nombre' => $caracteristica->nombre
+            ], 201);
+        }
+    } catch (Exception $e) {
+        DB::rollBack();
+        if(request()->ajax()){
+            return response()->json(['error' => 'Error al crear la categoría.'], 500);
+        }
     }
+
+    return redirect()->route('categorias.index')->with('success', 'Categoría registrada');
+}
 
     /**
      * Display the specified resource.

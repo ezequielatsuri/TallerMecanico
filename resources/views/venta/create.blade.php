@@ -32,13 +32,14 @@
                     <div class="row gy-4">
 
                         <!-----Producto---->
-                        <div class="col-12">
-                            <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="1" title="Busque un producto aquí">
-                                @foreach ($productos as $item)
-                                <option value="{{$item->id}}-{{$item->stock}}-{{$item->precio_venta}}">{{$item->codigo.' '.$item->nombre}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="8" title="Busque un producto aquí">
+                            @foreach ($productos->unique('id') as $item) {{-- Evita duplicados --}}
+                            <option value="{{ $item->id }}-{{ $item->stock }}-{{ $item->ultimaCompraProducto->precio_venta ?? '0' }}">
+                                {{ $item->id . ' ' . $item->nombre }}
+                            </option>
+                            @endforeach
+                        </select>
+
 
                         <!-----Stock--->
                         <div class="d-flex justify-content-end">
@@ -105,54 +106,49 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                            <label for="descuentoS" class="form-label">Descuento de servicios:</label>
-                            <input type="number" name="descuentoS" id="descuentoS" class="form-control">
-                        </div>
+                                    <label for="descuentoS" class="form-label">Descuento de servicios:</label>
+                                    <input type="number" name="descuentoS" id="descuentoS" class="form-control">
+                                </div>
                             </div>
                             <div class="col-12">
-                          <div class="table-responsive">
-                                <table id="tabla_detalle_servicios" class="table table-hover">
-                                    <thead class="bg-primary">
-                                        <tr>
-                                            <th class="text-white">#</th>
-                                            <th class="text-white">Servicio</th>
-                                            <th class="text-white">Precio</th>
-                                            <th class="text-white">Descuento</th>
-                                            <th class="text-white">Subtotal</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th></th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th colspan="4">Sumas</th>
-                                            <th colspan="2"><span id="precioS">0</span></th>
-                                        </tr>
-                                          <tr>
-                                            <th></th>
-                                            <th colspan="4">IGV %</th>
-                                            <th colspan="2"><span id="igvS">0</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <th colspan="4">Total</th>
-                                            <th colspan="2"> <input type="hidden" name="total" value="0" id="inputTotalS"> <span id="totalS">0</span></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                <div class="table-responsive">
+                                    <table id="tabla_detalle_servicios" class="table table-hover">
+                                        <thead class="bg-primary">
+                                            <tr>
+                                                <th class="text-white">#</th>
+                                                <th class="text-white">Servicio</th>
+                                                <th class="text-white">Precio</th>
+                                                <th class="text-white">Descuento</th>
+                                                <th class="text-white">Subtotal</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Las filas se agregarán dinámicamente aquí -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th colspan="4">Sumas</th>
+                                                <th colspan="2"><span id="precioS">0</span></th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th colspan="4">IVA %</th>
+                                                <th colspan="2"><span id="igvS">0</span></th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th colspan="4">Total</th>
+                                                <th colspan="2">
+                                                    <input type="hidden" name="total" value="0" id="inputTotalS">
+                                                    <span id="totalS">0</span>
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                         <!-- Script para mostrar/ocultar el contenedor de servicios -->
@@ -165,7 +161,7 @@
 
                         <!-----Tabla para el detalle de la venta--->
                         <div class="col-12">
-                          <div class="table-responsive">
+                            <div class="table-responsive">
                                 <table id="tabla_detalle" class="table table-hover">
                                     <thead class="bg-primary">
                                         <tr>
@@ -179,15 +175,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th></th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                        <!-- Las filas se agregarán dinámicamente aquí -->
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -195,15 +183,18 @@
                                             <th colspan="4">Sumas</th>
                                             <th colspan="2"><span id="sumas">0</span></th>
                                         </tr>
-                                          <tr>
+                                        <tr>
                                             <th></th>
-                                            <th colspan="4">IGV %</th>
+                                            <th colspan="4">IVA %</th>
                                             <th colspan="2"><span id="igv">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <th colspan="4">Total</th>
-                                            <th colspan="2"> <input type="hidden" name="total" value="0" id="inputTotal"> <span id="total">0</span></th>
+                                            <th colspan="2">
+                                                <input type="hidden" name="total" value="0" id="inputTotal">
+                                                <span id="total">0</span>
+                                            </th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -271,7 +262,7 @@
 
                         <!--Impuesto---->
                         <div class="col-sm-6">
-                            <label for="impuesto" class="form-label">Impuesto(IGV):</label>
+                            <label for="impuesto" class="form-label">Impuesto(IVA):</label>
                             <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
                             @error('impuesto')
                             <small class="text-danger">{{ '*'.$message }}</small>
@@ -327,41 +318,56 @@
 </form>
 @endsection
 @push('js')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+<!-- Incluye Font Awesome para los íconos de la papelera -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
 <script>
     $(document).ready(function() {
+        // Asociar eventos a los selects
         $('#producto_id').change(mostrarValores);
         $('#servicios_id').change(mostrarValoresS);
-        $('#btn_agregar').click(function() {
-        console.log("Botón de agregar presionado.");
 
-        if ($('#producto_id').val() !== '') {
-            agregarProducto();
-        } else if ($('#servicios_id').val() !== '') {
-            agregarServicios();
-        } else {
-            showModal('Por favor, selecciona un producto o servicio para agregar.');
-        }
-    });
+        // Evento click para el botón 'Agregar'
+        $('#btn_agregar').click(function() {
+            console.log("Botón de agregar presionado.");
+
+            if ($('#producto_id').val() !== '') {
+                agregarProducto();
+            } else if ($('#servicios_id').val() !== '') {
+                agregarServicios();
+            } else {
+                showModal('Por favor, selecciona un producto o servicio para agregar.');
+            }
+        });
+
+        // Evento click para el botón 'Cancelar Venta'
         $('#btnCancelarVenta').click(function() {
             console.log("Botón de cancelar venta presionado.");
-
             cancelarVenta();
-
         });
-        disableButtons();
-        $('#impuesto').val(impuesto + '%');
-    });
-    function validarDatosProducto() {
-    let precioVenta = parseFloat($('#precio_venta').val());
-    return precioVenta > 0 && $('#producto_id').val() !== '';
-}
 
-// Función para validar datos de servicio
-function validarDatosServicio() {
-    let precioServicio = parseFloat($('#precio').val());
-    return precioServicio > 0 && $('#servicios_id').val() !== '';
-}
+        // Inicializar el valor de impuesto
+        $('#impuesto').val(impuesto + '%');
+
+        // Inicializar botones según el estado
+        disableButtons();
+    });
+
+    // Funciones de validación
+    function validarDatosProducto() {
+        let precioVenta = parseFloat($('#precio_venta').val());
+        return precioVenta > 0 && $('#producto_id').val() !== '';
+    }
+
+    function validarDatosServicio() {
+        let precioServicio = parseFloat($('#precio').val());
+        return precioServicio > 0 && $('#servicios_id').val() !== '';
+    }
+
     // Variables globales
     let cont = 0;
     let subtotal = [];
@@ -373,12 +379,14 @@ function validarDatosServicio() {
     // Constantes
     const impuesto = 16;
 
+    // Mostrar valores del producto seleccionado
     function mostrarValores() {
         let dataProducto = document.getElementById('producto_id').value.split('-');
         $('#stock').val(dataProducto[1]);
         $('#precio_venta').val(dataProducto[2]);
     }
 
+    // Mostrar valores del servicio seleccionado
     function mostrarValoresS() {
         let dataServicios = document.getElementById('servicios_id').value.split('-');
         $('#nombre').val(dataServicios[1]);
@@ -386,156 +394,164 @@ function validarDatosServicio() {
         console.log("Valores de servicio mostrados.");
     }
 
+    // Agregar servicio a la tabla
     function agregarServicios() {
         let dataServicio = document.getElementById('servicios_id').value.split('-');
         let idServicios = dataServicio[0];
         let nameServicio = $('#servicios_id option:selected').text();
-        let precioServicio = $('#precio').val();
-        let descuentoS = $('#descuentoS').val();
+        let precioServicio = parseFloat($('#precio').val());
+        let descuentoS = parseFloat($('#descuentoS').val()) || 0;
+
         console.log("Datos de servicio - ID:", idServicios, "Nombre:", nameServicio, "Precio:", precioServicio, "Descuento:", descuentoS);
+
         if (nameServicio && precioServicio > 0) {
             subtotal[cont] = round(precioServicio * 1 - descuentoS);
             precioS += subtotal[cont];
             igv = round(precioS / 100 * impuesto);
-            total = round(precioS + igv);
+            total = round(precioS + igv); // Asegúrate de que 'sumas' es para servicios
 
-            let fila = '<tr id="fila' + cont + '">' +
-                        '<th>' + (cont + 1) + '</th>' +
-                        '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
-                        '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio + '</td>' +
-                        '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS + '</td>' +
-                        '<td>' + subtotal[cont] + '</td>' +
-                        '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
-                        '</tr>';
+            let fila = '<tr id="filaS' + cont + '">' +
+                '<th>' + (cont + 1) + '</th>' +
+                '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
+                '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio.toFixed(2) + '</td>' +
+                '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS.toFixed(2) + '</td>' +
+                '<td>' + subtotal[cont].toFixed(2) + '</td>' +
+                '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+                '</tr>';
 
-            $('#tabla_detalle_servicios').append(fila);
+            $('#tabla_detalle_servicios tbody').append(fila); // Apuntar al tbody
             limpiarCamposS();
             cont++;
             disableButtons();
 
             // Mostrar los totales calculados
-            $('#precioS').html(precioS);
-            $('#igvS').html(igv);
-            $('#totalS').html(total);
-            $('#impuestos').val(igv);
-            $('#inputTotalS').val(total);
+            $('#precioS').html(precioS.toFixed(2));
+            $('#igvS').html(igv.toFixed(2));
+            $('#totalS').html(total.toFixed(2));
+            $('#impuesto').val(igv.toFixed(2));
+            $('#inputTotalS').val(total.toFixed(2));
         } else {
             showModal('Valores Incorrectos');
         }
     }
 
+    // Eliminar servicio de la tabla
     function eliminarServicio(indice) {
         precioS -= round(subtotal[indice]);
-        igv = round(precioS / 100 * impuesto);
-        total = round(precioS + igv);
+        igv = round(precioS * impuesto / 100);
+        total = round(sumas + igv);
 
-        $('#precioS').html(precioS);
-        $('#igvS').html(igv);
-        $('#totalS').html(total);
-        $('#impuestos').val(igv);
-        $('#inputTotalS').val(total);
+        $('#precioS').html(precioS.toFixed(2));
+        $('#igvS').html(igv.toFixed(2));
+        $('#totalS').html(total.toFixed(2));
+        $('#impuestos').val(igv.toFixed(2));
+        $('#inputTotalS').val(total.toFixed(2));
 
-        $('#fila' + indice).remove();
+        $('#filaS' + indice).remove();
         disableButtons();
     }
 
+    // Agregar producto a la tabla
     function agregarProducto() {
+        console.log("Función agregarProducto llamada.");
+
         let dataProducto = document.getElementById('producto_id').value.split('-');
         let idProducto = dataProducto[0];
         let nameProducto = $('#producto_id option:selected').text();
-        let cantidad = $('#cantidad').val();
-        let precioVenta = $('#precio_venta').val();
+        let cantidad = parseInt($('#cantidad').val());
+        let precioVenta = parseFloat($('#precio_venta').val());
         let descuento = parseFloat($('#descuento').val()) || 0;
-        let stock = $('#stock').val();
+        let stock = parseInt($('#stock').val());
+
+        console.log("ID Producto:", idProducto);
+        console.log("Nombre Producto:", nameProducto);
+        console.log("Cantidad:", cantidad);
+        console.log("Precio Venta:", precioVenta);
+        console.log("Descuento:", descuento);
+        console.log("Stock:", stock);
 
         if (idProducto && cantidad) {
-            if (parseInt(cantidad) > 0 && cantidad % 1 === 0 && descuento >= 0) {
-                if (parseInt(cantidad) <= parseInt(stock)) {
-                    subtotal[cont] = round(cantidad * precioVenta - descuento);
+            if (cantidad > 0 && Number.isInteger(cantidad) && descuento >= 0) {
+                if (cantidad <= stock) {
+                    subtotal[cont] = round((cantidad * precioVenta) - descuento);
                     sumas += subtotal[cont];
-                    igv = round(sumas / 100 * impuesto);
+                    igv = round(sumas * impuesto / 100);
                     total = round(sumas + igv);
 
                     let fila = '<tr id="fila' + cont + '">' +
                         '<th>' + (cont + 1) + '</th>' +
                         '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>' +
                         '<td><input type="hidden" name="arraycantidad[]" value="' + cantidad + '">' + cantidad + '</td>' +
-                        '<td><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' + precioVenta + '</td>' +
-                        '<td><input type="hidden" name="arraydescuento[]" value="' + descuento + '">' + descuento + '</td>' +
-                        '<td>' + subtotal[cont] + '</td>' +
+                        '<td><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' + precioVenta.toFixed(2) + '</td>' +
+                        '<td><input type="hidden" name="arraydescuento[]" value="' + descuento + '">' + descuento.toFixed(2) + '</td>' +
+                        '<td>' + subtotal[cont].toFixed(2) + '</td>' +
                         '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
                         '</tr>';
 
-                    $('#tabla_detalle').append(fila);
+                    $('#tabla_detalle tbody').append(fila); // Apuntar al tbody
                     limpiarCampos();
-                    //limpiarCamposS();
                     cont++;
                     disableButtons();
 
-                    $('#sumas').html(sumas);
-                    $('#igv').html(igv);
-                    $('#total').html(total);
-                    $('#impuesto').val(igv);
-                    $('#inputTotal').val(total);
+                    $('#sumas').html(sumas.toFixed(2));
+                    $('#igv').html(igv.toFixed(2));
+                    $('#total').html(total.toFixed(2));
+                    $('#impuesto').val(igv.toFixed(2));
+                    $('#inputTotal').val(total.toFixed(2));
                 } else {
-                    showModal('Cantidad incorrecta');
+                    showModal('Cantidad incorrecta: supera el stock disponible.');
                 }
             } else {
-                showModal('Valores incorrectos');
+                showModal('Valores incorrectos: asegúrate de ingresar una cantidad válida y descuentos no negativos.');
             }
         } else {
-            showModal('Le faltan campos por llenar');
+            showModal('Le faltan campos por llenar.');
         }
     }
 
+    // Eliminar producto de la tabla
     function eliminarProducto(indice) {
         sumas -= round(subtotal[indice]);
-        igv = round(sumas / 100 * impuesto);
+        igv = round(sumas * impuesto / 100);
         total = round(sumas + igv);
 
-        $('#sumas').html(sumas);
-        $('#igv').html(igv);
-        $('#total').html(total);
-        $('#impuesto').val(igv);
-        $('#inputTotal').val(total);
+        $('#sumas').html(sumas.toFixed(2));
+        $('#igv').html(igv.toFixed(2));
+        $('#total').html(total.toFixed(2));
+        $('#impuesto').val(igv.toFixed(2));
+        $('#inputTotal').val(total.toFixed(2));
 
         $('#fila' + indice).remove();
         disableButtons();
     }
 
+    // Cancelar venta y limpiar todo
     function cancelarVenta() {
         $('#tabla_detalle tbody').empty();
-
-        let fila = '<tr>' +
-            '<th></th>' +
-            '<td></td>' +
-            '<td></td>' +
-            '<td></td>' +
-            '<td></td>' +
-            '<td></td>' +
-            '<td></td>' +
-            '</tr>';
-        $('#tabla_detalle').append(fila);
+        $('#tabla_detalle_servicios tbody').empty(); // Limpiar también servicios si es necesario
 
         cont = 0;
         subtotal = [];
         sumas = 0;
         igv = 0;
         total = 0;
+        precioS = 0;
 
-        $('#sumas').html(sumas);
-        $('#igv').html(igv);
-        $('#total').html(total);
+        $('#sumas').html(sumas.toFixed(2));
+        $('#igv').html(igv.toFixed(2));
+        $('#total').html(total.toFixed(2));
         $('#impuesto').val(impuesto + '%');
-        $('#inputTotal').val(total);
+        $('#inputTotal').val(total.toFixed(2));
+        $('#inputTotalS').val(total.toFixed(2));
 
         limpiarCampos();
         limpiarCamposS();
         disableButtons();
     }
 
+    // Mostrar u ocultar botones según el estado del total
     function disableButtons() {
-        if (total == 0) {
+        if (total === 0 && precioS === 0) {
             $('#guardar').hide();
             $('#cancelar').hide();
         } else {
@@ -544,22 +560,28 @@ function validarDatosServicio() {
         }
     }
 
+    // Limpiar campos del producto
     function limpiarCampos() {
         let select = $('#producto_id');
         select.selectpicker('val', '');
+        //select.selectpicker('refresh'); // Refrescar selectpicker
         $('#cantidad').val('');
         $('#precio_venta').val('');
         $('#descuento').val('');
         $('#stock').val('');
     }
 
+    // Limpiar campos del servicio
     function limpiarCamposS() {
         let select = $('#servicios_id');
         select.val('').change();
+        //select.selectpicker('refresh'); // Refrescar selectpicker
         $('#nombre').val('');
         $('#precio').val('');
+        $('#descuentoS').val('');
     }
 
+    // Mostrar mensajes con SweetAlert2
     function showModal(message, icon = 'error') {
         const Toast = Swal.mixin({
             toast: true,
@@ -571,23 +593,17 @@ function validarDatosServicio() {
                 toast.addEventListener('mouseenter', Swal.stopTimer)
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
-        })
+        });
 
         Toast.fire({
             icon: icon,
             title: message
-        })
+        });
     }
 
+    // Función para redondear números
     function round(num, decimales = 2) {
-        var signo = (num >= 0 ? 1 : -1);
-        num = num * signo;
-        if (decimales === 0)
-            return signo * Math.round(num);
-        num = num.toString().split('e');
-        num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
-        num = num.toString().split('e');
-        return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+        return +(Math.round(num + "e+" + decimales) + "e-" + decimales);
     }
 </script>
 @endpush

@@ -96,7 +96,7 @@
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th colspan="4">IGV %</th>
+                                            <th colspan="4">IVA %</th>
                                             <th colspan="2"><span id="igv">0</span></th>
                                         </tr>
                                         <tr>
@@ -164,7 +164,7 @@
 
                         <!--Impuesto---->
                         <div class="col-sm-6 mb-2">
-                            <label for="impuesto" class="form-label">Impuesto(IGV):</label>
+                            <label for="impuesto" class="form-label">Impuesto(IVA):</label>
                             <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
                             @error('impuesto')
                             <small class="text-danger">{{ '*'.$message }}</small>
