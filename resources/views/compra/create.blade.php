@@ -7,6 +7,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
+<style>
+    /* Contorno rojo para precio de venta inválido */
+    .invalid-input {
+        border: 2px solid red !important;
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    }
+</style>
 
 @section('content')
 <div class="container-fluid px-4">
@@ -55,6 +62,8 @@
                         <div class="col-sm-4 mb-2">
                             <label for="precio_venta" class="form-label">Precio de venta:</label>
                             <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                            <!-- Contenedor para el mensaje de error -->
+                            <small id="precio_venta_error" class="text-danger d-none">El precio de venta no puede ser menor que el precio de compra.</small>
                         </div>
 
                         <!-----botón para agregar--->
@@ -96,7 +105,7 @@
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th colspan="4">IVA %</th>
+                                            <th colspan="4">IGV %</th>
                                             <th colspan="2"><span id="igv">0</span></th>
                                         </tr>
                                         <tr>
@@ -164,7 +173,7 @@
 
                         <!--Impuesto---->
                         <div class="col-sm-6 mb-2">
-                            <label for="impuesto" class="form-label">Impuesto(IVA):</label>
+                            <label for="impuesto" class="form-label">Impuesto(IGV):</label>
                             <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
                             @error('impuesto')
                             <small class="text-danger">{{ '*'.$message }}</small>
@@ -412,5 +421,68 @@
             title: message
         })
     }
+    $(document).ready(function () {
+    // Validación del precio de venta
+    $('#precio_venta').on('input', function () {
+        validarPrecioVenta();
+    });
+
+    function validarPrecioVenta() {
+        let precioCompra = parseFloat($('#precio_compra').val());
+        let precioVenta = parseFloat($('#precio_venta').val());
+        let mensajeError = $('#precio_venta_error');
+
+        // Mostrar o esconder el mensaje de error dependiendo de la validación
+        if (precioVenta < precioCompra) {
+            mensajeError.removeClass('d-none'); // Muestra el mensaje
+            $('#precio_venta').addClass('invalid-input'); // Resalta el campo en rojo
+        } else {
+            mensajeError.addClass('d-none'); // Oculta el mensaje
+            $('#precio_venta').removeClass('invalid-input'); // Elimina el resalte del campo
+        }
+    }
+});
+$(document).ready(function () {
+    // Aplica el estilo azul al contenedor del producto
+    $('#producto_id').closest('.bootstrap-select').css({
+        'border': '2px solid #0d6efd',
+        'border-radius': '4px'
+    });
+
+    // Aplica el estilo verde al contenedor del proveedor
+    $('#proveedore_id').closest('.bootstrap-select').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
+
+    // Aplica el estilo verde al contenedor del comprobante
+    $('#comprobante_id').closest('.bootstrap-select').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
+});
+$(document).ready(function () {
+    function validarFormulario() {
+        const proveedor = $('#proveedore_id').val();
+        const comprobante = $('#comprobante_id').val();
+        const numeroComprobante = $('#numero_comprobante').val();
+
+        if (proveedor && comprobante && numeroComprobante) {
+            $('#guardar').prop('disabled', false);
+        } else {
+            $('#guardar').prop('disabled', true);
+        }
+    }
+
+    // Escuchar cambios en los campos requeridos
+    $('#proveedore_id, #comprobante_id, #numero_comprobante').on('change input', function () {
+        validarFormulario();
+    });
+
+    // Llama a la función una vez para establecer el estado inicial del botón
+    validarFormulario();
+});
+
+
 </script>
 @endpush
