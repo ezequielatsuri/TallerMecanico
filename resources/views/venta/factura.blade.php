@@ -117,7 +117,7 @@
             <p><strong>Teléfono:</strong> {{ $venta->cliente->persona->telefono ?? 'N/A' }}</p>
             <p><strong>Email:</strong> {{ $venta->cliente->persona->email ?? 'N/A' }}</p>
         </div>
-        
+
         <div class="details">
             <h3>Vendedor</h3>
             <p><strong>Nombre:</strong> {{ $venta->user->name }}</p>
@@ -138,18 +138,22 @@
                 </tr>
             </thead>
             <tbody>
-                @php 
-                    $totalProductos = 0; 
+                @php
+                    $totalProductos = 0;
                     $totalServicios = 0;
-                    $impuestoPorcentaje = 0.16; // 16% de impuesto
+                    $impuestoPorcentaje = 16; // 16% de impuesto
                 @endphp
 
                 <!-- Listado de Productos -->
                 @foreach($venta->productos as $producto)
                 @php
-                    $subtotal = $producto->pivot->cantidad * $producto->pivot->precio_venta;
-                    $totalProductos += $subtotal;
+                    $subtotal = ($producto->pivot->cantidad * $producto->pivot->precio_venta) - $producto->pivot->descuento;
+                    $igv = ($subtotal * $impuestoPorcentaje / 100);
+                    $totalProductos += ($subtotal + $igv);
+            
                 @endphp
+
+
                 <tr>
                     <td>Producto</td>
                     <td>{{ $producto->nombre }}</td>
@@ -162,8 +166,9 @@
                 <!-- Listado de Servicios -->
                 @foreach($venta->servicios as $servicio)
                 @php
-                    $subtotalServicio = $servicio->pivot->precio; // Asumiendo cantidad = 1
-                    $totalServicios += $subtotalServicio;
+                    $subtotalServicio = $servicio->pivot->precio - $servicio->pivot->descuento; // Asumiendo cantidad = 1
+                    $igv2 = ($subtotalServicio * $impuestoPorcentaje / 100);
+                    $totalServicios += ($subtotalServicio + $igv2);
                 @endphp
                 <tr>
                     <td>Servicio</td>
@@ -175,17 +180,21 @@
                 @endforeach
             </tbody>
             <tfoot>
+
                 @php
+
                     $subtotalGeneral = $totalProductos + $totalServicios;
-                    $impuesto = $subtotalGeneral * $impuestoPorcentaje;
-                    $totalConImpuesto = $subtotalGeneral + $impuesto;
-                @endphp
+                    $impuesto = $venta->impuesto;
+                    $totalConImpuesto = $subtotalGeneral;
+                    $subtotalGeneral = $subtotalGeneral-   $impuesto;
+                    @endphp
+
                 <tr>
                     <td colspan="4" style="text-align: right;">Subtotal</td>
                     <td>${{ number_format($subtotalGeneral, 2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="text-align: right;">Impuesto ({{ $impuestoPorcentaje * 100 }}%)</td>
+                    <td colspan="4" style="text-align: right;">Impuesto ({{ $impuestoPorcentaje}}%)</td>
                     <td>${{ number_format($impuesto, 2) }}</td>
                 </tr>
                 <tr>
