@@ -6,6 +6,17 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    .invalid-input {
+        border: 2px solid red !important;
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    }
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -60,9 +71,11 @@
                         </div>
 
                         <!-----Cantidad---->
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 mb-2">
                             <label for="cantidad" class="form-label">Cantidad:</label>
                             <input type="number" name="cantidad" id="cantidad" class="form-control">
+                            <!-- Mensaje de error para cantidad -->
+                            <div id="error-cantidad" class="error-message d-none"></div>
                         </div>
 
                         <!----Descuento---->
@@ -594,5 +607,85 @@ console.log("PrecioS: ", precioS);
     function round(num, decimales = 2) {
         return +(Math.round(num + "e+" + decimales) + "e-" + decimales);
     }
+    $(document).ready(function () {
+    // Forzar contornos desde el script
+    $('#producto_id').closest('.bootstrap-select').css({
+        'border': '2px solid #0d6efd',
+        'border-radius': '5px'
+    });
+    $('#cliente_id').closest('.bootstrap-select').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
+    $('#comprobante_id').closest('.bootstrap-select').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
+    $('#servicios_id').closest('.bootstrap-select').css({
+        'border': '2px solid #0d6efd',
+        'border-radius': '5px'
+    });
+
+    // Validar cantidad en tiempo real
+    $('#cantidad').on('input', validarCantidad);
+
+    // Validar campos obligatorios para habilitar el botón "Guardar"
+    $('#cliente_id, #comprobante_id, #numero_comprobante').on('change input', validarFormularioVenta);
+
+    // Validar producto y cantidad para habilitar "Agregar"
+    $('#producto_id, #cantidad').on('change input', validarProductoYCantidad);
+
+    // Ejecutar validaciones iniciales al cargar la página
+    validarFormularioVenta();
+    validarProductoYCantidad();
+});
+
+// Validar cantidad contra el stock
+function validarCantidad() {
+    const cantidad = parseInt($('#cantidad').val()) || 0;
+    const stock = parseInt($('#stock').val()) || 0;
+    const btnAgregar = $('#btn_agregar');
+    const errorCantidad = $('#error-cantidad');
+
+    if (cantidad > stock) {
+        $('#cantidad').addClass('invalid-input');
+        if (errorCantidad.length === 0) {
+            $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
+        }
+        btnAgregar.prop('disabled', true);
+    } else {
+        $('#cantidad').removeClass('invalid-input');
+        $('#error-cantidad').remove();
+        btnAgregar.prop('disabled', false);
+    }
+}
+
+// Validar formulario para habilitar/deshabilitar el botón "Guardar"
+function validarFormularioVenta() {
+    const cliente = $('#cliente_id').val();
+    const comprobante = $('#comprobante_id').val();
+    const numeroComprobante = $('#numero_comprobante').val();
+
+    if (cliente && comprobante && numeroComprobante) {
+        $('#guardar').prop('disabled', false);
+    } else {
+        $('#guardar').prop('disabled', true);
+    }
+}
+
+// Validar producto y cantidad para habilitar "Agregar"
+function validarProductoYCantidad() {
+    const productoSeleccionado = $('#producto_id').val(); // Validar si se seleccionó un producto
+    const cantidad = parseFloat($('#cantidad').val()); // Validar si la cantidad es mayor a 0
+    const btnAgregar = $('#btn_agregar');
+
+    // Habilitar el botón si ambas condiciones se cumplen
+    if (productoSeleccionado && cantidad > 0) {
+        btnAgregar.prop('disabled', false);
+    } else {
+        btnAgregar.prop('disabled', true);
+    }
+}
+
 </script>
 @endpush
