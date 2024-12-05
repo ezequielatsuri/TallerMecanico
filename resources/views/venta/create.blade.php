@@ -320,9 +320,6 @@
 @push('js')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
-<!-- Incluye Font Awesome para los íconos de la papelera -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script>
@@ -372,12 +369,13 @@
     let cont = 0;
     let subtotal = [];
     let sumas = 0;
-    let igv = 0;
+    let igvProductos = 0;
+    let igvServicios = 0;
     let total = 0;
     let precioS = 0;
 
     // Constantes
-    const impuesto = 16;
+    const impuesto = 16; // Definir el impuesto en porcentaje
 
     // Mostrar valores del producto seleccionado
     function mostrarValores() {
@@ -391,7 +389,6 @@
         let dataServicios = document.getElementById('servicios_id').value.split('-');
         $('#nombre').val(dataServicios[1]);
         $('#precio').val(dataServicios[2]);
-        console.log("Valores de servicio mostrados.");
     }
 
     // Agregar servicio a la tabla
@@ -402,13 +399,11 @@
         let precioServicio = parseFloat($('#precio').val());
         let descuentoS = parseFloat($('#descuentoS').val()) || 0;
 
-        console.log("Datos de servicio - ID:", idServicios, "Nombre:", nameServicio, "Precio:", precioServicio, "Descuento:", descuentoS);
-
         if (nameServicio && precioServicio > 0) {
-            subtotal[cont] = round(precioServicio * 1 - descuentoS);
+            subtotal[cont] = round(precioServicio - descuentoS);
             precioS += subtotal[cont];
-            igv = round(precioS / 100 * impuesto);
-            total = round(precioS + igv); // Asegúrate de que 'sumas' es para servicios
+            igvServicios = round(precioS * impuesto / 100);
+            total = round(precioS + igvProductos + igvServicios);  // Sumar impuestos de productos y servicios
 
             let fila = '<tr id="filaS' + cont + '">' +
                 '<th>' + (cont + 1) + '</th>' +
@@ -422,13 +417,12 @@
             $('#tabla_detalle_servicios tbody').append(fila); // Apuntar al tbody
             limpiarCamposS();
             cont++;
-            disableButtons();
 
-            // Mostrar los totales calculados
+            // Actualizar los totales
             $('#precioS').html(precioS.toFixed(2));
-            $('#igvS').html(igv.toFixed(2));
+            $('#igvS').html(igvServicios.toFixed(2));
             $('#totalS').html(total.toFixed(2));
-            $('#impuesto').val(igv.toFixed(2));
+            $('#impuesto').val(igvProductos + igvServicios);  // Mostrar impuesto total
             $('#inputTotalS').val(total.toFixed(2));
         } else {
             showModal('Valores Incorrectos');
@@ -438,13 +432,13 @@
     // Eliminar servicio de la tabla
     function eliminarServicio(indice) {
         precioS -= round(subtotal[indice]);
-        igv = round(precioS * impuesto / 100);
-        total = round(sumas + igv);
+        igvServicios = round(precioS * impuesto / 100);
+        total = round(sumas + precioS + igvProductos + igvServicios);
 
         $('#precioS').html(precioS.toFixed(2));
-        $('#igvS').html(igv.toFixed(2));
+        $('#igvS').html(igvServicios.toFixed(2));
         $('#totalS').html(total.toFixed(2));
-        $('#impuestos').val(igv.toFixed(2));
+        $('#impuesto').val(igvProductos + igvServicios);
         $('#inputTotalS').val(total.toFixed(2));
 
         $('#filaS' + indice).remove();
@@ -453,8 +447,6 @@
 
     // Agregar producto a la tabla
     function agregarProducto() {
-        console.log("Función agregarProducto llamada.");
-
         let dataProducto = document.getElementById('producto_id').value.split('-');
         let idProducto = dataProducto[0];
         let nameProducto = $('#producto_id option:selected').text();
@@ -463,20 +455,13 @@
         let descuento = parseFloat($('#descuento').val()) || 0;
         let stock = parseInt($('#stock').val());
 
-        console.log("ID Producto:", idProducto);
-        console.log("Nombre Producto:", nameProducto);
-        console.log("Cantidad:", cantidad);
-        console.log("Precio Venta:", precioVenta);
-        console.log("Descuento:", descuento);
-        console.log("Stock:", stock);
-
         if (idProducto && cantidad) {
             if (cantidad > 0 && Number.isInteger(cantidad) && descuento >= 0) {
                 if (cantidad <= stock) {
                     subtotal[cont] = round((cantidad * precioVenta) - descuento);
                     sumas += subtotal[cont];
-                    igv = round(sumas * impuesto / 100);
-                    total = round(sumas + igv);
+                    igvProductos = round(sumas * impuesto / 100);
+                    total = round(sumas + igvProductos + igvServicios);  // Sumar impuestos de productos y servicios
 
                     let fila = '<tr id="fila' + cont + '">' +
                         '<th>' + (cont + 1) + '</th>' +
@@ -491,12 +476,12 @@
                     $('#tabla_detalle tbody').append(fila); // Apuntar al tbody
                     limpiarCampos();
                     cont++;
-                    disableButtons();
 
+                    // Actualizar los totales
                     $('#sumas').html(sumas.toFixed(2));
-                    $('#igv').html(igv.toFixed(2));
+                    $('#igv').html(igvProductos.toFixed(2));
                     $('#total').html(total.toFixed(2));
-                    $('#impuesto').val(igv.toFixed(2));
+                    $('#impuesto').val(igvProductos + igvServicios);  // Mostrar impuesto total
                     $('#inputTotal').val(total.toFixed(2));
                 } else {
                     showModal('Cantidad incorrecta: supera el stock disponible.');
@@ -512,13 +497,13 @@
     // Eliminar producto de la tabla
     function eliminarProducto(indice) {
         sumas -= round(subtotal[indice]);
-        igv = round(sumas * impuesto / 100);
-        total = round(sumas + igv);
+        igvProductos = round(sumas * impuesto / 100);
+        total = round(sumas + igvProductos + igvServicios);
 
         $('#sumas').html(sumas.toFixed(2));
-        $('#igv').html(igv.toFixed(2));
+        $('#igv').html(igvProductos.toFixed(2));
         $('#total').html(total.toFixed(2));
-        $('#impuesto').val(igv.toFixed(2));
+        $('#impuesto').val(igvProductos + igvServicios);
         $('#inputTotal').val(total.toFixed(2));
 
         $('#fila' + indice).remove();
@@ -533,12 +518,13 @@
         cont = 0;
         subtotal = [];
         sumas = 0;
-        igv = 0;
+        igvProductos = 0;
+        igvServicios = 0;
         total = 0;
         precioS = 0;
 
         $('#sumas').html(sumas.toFixed(2));
-        $('#igv').html(igv.toFixed(2));
+        $('#igv').html(igvProductos.toFixed(2));
         $('#total').html(total.toFixed(2));
         $('#impuesto').val(impuesto + '%');
         $('#inputTotal').val(total.toFixed(2));
@@ -550,21 +536,25 @@
     }
 
     // Mostrar u ocultar botones según el estado del total
-    function disableButtons() {
-        if (total === 0 && precioS === 0) {
-            $('#guardar').hide();
-            $('#cancelar').hide();
-        } else {
-            $('#guardar').show();
-            $('#cancelar').show();
-        }
+    // Mostrar u ocultar botones según el estado del total
+function disableButtons() {
+    if (total <= 0 && precioS <= 0) {
+        $('#guardar').show();  // Ocultar el botón si el total y el precio son cero
+        $('#cancelar').hide(); // Ocultar el botón si no hay productos o servicios
+    } else {
+        $('#guardar').show();  // Mostrar el botón si el total o precio es mayor que cero
+        $('#cancelar').show(); // Mostrar el botón de cancelar
     }
+}
+console.log("Total: ", total);
+console.log("PrecioS: ", precioS);
+
+
 
     // Limpiar campos del producto
     function limpiarCampos() {
         let select = $('#producto_id');
         select.selectpicker('val', '');
-        //select.selectpicker('refresh'); // Refrescar selectpicker
         $('#cantidad').val('');
         $('#precio_venta').val('');
         $('#descuento').val('');
@@ -575,7 +565,6 @@
     function limpiarCamposS() {
         let select = $('#servicios_id');
         select.val('').change();
-        //select.selectpicker('refresh'); // Refrescar selectpicker
         $('#nombre').val('');
         $('#precio').val('');
         $('#descuentoS').val('');
