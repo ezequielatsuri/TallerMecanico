@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Factura de Venta</title>
+    <title>Nota de remisión</title>
     <style>
         /* Estilos generales */
         body {
@@ -104,7 +104,7 @@
 
 <div class="container">
     <div class="header">
-        <h1>Factura de Venta</h1>
+        <h1>Nota de remisión</h1>
         <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($venta->fecha_hora)->format('d/m/Y') }}</p>
         <p><strong>Número de Comprobante:</strong> {{ $venta->numero_comprobante }}</p>
     </div>
@@ -206,6 +206,7 @@
     </div>
 
     <div class="footer">
+        <p><strong>Gracias por su compra!!</strong></p>
         <p><strong>Condiciones de Pago:</strong> Transferencia bancaria, pago a 30 días</p>
         <p><strong>Condiciones de Entrega:</strong> Envío a la dirección del cliente en un plazo de 7 días hábiles</p>
     </div>

@@ -55,10 +55,10 @@ button.selected {
                     <div class="row gy-4">
 
                         <!-----Producto---->
-                        <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="8" title="Busque un producto aquí">
+                        <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="8" title="Ingrese el codigo del producto">
                             @foreach ($productos->unique('id') as $item) {{-- Evita duplicados --}}
                             <option value="{{ $item->id }}-{{ $item->stock }}-{{ $item->ultimaCompraProducto->precio_venta ?? '0' }}">
-                                {{ $item->id . ' ' . $item->nombre }}
+                                {{ $item->codigo . ' ' . $item->nombre }}
                             </option>
                             @endforeach
                         </select>
@@ -116,7 +116,7 @@ button.selected {
 
                             <!-- Selector de servicios con búsqueda -->
                             <div class="mb-3">
-                                <label for="servicios_id" class="form-label">Busque su servicio aquí:</label>
+                                <label for="servicios_id" class="form-label">Ingrese el codigo de servicio:</label>
                                 <select name="servicios_id" id="servicios_id" class="form-control selectpicker" data-live-search="true" data-size="1" title="Seleccione un servicio">
                                     @foreach ($servicios as $item)
                                     <option value="{{$item->id}}-{{$item->nombre}}-{{$item->precio}}">{{$item->codigo.' '.$item->nombre}}</option>
@@ -804,6 +804,12 @@ $(document).ready(function () {
 });
 </script>
 <script>
+    $(document).ready(function () {
+    $('.selectpicker').selectpicker({
+        noneResultsText: 'El producto no existe o está agotado.'
+    });
+});
+
     document.addEventListener('DOMContentLoaded', function () {
         const btnSiServicio = document.getElementById('btn_si_servicio');
         const btnNoServicio = document.getElementById('btn_no_servicio');
