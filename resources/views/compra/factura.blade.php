@@ -109,10 +109,10 @@
     <div class="details-section">
         <div class="details">
             <h3>Comprador</h3>
-            <p><strong>Nombre:</strong> Nombre de la Empresa XYZ</p>
-            <p><strong>Dirección:</strong> Dirección del Comprador</p>
+            <p><strong>Nombre:</strong>Taller Mecanico Leones</p>
+            <p><strong>Dirección:</strong> Aldama #11 San jasinto Amilpas</p>
             <p><strong>Teléfono:</strong> (123) 456-7890</p>
-            <p><strong>Email:</strong> compras@xyz.com</p>
+            <p><strong>Email:</strong> compras@tallerleones.com</p>
         </div>
         
         <div class="details">

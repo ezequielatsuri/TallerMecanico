@@ -146,5 +146,12 @@
     window.addEventListener('DOMContentLoaded', event => {
         const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {})
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
+            perPageSelect: [10, 25, 50, 100]  // Opciones de cantidad de registros para mostrar
+        });
+    });
+
 </script>
 @endpush
