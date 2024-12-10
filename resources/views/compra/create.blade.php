@@ -482,7 +482,105 @@ $(document).ready(function () {
     // Llama a la función una vez para establecer el estado inicial del botón
     validarFormulario();
 });
+$(document).ready(function () {
+    // Restringir entrada en Precio Compra y Precio Venta
+    $('#precio_compra, #precio_venta').on('keydown', function (e) {
+        // Permitir: teclas de control como Backspace, Tab, Flechas, etc.
+        if (
+            e.key === "Backspace" || e.key === "Tab" || e.key === "ArrowLeft" || e.key === "ArrowRight" ||
+            e.key === "Delete"
+        ) {
+            return; // Permitir teclas de control
+        }
+        // Permitir números (0-9) y punto decimal
+        if ((e.key >= "0" && e.key <= "9") || e.key === ".") {
+            // Validar si ya existe un punto decimal para evitar múltiples
+            if (e.key === "." && $(this).val().includes(".")) {
+                e.preventDefault(); // Bloquear si ya hay un punto
+            }
+            return; // Permitir número o punto
+        }
+        // Bloquear cualquier otra tecla
+        e.preventDefault();
+    });
+    // Validar entrada en Cantidad (solo números enteros)
+    $('#cantidad').on('keydown', function (e) {
+        // Permitir: teclas de control como Backspace, Tab, Flechas, etc.
+        if (
+            e.key === "Backspace" || e.key === "Tab" || e.key === "ArrowLeft" || e.key === "ArrowRight" ||
+            e.key === "Delete"
+        ) {
+            return; // Permitir teclas de control
+        }
+        // Permitir solo números (0-9)
+        if (e.key >= "0" && e.key <= "9") {
+            return; // Permitir número
+        }
+        // Bloquear cualquier otra tecla
+        e.preventDefault();
+    });
+});
+$(document).ready(function () {
+    // Validación del precio de venta y habilitación del botón
+    $('#precio_compra, #precio_venta').on('input', function () {
+        validarCamposAgregar();
+    });
 
+    // Validar los campos y habilitar o deshabilitar el botón Agregar
+    function validarCamposAgregar() {
+        const producto = $('#producto_id').val();
+        const cantidad = $('#cantidad').val();
+        const precioCompra = parseFloat($('#precio_compra').val());
+        const precioVenta = parseFloat($('#precio_venta').val());
+        const btnAgregar = $('#btn_agregar');
+
+        // Verificar si todos los campos están llenos y el precio de venta es mayor o igual al precio de compra
+        if (producto && cantidad && precioCompra && precioVenta && precioVenta >= precioCompra) {
+            btnAgregar.prop('disabled', false); // Habilitar botón
+            $('#precio_venta_error').addClass('d-none'); // Ocultar mensaje de error
+            $('#precio_venta').removeClass('invalid-input'); // Remover estilo de error
+        } else {
+            btnAgregar.prop('disabled', true); // Deshabilitar botón
+            if (precioVenta < precioCompra) {
+                $('#precio_venta_error').removeClass('d-none'); // Mostrar mensaje de error
+                $('#precio_venta').addClass('invalid-input'); // Aplicar estilo de error
+            } else {
+                $('#precio_venta_error').addClass('d-none'); // Ocultar mensaje de error si no aplica
+                $('#precio_venta').removeClass('invalid-input'); // Remover estilo de error si no aplica
+            }
+        }
+    }
+
+    // Llamar a la función una vez al cargar la página
+    validarCamposAgregar();
+});
+$(document).ready(function () {
+    // Validar longitud de Cantidad
+    $('#cantidad').on('input', function () {
+        const maxLength = 5;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength); // Recortar a la longitud máxima
+        }
+    });
+
+    // Validar longitud de Precio de Compra
+    $('#precio_compra').on('input', function () {
+        validarLongitudDecimal(this, 10);
+    });
+
+    // Validar longitud de Precio de Venta
+    $('#precio_venta').on('input', function () {
+        validarLongitudDecimal(this, 10);
+    });
+
+    // Función para validar longitud de números decimales
+    function validarLongitudDecimal(input, maxLength) {
+        const regexDecimal = /^\d*(\.\d{0,2})?$/; // Máximo 2 decimales
+        if (!regexDecimal.test(input.value) || input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength); // Recortar a la longitud máxima
+        }
+    }
+});
 
 </script>
 @endpush
