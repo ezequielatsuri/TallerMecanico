@@ -16,6 +16,18 @@
         font-size: 0.9rem;
         margin-top: 5px;
     }
+    /* Clase para indicar el estado seleccionado */
+button.selected {
+    background-color: #28a745; 
+    color: white;
+    border: 1px solid #0a58ca; 
+}
+
+#btn_no_servicio.selected {
+    background-color: #dc3545; 
+    color: white;
+    border: 1px solid #b02a37;
+}
 </style>
 @endpush
 
@@ -82,6 +94,14 @@
                         <div class="col-sm-4">
                             <label for="descuento" class="form-label">Descuento:</label>
                             <input type="number" name="descuento" id="descuento" class="form-control">
+                        </div>
+                         <!-- Pregunta para agregar servicios -->
+                         <div class="col-12 mt-3">
+                            <label class="form-label">¿Desea agregar algún servicio extra?</label>
+                            <div class="d-flex gap-3">
+                                <button type="button" id="btn_si_servicio" class="btn btn-outline-success">Sí</button>
+                                <button type="button" id="btn_no_servicio" class="btn btn-outline-danger">No</button>
+                            </div>
                         </div>
 
                         <!-- Botón para mostrar/ocultar el selector de servicios extras -->
@@ -272,6 +292,18 @@
                                 input.value = input.value.replace(/[^0-9]/g, '');
                             }
                         </script>
+                        <!-- Cantidad a pagar -->
+                        <div class="col-12">
+                            <label for="cantidad_pagar" class="form-label">Cantidad a pagar:</label>
+                            <input type="number" id="cantidad_pagar" class="form-control" step="0.01" placeholder="Ingrese el monto que paga el cliente">
+                            <small id="error-cantidad-pagar" class="error-message d-none">La cantidad a pagar no puede ser menor que el total.</small>
+                        </div>
+
+                        <!-- Cambio -->
+                        <div class="col-12">
+                            <label for="cambio" class="form-label">Cambio:</label>
+                            <input readonly type="number" id="cambio" class="form-control" step="0.01">
+                        </div>
 
                         <!--Impuesto---->
                         <div class="col-sm-6">
@@ -339,6 +371,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script>
+    function desactivarBotonAgregar() {
+    const btnAgregar = $('#btn_agregar');
+    btnAgregar.prop('disabled', true); // Deshabilitar el botón
+    console.log('Botón Agregar deshabilitado al inicio.');
+}
     $(document).ready(function() {
         // Asociar eventos a los selects
         $('#producto_id').change(mostrarValores);
@@ -368,6 +405,8 @@
 
         // Inicializar botones según el estado
         disableButtons();
+        desactivarBotonAgregar(); // Deshabilitar el botón al cargar la página
+
     });
 
     // Funciones de validación
@@ -582,6 +621,7 @@
         $('#precio_venta').val('');
         $('#descuento').val('');
         $('#stock').val('');
+        $('#btn_agregar').prop('disabled', true);
     }
 
     // Limpiar campos del servicio
@@ -636,6 +676,18 @@
         'border': '2px solid #0d6efd',
         'border-radius': '5px'
     });
+    $('#numero_comprobante').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
+    $('#cantidad_pagar').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
+    $('#cambio').css({
+        'border': '2px solid #198754',
+        'border-radius': '5px'
+    });
 
     // Validar cantidad en tiempo real
     $('#cantidad').on('input', validarCantidad);
@@ -651,52 +703,164 @@
     validarProductoYCantidad();
 });
 
-// Validar cantidad contra el stock
-function validarCantidad() {
-    const cantidad = parseInt($('#cantidad').val()) || 0;
-    const stock = parseInt($('#stock').val()) || 0;
-    const btnAgregar = $('#btn_agregar');
-    const errorCantidad = $('#error-cantidad');
-
-    if (cantidad > stock) {
-        $('#cantidad').addClass('invalid-input');
-        if (errorCantidad.length === 0) {
-            $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
-        }
-        btnAgregar.prop('disabled', true);
-    } else {
-        $('#cantidad').removeClass('invalid-input');
-        $('#error-cantidad').remove();
-        btnAgregar.prop('disabled', false);
-    }
-}
-
-// Validar formulario para habilitar/deshabilitar el botón "Guardar"
 function validarFormularioVenta() {
     const cliente = $('#cliente_id').val();
     const comprobante = $('#comprobante_id').val();
     const numeroComprobante = $('#numero_comprobante').val();
+    const totalVenta = parseFloat($('#total').text()) || 0;
+    const montoPagar = parseFloat($('#cantidad_pagar').val()) || 0;
+    const guardarButton = $('#guardar');
 
-    if (cliente && comprobante && numeroComprobante) {
-        $('#guardar').prop('disabled', false);
+    if (cliente && comprobante && numeroComprobante && montoPagar >= totalVenta) {
+        guardarButton.prop('disabled', false);
     } else {
-        $('#guardar').prop('disabled', true);
+        guardarButton.prop('disabled', true);
     }
 }
 
-// Validar producto y cantidad para habilitar "Agregar"
+// Evento para validar formulario
+$('#cliente_id, #comprobante_id, #numero_comprobante, #cantidad_pagar').on('change input', validarFormularioVenta);
+
+// Validación inicial
+validarFormularioVenta();
+
+
 function validarProductoYCantidad() {
     const productoSeleccionado = $('#producto_id').val(); // Validar si se seleccionó un producto
     const cantidad = parseFloat($('#cantidad').val()); // Validar si la cantidad es mayor a 0
+    const stock = parseInt($('#stock').val()); // Validar si la cantidad no supera el stock disponible
     const btnAgregar = $('#btn_agregar');
-
-    // Habilitar el botón si ambas condiciones se cumplen
-    if (productoSeleccionado && cantidad > 0) {
-        btnAgregar.prop('disabled', false);
+    btnAgregar.prop('disabled', true);
+    if (productoSeleccionado && cantidad > 0 && cantidad <= stock) {
+        btnAgregar.prop('disabled', false); // Habilitar el botón
     } else {
-        btnAgregar.prop('disabled', true);
+        btnAgregar.prop('disabled', true); // Deshabilitar el botón
+
     }
 }
+
+// Evento para validar el botón "Agregar"
+$('#producto_id, #cantidad').on('change input', function () {
+    validarProductoYCantidad();
+});
+
+// Llamada inicial al cargar la página
+validarProductoYCantidad();
+
+$(document).ready(function () {
+    // Validar cantidad contra el stock
+    function validarCantidad() {
+        const cantidad = parseInt($('#cantidad').val()) || 0;
+        const stock = parseInt($('#stock').val()) || 0;
+        const btnAgregar = $('#btn_agregar');
+        const errorCantidad = $('#error-cantidad');
+
+        if (cantidad > stock) {
+            $('#cantidad').addClass('invalid-input');
+            if (errorCantidad.length === 0) {
+                $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
+            }
+            btnAgregar.prop('disabled', true);
+        } else {
+            $('#cantidad').removeClass('invalid-input');
+            $('#error-cantidad').remove();
+            btnAgregar.prop('disabled', false);
+        }
+    }
+
+    // Restringir entrada para "Cantidad" y "Descuento"
+    $('#cantidad, #descuento').on('keydown input', function (e) {
+        const inputField = $(this);
+        const maxLength = inputField.attr('id') === 'cantidad' ? 5 : 10;
+
+        // Permitir: teclas de control como Backspace, Tab, Delete, etc.
+        if (
+            e.key === "Backspace" || e.key === "Tab" || e.key === "Delete" ||
+            e.key === "ArrowLeft" || e.key === "ArrowRight" ||
+            e.key === "Home" || e.key === "End"
+        ) {
+            return;
+        }
+
+        // Verificar si el límite de caracteres ya se alcanzó
+        if (inputField.val().length >= maxLength) {
+            e.preventDefault(); // Bloquear entrada adicional
+        }
+
+        // Permitir solo números
+        if ((e.key >= "0" && e.key <= "9")) {
+            return;
+        }
+
+        // Bloquear cualquier otra tecla
+        e.preventDefault();
+    });
+
+    // Validación en tiempo real para recortar caracteres si se ingresaron de otra manera
+    $('#cantidad, #descuento').on('input', function () {
+        const inputField = $(this);
+        const maxLength = inputField.attr('id') === 'cantidad' ? 5 : 10;
+
+        // Recortar el valor si excede el límite
+        if (inputField.val().length > maxLength) {
+            inputField.val(inputField.val().slice(0, maxLength));
+        }
+
+        // Validar cantidad contra el stock después de ajustar el valor
+        if (inputField.attr('id') === 'cantidad') {
+            validarCantidad();
+        }
+    });
+    validarCantidad();
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnSiServicio = document.getElementById('btn_si_servicio');
+        const btnNoServicio = document.getElementById('btn_no_servicio');
+        const btnServicios = document.getElementById('btn_servicios');
+
+        // Si el usuario elige "Sí"
+        btnSiServicio.addEventListener('click', function () {
+            btnServicios.disabled = false; // Habilitar el botón de servicios extras
+            btnSiServicio.classList.add('selected'); // Marcar el botón "Sí" como seleccionado
+            btnNoServicio.classList.remove('selected'); // Quitar la selección del botón "No"
+        });
+
+        // Si el usuario elige "No"
+        btnNoServicio.addEventListener('click', function () {
+            btnServicios.disabled = true; // Deshabilitar el botón de servicios extras
+            btnNoServicio.classList.add('selected'); // Marcar el botón "No" como seleccionado
+            btnSiServicio.classList.remove('selected'); // Quitar la selección del botón "Sí"
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    const cantidadPagar = document.getElementById('cantidad_pagar');
+    const cambio = document.getElementById('cambio');
+    const totalElement = document.getElementById('total');
+    const guardarButton = document.getElementById('guardar');
+    const errorCantidadPagar = document.getElementById('error-cantidad-pagar');
+
+    // Validar cantidad a pagar
+    cantidadPagar.addEventListener('input', function () {
+        const totalVenta = parseFloat(totalElement.textContent) || 0;
+        const montoPagar = parseFloat(cantidadPagar.value) || 0;
+
+        if (montoPagar >= totalVenta) {
+            cambio.value = (montoPagar - totalVenta).toFixed(2);
+            errorCantidadPagar.classList.add('d-none');
+            guardarButton.disabled = false;
+        } else {
+            cambio.value = '0.00';
+            errorCantidadPagar.classList.remove('d-none');
+            guardarButton.disabled = true;
+        }
+    });
+
+    // Validación inicial
+    guardarButton.disabled = true; // Deshabilitar el botón al cargar
+});
+
 
 </script>
 @endpush
