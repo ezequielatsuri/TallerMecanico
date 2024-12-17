@@ -79,7 +79,10 @@ button.selected {
                         <!-----Precio de venta---->
                         <div class="col-sm-4">
                             <label for="precio_venta" class="form-label">Precio de venta:</label>
-                            <input disabled type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                            <div class="input-group">
+                                <span class="input-group-text">MX$</span>
+                                <input disabled type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                            </div>
                         </div>
 
                         <!-----Cantidad---->
@@ -93,7 +96,10 @@ button.selected {
                         <!----Descuento---->
                         <div class="col-sm-4">
                             <label for="descuento" class="form-label">Descuento:</label>
-                            <input type="number" name="descuento" id="descuento" class="form-control">
+                            <div class="input-group">
+                                <span class="input-group-text">MX$</span>
+                                <input type="number" name="descuento" id="descuento" class="form-control">
+                            </div>
                         </div>
                          <!-- Pregunta para agregar servicios -->
                          <div class="col-12 mt-3">
@@ -134,13 +140,16 @@ button.selected {
 
                                 <!-- Precio de servicio -->
                                 <div class="col-sm-6 mb-3">
-                                    <label for="precio" class="form-label">Precio de servicio:</label>
+                                    <label for="precio" class="form-label">Precio de servicio MX$:</label>
                                     <input disabled type="number" name="precio" id="precio" class="form-control" step="0.1">
                                 </div>
 
                                 <div class="col-sm-4">
                                     <label for="descuentoS" class="form-label">Descuento de servicios:</label>
-                                    <input type="number" name="descuentoS" id="descuentoS" class="form-control">
+                                    <div class="input-group">
+                                        <span class="input-group-text">MX$</span>
+                                        <input type="number" name="descuentoS" id="descuentoS" class="form-control">
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -150,9 +159,9 @@ button.selected {
                                             <tr>
                                                 <th class="text-white">#</th>
                                                 <th class="text-white">Servicio</th>
-                                                <th class="text-white">Precio</th>
-                                                <th class="text-white">Descuento</th>
-                                                <th class="text-white">Subtotal</th>
+                                                <th class="text-white">Precio MX$</th>
+                                                <th class="text-white">Descuento MX$</th>
+                                                <th class="text-white">Subtotal MX$</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -163,17 +172,17 @@ button.selected {
                                             <tr>
                                                 <th></th>
                                                 <th colspan="4">Sumas</th>
-                                                <th colspan="2"><span id="precioS">0</span></th>
+                                                <th colspan="2">MX$ <span id="precioS">0</span></th>
                                             </tr>
                                             <tr>
                                                 <th></th>
                                                 <th colspan="4">IVA %</th>
-                                                <th colspan="2"><span id="igvS">0</span></th>
+                                                <th colspan="2">MX$ <span id="igvS">0</span></th>
                                             </tr>
                                             <tr>
                                                 <th></th>
                                                 <th colspan="4">Total</th>
-                                                <th colspan="2">
+                                                <th colspan="2">MX$ 
                                                     <input type="hidden" name="total" value="0" id="inputTotalS">
                                                     <span id="totalS">0</span>
                                                 </th>
@@ -201,9 +210,9 @@ button.selected {
                                             <th class="text-white">#</th>
                                             <th class="text-white">Producto</th>
                                             <th class="text-white">Cantidad</th>
-                                            <th class="text-white">Precio venta</th>
-                                            <th class="text-white">Descuento</th>
-                                            <th class="text-white">Subtotal</th>
+                                            <th class="text-white">Precio venta MX$</th>
+                                            <th class="text-white">Descuento MX$</th>
+                                            <th class="text-white">Subtotal MX$</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -214,21 +223,21 @@ button.selected {
                                         <tr>
                                             <th></th>
                                             <th colspan="4">Sumas</th>
-                                            <th colspan="2"><span id="sumas">0</span></th>
+                                            <th colspan="2">MX$ <span id="sumas">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <th colspan="4">IVA %</th>
-                                            <th colspan="2"><span id="igv">0</span></th>
+                                            <th colspan="2">MX$ <span id="igv">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <th colspan="4">Total</th>
-                                            <th colspan="2">
+                                            <th colspan="2">MX$
                                                 <input type="hidden" name="total" value="0" id="inputTotal">
                                                 <span id="total">0</span>
                                             </th>
-                                        </tr>
+                                        </tr>$
                                     </tfoot>
                                 </table>
                             </div>
@@ -270,7 +279,7 @@ button.selected {
                             <label for="comprobante_id" class="form-label">Comprobante:</label>
                             <select name="comprobante_id" id="comprobante_id" class="form-control selectpicker" title="Selecciona">
                                 @foreach ($comprobantes as $item)
-                                <option value="{{$item->id}}">{{$item->tipo_comprobante}}</option>
+                                <option value="{{$item->id}}" selected>{{$item->tipo_comprobante}}</option>
                                 @endforeach
                             </select>
                             @error('comprobante_id')
@@ -280,8 +289,8 @@ button.selected {
 
                         <!-- Numero de comprobante -->
                         <div class="col-12">
-                            <label for="numero_comprobante" class="form-label">Numero de comprobante:</label>
-                            <input required type="number" name="numero_comprobante" id="numero_comprobante" class="form-control" oninput="validateNumberInput(this)">
+                            <label for="numero_comprobante" class="form-label">Numero de folio:</label>
+                            <input required type="number" name="numero_comprobante" id="numero_comprobante" class="form-control" maxlength="6" oninput="validateFolioInput(this)">
                             @error('numero_comprobante')
                             <small class="text-danger">{{ '*'.$message }}</small>
                             @enderror
@@ -295,19 +304,24 @@ button.selected {
                         <!-- Cantidad a pagar -->
                         <div class="col-12">
                             <label for="cantidad_pagar" class="form-label">Cantidad a pagar:</label>
-                            <input type="number" id="cantidad_pagar" class="form-control" step="0.01" placeholder="Ingrese el monto que paga el cliente">
+                            <div class="input-group">
+                                <span class="input-group-text">MX$</span>
+                                <input type="number" id="cantidad_pagar" class="form-control" step="0.01" placeholder="Ingrese el monto que paga el cliente">
+                            </div>
                             <small id="error-cantidad-pagar" class="error-message d-none">La cantidad a pagar no puede ser menor que el total.</small>
                         </div>
 
                         <!-- Cambio -->
                         <div class="col-12">
                             <label for="cambio" class="form-label">Cambio:</label>
-                            <input readonly type="number" id="cambio" class="form-control" step="0.01">
+                            <div class="input-group">
+                                <span class="input-group-text">MX$</span>
+                                <input readonly type="number" id="cambio" class="form-control" step="0.01">
+                            </div>
                         </div>
-
                         <!--Impuesto---->
                         <div class="col-sm-6">
-                            <label for="impuesto" class="form-label">Impuesto(IVA):</label>
+                            <label for="impuesto" class="form-label">Impuesto(IVA) MX$:</label>
                             <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
                             @error('impuesto')
                             <small class="text-danger">{{ '*'.$message }}</small>
@@ -736,26 +750,32 @@ $('#producto_id, #cantidad').on('change input', function () {
 // Llamada inicial al cargar la página
 validarProductoYCantidad();
 
-$(document).ready(function () {
-    // Validar cantidad contra el stock
-    function validarCantidad() {
-        const cantidad = parseInt($('#cantidad').val()) || 0;
-        const stock = parseInt($('#stock').val()) || 0;
-        const btnAgregar = $('#btn_agregar');
-        const errorCantidad = $('#error-cantidad');
+// Declarar la función fuera de $(document).ready()
+function validarCantidad() {
+    const cantidad = parseInt($('#cantidad').val()) || 0;
+    const stock = parseInt($('#stock').val()) || 0;
+    const btnAgregar = $('#btn_agregar');
+    const errorCantidad = $('#error-cantidad');
 
-        if (cantidad > stock) {
-            $('#cantidad').addClass('invalid-input');
-            if (errorCantidad.length === 0) {
-                $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
-            }
-            btnAgregar.prop('disabled', true);
-        } else {
-            $('#cantidad').removeClass('invalid-input');
-            $('#error-cantidad').remove();
-            btnAgregar.prop('disabled', false);
+    if (cantidad > stock) {
+        $('#cantidad').addClass('invalid-input');
+        if ($('#error-cantidad').length === 0) {
+            $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
         }
+        btnAgregar.prop('disabled', true);
+    } else {
+        $('#cantidad').removeClass('invalid-input');
+        $('#error-cantidad').remove();
+        btnAgregar.prop('disabled', false);
     }
+}
+
+// Asegurarse de que el DOM esté listo
+$(document).ready(function () {
+    console.log("Document ready: inicializando scripts...");
+
+    // Validar cantidad contra el stock
+    $('#cantidad').on('input', validarCantidad);
 
     // Restringir entrada para "Cantidad" y "Descuento"
     $('#cantidad, #descuento').on('keydown input', function (e) {
@@ -785,23 +805,24 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    // Validación en tiempo real para recortar caracteres si se ingresaron de otra manera
+    // Validación en tiempo real para recortar caracteres
     $('#cantidad, #descuento').on('input', function () {
         const inputField = $(this);
         const maxLength = inputField.attr('id') === 'cantidad' ? 5 : 10;
 
-        // Recortar el valor si excede el límite
         if (inputField.val().length > maxLength) {
             inputField.val(inputField.val().slice(0, maxLength));
         }
 
-        // Validar cantidad contra el stock después de ajustar el valor
         if (inputField.attr('id') === 'cantidad') {
             validarCantidad();
         }
     });
+
+    // Llamada inicial
     validarCantidad();
 });
+
 </script>
 <script>
     $(document).ready(function () {
@@ -838,22 +859,78 @@ $(document).ready(function () {
 
     // Validar cantidad a pagar
     cantidadPagar.addEventListener('input', function () {
-        const totalVenta = parseFloat(totalElement.textContent) || 0;
-        const montoPagar = parseFloat(cantidadPagar.value) || 0;
+    const totalVenta = parseFloat(totalElement.textContent) || 0;
+    const montoPagar = parseFloat(cantidadPagar.value) || 0;
 
-        if (montoPagar >= totalVenta) {
-            cambio.value = (montoPagar - totalVenta).toFixed(2);
-            errorCantidadPagar.classList.add('d-none');
-            guardarButton.disabled = false;
-        } else {
-            cambio.value = '0.00';
-            errorCantidadPagar.classList.remove('d-none');
-            guardarButton.disabled = true;
-        }
-    });
+    if (montoPagar >= totalVenta) {
+        cambio.value = (montoPagar - totalVenta).toFixed(2);
+        errorCantidadPagar.classList.add('d-none');
+        guardarButton.disabled = false;
+    } else {
+        const falta = (totalVenta - montoPagar).toFixed(2);
+        cambio.value = '0.00';
+        errorCantidadPagar.textContent = `Te faltan MX$ ${falta} por pagar.`;
+        errorCantidadPagar.classList.remove('d-none');
+        guardarButton.disabled = true;
+    }
+});
+
 
     // Validación inicial
     guardarButton.disabled = true; // Deshabilitar el botón al cargar
+});
+function validateFolioInput(input) {
+        // Reemplaza cualquier carácter que no sea un número
+        input.value = input.value.replace(/[^0-9]/g, '');
+
+        // Limita la cantidad de caracteres a 6
+        if (input.value.length > 6) {
+            input.value = input.value.slice(0, 6);
+        }
+    }
+    $(document).ready(function () {
+    // Función para validar los campos obligatorios
+    function validarCamposObligatorios() {
+        const cliente = $('#cliente_id');
+        const numeroFolio = $('#numero_comprobante');
+        const producto = $('#producto_id');
+        const cantidad = $('#cantidad');
+        const cantidadPagar = $('#cantidad_pagar');
+
+        // Validar Cliente
+        validarCampo(cliente.closest('.bootstrap-select'), cliente.val(), 'Registro obligatorio');
+
+        // Validar Número de Folio
+        validarCampo(numeroFolio, numeroFolio.val().trim(), 'Registro obligatorio');
+
+        // Validar Producto
+        validarCampo(producto.closest('.bootstrap-select'), producto.val(), 'Registro obligatorio');
+
+        // Validar Cantidad
+        validarCampo(cantidad, cantidad.val().trim() && parseFloat(cantidad.val()) > 0, 'Registro obligatorio');
+
+        // Validar Cantidad a Pagar
+        validarCampo(cantidadPagar, cantidadPagar.val().trim() && parseFloat(cantidadPagar.val()) > 0, 'Registro obligatorio');
+    }
+
+    // Función para mostrar el mensaje de error
+    function validarCampo(campo, condicion, mensaje) {
+        if (!condicion) {
+            if (!campo.next('.error-message').length) {
+                campo.after(`<div class="error-message">${mensaje}</div>`);
+            }
+        } else {
+            campo.next('.error-message').remove();
+        }
+    }
+
+    // Validación inicial al cargar la página
+    validarCamposObligatorios();
+
+    // Validación en tiempo real
+    $('#cliente_id, #numero_comprobante, #producto_id, #cantidad, #cantidad_pagar').on('input change', function () {
+        validarCamposObligatorios();
+    });
 });
 
 
