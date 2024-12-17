@@ -152,7 +152,7 @@
                         <th class="text-white">Cantidad</th>
                         <th class="text-white">Precio de compra</th>
                         <th class="text-white">Precio de venta</th>
-                        <th class="text-white">Subtotal</th>
+                        <th class="text-white">Subtotal MX$</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,10 +165,10 @@
                             {{$item->pivot->cantidad}}
                         </td>
                         <td>
-                            {{$item->pivot->precio_compra}}
+                        MX$ {{$item->pivot->precio_compra}}
                         </td>
                         <td>
-                            {{$item->pivot->precio_venta}}
+                        MX$ {{$item->pivot->precio_venta}}
                         </td>
                         <td class="td-subtotal">
                             {{($item->pivot->cantidad) * ($item->pivot->precio_compra)}}
@@ -216,9 +216,9 @@
             cont += parseFloat(filasSubtotal[i].innerHTML);
         }
 
-        $('#th-suma').html(cont);
-        $('#th-igv').html(impuesto);
-        $('#th-total').html(round(cont + parseFloat(impuesto)));
+        $('#th-suma').html('MX$ '+cont);
+        $('#th-igv').html('MX$ '+impuesto);
+        $('#th-total').html('MX$ '+round(cont + parseFloat(impuesto)));
     }
 
     function round(num, decimales = 2) {

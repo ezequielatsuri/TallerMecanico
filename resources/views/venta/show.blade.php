@@ -147,7 +147,7 @@
                 <div class="col-sm-6">
                     <div class="input-group">
                         <span title="Impuesto" class="input-group-text" id="icon-form"><i class="fa-solid fa-percent"></i></span>
-                        <input id="input-impuesto" disabled type="text" class="form-control" value="{{ $venta->impuesto }}">
+                        <input id="input-impuesto" disabled type="text" class="form-control" value="MX$ {{ $venta->impuesto }}">
                     </div>
 
                 </div>
@@ -170,9 +170,9 @@
                     <tr class="align-top">
                         <th class="text-white">Producto</th>
                         <th class="text-white">Cantidad</th>
-                        <th class="text-white">Precio de venta</th>
-                        <th class="text-white">Descuento</th>
-                        <th class="text-white">Subtotal</th>
+                        <th class="text-white">Precio de venta MX$</th>
+                        <th class="text-white">Descuento MX$</th>
+                        <th class="text-white">Subtotal MX$</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -185,13 +185,13 @@
                             {{$item->pivot->cantidad}}
                         </td>
                         <td>
-                            {{$item->pivot->precio_venta}}
+                        MX$ {{$item->pivot->precio_venta}} 
                         </td>
                         <td>
-                            {{$item->pivot->descuento}}
+                        MX$ {{$item->pivot->descuento}} 
                         </td>
                         <td class="td-subtotal">
-                            {{($item->pivot->cantidad) * ($item->pivot->precio_venta) - ($item->pivot->descuento)}}
+                         {{($item->pivot->cantidad) * ($item->pivot->precio_venta) - ($item->pivot->descuento)}}
                         </td>
                     </tr>
                     @endforeach
@@ -249,7 +249,7 @@
                     @endphp
                     <tr>
                         <th colspan="4">Total:</th>
-                        <th id="th-total">{{$totalVenta}}</th>
+                        <th id="th-total"> MX$ {{$totalVenta}} </th>
                     </tr>
                 </tfoot>
             </table>
@@ -280,7 +280,7 @@
             contS += parseFloat(filasSubtotalS[i].innerHTML);
         }
 
-        $('#th-suma').html(cont + contS);
+        $('#th-suma').html('MX$ '+(cont + contS));
         $('#th-igv').html(impuesto);
 
     }
