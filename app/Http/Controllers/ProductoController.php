@@ -194,4 +194,15 @@ class ProductoController extends Controller
 
         return redirect()->route('productos.index')->with('success', $message);
     }
+    public function validar(Request $request)
+{
+    $codigoExiste = Producto::where('codigo', $request->codigo)->exists();
+    $nombreExiste = Producto::where('nombre', $request->nombre)->exists();
+
+    return response()->json([
+        'codigoExiste' => $codigoExiste,
+        'nombreExiste' => $nombreExiste,
+    ]);
+}
+
 }

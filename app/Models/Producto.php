@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\StockMinimoNotification;
+
 
 class Producto extends Model
 {
@@ -63,4 +65,19 @@ class Producto extends Model
 
         return $name;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+    
+        static::updated(function ($producto) {
+            $stockMinimo = 5; // Define un valor fijo de stock mínimo
+            if ($producto->stock <= $stockMinimo) {
+                foreach (User::all() as $user) { // Notificar a todos los usuarios
+                    $user->notify(new StockMinimoNotification($producto));
+                }
+            }
+        });
+    }
+    
 }
