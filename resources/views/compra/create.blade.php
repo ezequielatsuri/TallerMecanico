@@ -55,15 +55,23 @@
                         <!-----Precio de compra---->
                         <div class="col-sm-4 mb-2">
                             <label for="precio_compra" class="form-label">Precio de compra:</label>
-                            <input type="number" name="precio_compra" id="precio_compra" class="form-control" step="0.1">
+                            <div class="input-group">
+                                <span class="input-group-text">MX$</span>
+                                <input type="number" name="precio_compra" id="precio_compra" class="form-control" step="0.1">
+                            </div>
                         </div>
 
                         <!-----Precio de venta---->
                         <div class="col-sm-4 mb-2">
                             <label for="precio_venta" class="form-label">Precio de venta:</label>
-                            <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                            <div class="input-group">
+                                <span class="input-group-text">MX$</span>
+                                <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
+                            </div>
                             <!-- Contenedor para el mensaje de error -->
-                            <small id="precio_venta_error" class="text-danger d-none">El precio de venta no puede ser menor que el precio de compra.</small>
+                            <small id="precio_venta_error" class="text-danger d-none">
+                                El precio de venta no puede ser menor que el precio de compra.
+                            </small>
                         </div>
 
                         <!-----botón para agregar--->
@@ -80,9 +88,9 @@
                                             <th class="text-white">#</th>
                                             <th class="text-white">Producto</th>
                                             <th class="text-white">Cantidad</th>
-                                            <th class="text-white">Precio compra</th>
-                                            <th class="text-white">Precio venta</th>
-                                            <th class="text-white">Subtotal</th>
+                                            <th class="text-white">Precio compra MX$</th>
+                                            <th class="text-white">Precio venta MX$</th>
+                                            <th class="text-white">Subtotal MX$</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -101,17 +109,17 @@
                                         <tr>
                                             <th></th>
                                             <th colspan="4">Sumas</th>
-                                            <th colspan="2"><span id="sumas">0</span></th>
+                                            <th colspan="2"> MX$ <span id="sumas">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <th colspan="4">IGV %</th>
-                                            <th colspan="2"><span id="igv">0</span></th>
+                                            <th colspan="2">MX$ <span id="igv">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <th colspan="4">Total</th>
-                                            <th colspan="2"> <input type="hidden" name="total" value="0" id="inputTotal"> <span id="total">0</span></th>
+                                            <th colspan="2"> <input type="hidden" name="total" value="0" id="inputTotal">MX$ <span id="total">0</span></th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -154,7 +162,7 @@
                             <label for="comprobante_id" class="form-label">Comprobante:</label>
                             <select name="comprobante_id" id="comprobante_id" class="form-control selectpicker" title="Selecciona">
                                 @foreach ($comprobantes as $item)
-                                <option value="{{$item->id}}">{{$item->tipo_comprobante}}</option>
+                                <option value="{{$item->id}}" selected>{{$item->tipo_comprobante}}</option>
                                 @endforeach
                             </select>
                             @error('comprobante_id')
@@ -164,8 +172,8 @@
 
                         <!--Numero de comprobante-->
                         <div class="col-12 mb-2">
-                            <label for="numero_comprobante" class="form-label">Numero de comprobante:</label>
-                            <input required type="text" name="numero_comprobante" id="numero_comprobante" class="form-control">
+                            <label for="numero_comprobante" class="form-label">Numero de folio:</label>
+                            <input required type="text" name="numero_comprobante" id="numero_comprobante" class="form-control"  maxlength="6" oninput="validateFolioInput(this)">
                             @error('numero_comprobante')
                             <small class="text-danger">{{ '*'.$message }}</small>
                             @enderror
@@ -581,6 +589,14 @@ $(document).ready(function () {
         }
     }
 });
+function validateFolioInput(input) {
+        // Reemplaza cualquier carácter que no sea un número
+        input.value = input.value.replace(/[^0-9]/g, '');
 
+        // Limita la cantidad de caracteres a 6
+        if (input.value.length > 6) {
+            input.value = input.value.slice(0, 6);
+        }
+    }
 </script>
 @endpush
