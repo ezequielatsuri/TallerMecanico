@@ -761,26 +761,32 @@ $('#producto_id, #cantidad').on('change input', function () {
 // Llamada inicial al cargar la página
 validarProductoYCantidad();
 
-$(document).ready(function () {
-    // Validar cantidad contra el stock
-    function validarCantidad() {
-        const cantidad = parseInt($('#cantidad').val()) || 0;
-        const stock = parseInt($('#stock').val()) || 0;
-        const btnAgregar = $('#btn_agregar');
-        const errorCantidad = $('#error-cantidad');
+// Declarar la función fuera de $(document).ready()
+function validarCantidad() {
+    const cantidad = parseInt($('#cantidad').val()) || 0;
+    const stock = parseInt($('#stock').val()) || 0;
+    const btnAgregar = $('#btn_agregar');
+    const errorCantidad = $('#error-cantidad');
 
-        if (cantidad > stock) {
-            $('#cantidad').addClass('invalid-input');
-            if (errorCantidad.length === 0) {
-                $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
-            }
-            btnAgregar.prop('disabled', true);
-        } else {
-            $('#cantidad').removeClass('invalid-input');
-            $('#error-cantidad').remove();
-            btnAgregar.prop('disabled', false);
+    if (cantidad > stock) {
+        $('#cantidad').addClass('invalid-input');
+        if ($('#error-cantidad').length === 0) {
+            $('#cantidad').after('<div id="error-cantidad" class="error-message">La cantidad no puede exceder el stock disponible.</div>');
         }
+        btnAgregar.prop('disabled', true);
+    } else {
+        $('#cantidad').removeClass('invalid-input');
+        $('#error-cantidad').remove();
+        btnAgregar.prop('disabled', false);
     }
+}
+
+// Asegurarse de que el DOM esté listo
+$(document).ready(function () {
+    console.log("Document ready: inicializando scripts...");
+
+    // Validar cantidad contra el stock
+    $('#cantidad').on('input', validarCantidad);
 
     // Restringir entrada para "Cantidad" y "Descuento"
     $('#cantidad, #descuento').on('keydown input', function (e) {
@@ -810,23 +816,24 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    // Validación en tiempo real para recortar caracteres si se ingresaron de otra manera
+    // Validación en tiempo real para recortar caracteres
     $('#cantidad, #descuento').on('input', function () {
         const inputField = $(this);
         const maxLength = inputField.attr('id') === 'cantidad' ? 5 : 10;
 
-        // Recortar el valor si excede el límite
         if (inputField.val().length > maxLength) {
             inputField.val(inputField.val().slice(0, maxLength));
         }
 
-        // Validar cantidad contra el stock después de ajustar el valor
         if (inputField.attr('id') === 'cantidad') {
             validarCantidad();
         }
     });
+
+    // Llamada inicial
     validarCantidad();
 });
+
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -886,6 +893,51 @@ function validateFolioInput(input) {
             input.value = input.value.slice(0, 6);
         }
     }
+    $(document).ready(function () {
+    // Función para validar los campos obligatorios
+    function validarCamposObligatorios() {
+        const cliente = $('#cliente_id');
+        const numeroFolio = $('#numero_comprobante');
+        const producto = $('#producto_id');
+        const cantidad = $('#cantidad');
+        const cantidadPagar = $('#cantidad_pagar');
+
+        // Validar Cliente
+        validarCampo(cliente.closest('.bootstrap-select'), cliente.val(), 'Registro obligatorio');
+
+        // Validar Número de Folio
+        validarCampo(numeroFolio, numeroFolio.val().trim(), 'Registro obligatorio');
+
+        // Validar Producto
+        validarCampo(producto.closest('.bootstrap-select'), producto.val(), 'Registro obligatorio');
+
+        // Validar Cantidad
+        validarCampo(cantidad, cantidad.val().trim() && parseFloat(cantidad.val()) > 0, 'Registro obligatorio');
+
+        // Validar Cantidad a Pagar
+        validarCampo(cantidadPagar, cantidadPagar.val().trim() && parseFloat(cantidadPagar.val()) > 0, 'Registro obligatorio');
+    }
+
+    // Función para mostrar el mensaje de error
+    function validarCampo(campo, condicion, mensaje) {
+        if (!condicion) {
+            if (!campo.next('.error-message').length) {
+                campo.after(`<div class="error-message">${mensaje}</div>`);
+            }
+        } else {
+            campo.next('.error-message').remove();
+        }
+    }
+
+    // Validación inicial al cargar la página
+    validarCamposObligatorios();
+
+    // Validación en tiempo real
+    $('#cliente_id, #numero_comprobante, #producto_id, #cantidad, #cantidad_pagar').on('input change', function () {
+        validarCamposObligatorios();
+    });
+});
+
 
 </script>
 @endpush

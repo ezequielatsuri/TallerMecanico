@@ -598,5 +598,58 @@ function validateFolioInput(input) {
             input.value = input.value.slice(0, 6);
         }
     }
+    $(document).ready(function () {
+    // Función principal para validar los campos
+    function validarCamposObligatorios() {
+        const proveedor = $('#proveedore_id');
+        const numeroFolio = $('#numero_comprobante');
+        const producto = $('#producto_id');
+        const cantidad = $('#cantidad');
+        const precioCompra = $('#precio_compra');
+        const precioVenta = $('#precio_venta');
+
+        // Validar cada campo
+        validarCampo(proveedor.closest('.bootstrap-select'), proveedor.val(), 'Registro obligatorio');
+        validarCampo(numeroFolio, numeroFolio.val().trim(), 'Registro obligatorio');
+        validarCampo(producto.closest('.bootstrap-select'), producto.val(), 'Registro obligatorio');
+        validarCampo(cantidad, cantidad.val().trim() && parseFloat(cantidad.val()) > 0, 'Registro obligatorio');
+        validarCampoInputGroup(precioCompra, precioCompra.val().trim() && parseFloat(precioCompra.val()) > 0, 'Registro obligatorio');
+        validarCampoInputGroup(precioVenta, precioVenta.val().trim() && parseFloat(precioVenta.val()) > 0, 'Registro obligatorio');
+    }
+
+    // Función para validar campos normales
+    function validarCampo(campo, condicion, mensaje) {
+        if (!condicion) {
+            if (!campo.next('.error-message').length) {
+                campo.after(`<div class="error-message text-danger">${mensaje}</div>`);
+            }
+        } else {
+            campo.next('.error-message').remove();
+        }
+    }
+
+    // Función para validar campos en Input Group
+    function validarCampoInputGroup(input, condicion, mensaje) {
+        const inputGroup = input.closest('.input-group'); // Selecciona el div .input-group
+        const errorContainer = inputGroup.next('.error-message'); // Verifica si existe un mensaje de error
+
+        if (!condicion) {
+            if (!errorContainer.length) {
+                inputGroup.after(`<small class="error-message text-danger">${mensaje}</small>`);
+            }
+        } else {
+            errorContainer.remove();
+        }
+    }
+
+    // Validar inicialmente al cargar la página
+    validarCamposObligatorios();
+
+    // Escuchar cambios en tiempo real
+    $('#proveedore_id, #numero_comprobante, #producto_id, #cantidad, #precio_compra, #precio_venta').on('input change', function () {
+        validarCamposObligatorios();
+    });
+});
+
 </script>
 @endpush
