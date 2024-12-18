@@ -22,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +39,10 @@ use Illuminate\Support\Facades\Route;
 
 // Ruta principal (Home)
 Route::get('/', [homeController::class, 'index'])->name('panel');
+// Rutas específicas primero
+Route::get('/ventas/filtrar', [VentaController::class, 'filtrarVentas'])->name('ventas.filtrar');
+Route::get('/ventas/{venta}/imprimir', [VentaController::class, 'imprimirFactura'])->name('ventas.imprimir');
+Route::get('/ventas/reporte', [VentaController::class, 'generarReporte'])->name('ventas.reporte');
 
 // Rutas de recursos
 Route::resources([
@@ -56,6 +64,13 @@ Route::resources([
 // Ruta para imprimir factura de una compra específica
 Route::get('/compras/{compra}/print', [compraController::class, 'print'])->name('compras.print');
 Route::get('/ventas/{venta}/imprimir', [VentaController::class, 'imprimirFactura'])->name('ventas.imprimir');
+Route::get('/productos/validar', [ProductoController::class, 'validar'])->name('productos.validar');
+
+
+Route::get('/notifications/read', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+    return redirect()->back();
+})->name('notifications.read');
 Route::get('/productos/validar', [ProductoController::class, 'validar'])->name('productos.validar');
 
 

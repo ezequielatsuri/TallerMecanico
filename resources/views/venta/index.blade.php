@@ -33,7 +33,10 @@
         </a>
     </div>
     @endcan
-
+    <div class="mb-3">
+    <label for="fecha_filtro" class="form-label">Filtrar ventas por fecha:</label>
+    <input type="date" id="fecha_filtro" class="form-control" />
+</div>
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
@@ -132,26 +135,101 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
+    </div> <!-- Cierre del div de la tabla -->
+    </div> <!-- Cierre del card -->
+
+    <!-- Botón para generar reporte PDF -->
+    <div class="text-end mt-3">
+        <form method="GET" action="{{ route('ventas.reporte') }}">
+            <input type="hidden" id="fecha_reporte" name="fecha" value="">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-file-pdf"></i> Generar Reporte PDF
+            </button>
+        </form>
     </div>
 
-</div>
+    </div> <!-- Cierre del container -->
 @endsection
 
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 <script>
-    // Simple-DataTables
-    // https://github.com/fiduswriter/Simple-DataTables/wiki
     window.addEventListener('DOMContentLoaded', event => {
         const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {})
     });
 
     document.addEventListener('DOMContentLoaded', function() {
+<<<<<<< HEAD
         const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
             perPageSelect: [10, 25, 50, 100]  // Opciones de cantidad de registros para mostrar
         });
     });
 
+=======
+        const inputFecha = document.getElementById('fecha_filtro');
+        const tablaVentas = document.querySelector('#datatablesSimple tbody');
+
+        document.getElementById('fecha_filtro').addEventListener('change', function () {
+    const fechaSeleccionada = this.value;
+
+    if (fechaSeleccionada) {
+        fetch(`/ventas/filtrar?fecha=${fechaSeleccionada}`)
+            .then(response => response.json())
+            .then(data => {
+                const tablaVentas = document.querySelector('#datatablesSimple tbody');
+                tablaVentas.innerHTML = ''; // Limpiar la tabla
+
+                if (data.length > 0) {
+                    data.forEach(venta => {
+                        const acciones = `
+                            <div class="d-flex align-items-center">
+                                ${venta.acciones.can_ver ? `
+                                    <a href="${venta.acciones.ver}" class="text-success mx-3" title="Ver">
+                                        <i class="fas fa-eye"></i>
+                                    </a>` : ''}
+                                ${venta.acciones.can_imprimir ? `
+                                    <a href="${venta.acciones.imprimir}" target="_blank" class="text-primary mx-3" title="Imprimir">
+                                        <i class="fas fa-print"></i>
+                                    </a>` : ''}
+                                ${venta.acciones.can_eliminar ? `
+                                    <a href="${venta.acciones.eliminar}" class="text-danger mx-3" title="Eliminar">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>` : ''}
+                            </div>`;
+
+                        const fila = `
+                            <tr>
+                                <td>
+                                    <p class="fw-semibold mb-1">${venta.comprobante}</p>
+                                    <p class="text-muted mb-0">${venta.numero_comprobante}</p>
+                                </td>
+                                <td>
+                                    <p class="fw-semibold mb-1">${venta.cliente}</p>
+                                </td>
+                                <td>${venta.fecha}</td>
+                                <td>${venta.vendedor}</td>
+                                <td>${venta.total}</td>
+                                <td>${acciones}</td>
+                            </tr>`;
+                        tablaVentas.insertAdjacentHTML('beforeend', fila);
+                    });
+                } else {
+                    tablaVentas.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center">No hay ventas registradas para esta fecha.</td>
+                        </tr>`;
+                }
+            })
+            .catch(error => console.error('Error al filtrar ventas:', error));
+    }
+});
+
+
+        // Capturar la fecha seleccionada y agregarla al formulario de reporte
+        inputFecha.addEventListener('change', function () {
+            document.getElementById('fecha_reporte').value = this.value;
+        });
+    });
+>>>>>>> 6d63a02ad58f374a3a1811e985917e1af379c752
 </script>
 @endpush
