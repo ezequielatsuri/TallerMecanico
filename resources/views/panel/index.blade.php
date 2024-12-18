@@ -132,7 +132,7 @@
 
         <!----Presentaciones--->
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-danger text-white mb-4">
+            <div class="card bg-info text-white mb-4">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-8">
@@ -184,7 +184,7 @@
 
         <!----Proveedore--->
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-warning text-white mb-4">
+            <div class="card bg-orange text-white mb-4">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-8">
@@ -210,7 +210,7 @@
 
         <!----Users--->
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
+            <div class="card bg-purple text-white mb-4">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-8">
