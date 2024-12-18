@@ -61,6 +61,7 @@
                         @enderror
                         <small id="codigoError" class="text-danger d-none">El código no puede estar vacío y debe ser único.</small>
                         <small id="codigoNumero" class="text-danger d-none">El código debe ser solamente de números y máximo 20 caracteres.</small>
+                        <small id="codigoError" class="text-danger d-none">El código ya existe.</small>
                     </div>
 
                     <!-- Nombre -->
@@ -255,6 +256,41 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script>
+    
+    $(document).ready(function () {
+    function validarCampos() {
+        const codigo = $('#codigo').val().trim();
+        const nombre = $('#nombre').val().trim();
+        $('#codigoError').addClass('d-none');
+        $('#nombreError').addClass('d-none');
+
+        if (codigo || nombre) {
+            $.ajax({
+                url: "{{ route('productos.validar') }}", // Ruta para validar código/nombre
+                method: "GET",
+                data: { codigo: codigo, nombre: nombre },
+                success: function (response) {
+                    let valid = true;
+                    if (response.codigoExiste) {
+                        $('#codigoError').removeClass('d-none').text('El código ya existe.');
+                        valid = false;
+                    }
+                    if (response.nombreExiste) {
+                        $('#nombreError').removeClass('d-none').text('El nombre ya existe.');
+                        valid = false;
+                    }
+                    $('#submitBtn').prop('disabled', !valid);
+                },
+            });
+        }
+    }
+
+    $('#codigo, #nombre').on('input', validarCampos);
+});
+
+
+
+
     function validarCampos() {
         const codigoInput = document.getElementById("codigo");
         const nombreInput = document.getElementById("nombre");

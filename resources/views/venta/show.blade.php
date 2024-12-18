@@ -234,7 +234,7 @@
                     $impuesto = 16;
 
                     foreach ($venta->productos as $item) {
-                    $precioProdu = ($item->pivot->precio_venta - $item->pivot->descuento) * $item->pivot->cantidad;
+                    $precioProdu = ($item->pivot->precio_venta * $item->pivot->cantidad) - $item->pivot->descuento;
                     $igv = ($precioProdu * $impuesto / 100);
                     $totalProductos += ($precioProdu + $igv);
                     }

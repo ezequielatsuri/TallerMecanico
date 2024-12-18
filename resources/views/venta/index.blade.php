@@ -159,6 +159,13 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
+<<<<<<< HEAD
+        const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
+            perPageSelect: [10, 25, 50, 100]  // Opciones de cantidad de registros para mostrar
+        });
+    });
+
+=======
         const inputFecha = document.getElementById('fecha_filtro');
         const tablaVentas = document.querySelector('#datatablesSimple tbody');
 
@@ -223,5 +230,6 @@
             document.getElementById('fecha_reporte').value = this.value;
         });
     });
+>>>>>>> 6d63a02ad58f374a3a1811e985917e1af379c752
 </script>
 @endpush

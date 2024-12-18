@@ -22,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,6 +63,14 @@ Route::resources([
 
 // Ruta para imprimir factura de una compra específica
 Route::get('/compras/{compra}/print', [compraController::class, 'print'])->name('compras.print');
+Route::get('/ventas/{venta}/imprimir', [VentaController::class, 'imprimirFactura'])->name('ventas.imprimir');
+Route::get('/productos/validar', [ProductoController::class, 'validar'])->name('productos.validar');
+
+
+Route::get('/notifications/read', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+    return redirect()->back();
+})->name('notifications.read');
 Route::get('/productos/validar', [ProductoController::class, 'validar'])->name('productos.validar');
 
 

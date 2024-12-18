@@ -18,7 +18,7 @@ class ComprobanteSeeder extends Seeder
                 'tipo_comprobante' => 'Boleta'
             ],
             [
-                'tipo_comprobante' => 'Factura'
+                'tipo_comprobante' => 'Nota de remisión'
             ]
         ]);
     }
