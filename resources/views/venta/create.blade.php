@@ -290,7 +290,7 @@ button.selected {
                         <!-- Numero de comprobante -->
                         <div class="col-12">
                             <label for="numero_comprobante" class="form-label">Numero de folio:</label>
-                            <input required type="number" name="numero_comprobante" id="numero_comprobante" class="form-control" maxlength="6" oninput="validateFolioInput(this)">
+                            <input required type="number" name="numero_comprobante" id="numero_comprobante" class="form-control" maxlength="6" oninput="validateFolioInput(this)" >
                             @error('numero_comprobante')
                             <small class="text-danger">{{ '*'.$message }}</small>
                             @enderror
@@ -884,6 +884,7 @@ $(document).ready(function () {
     // Validación inicial
     guardarButton.disabled = true; // Deshabilitar el botón al cargar
 });
+
 function validateFolioInput(input) {
         // Reemplaza cualquier carácter que no sea un número
         input.value = input.value.replace(/[^0-9]/g, '');

@@ -1,18 +1,25 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\StoreVentaRequest;
+use Illuminate\Http\Request; // Importa la clase correcta
+use App\Models\Venta;
 use App\Models\Cliente;
 use App\Models\Comprobante;
 use App\Models\Producto;
 use App\Models\Servicio;
-use App\Models\Venta;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class VentaController extends Controller
 {
+    public $timestamps = true;
+
     function __construct()
     {
         $this->middleware('permission:ver-venta|crear-venta|mostrar-venta|eliminar-venta', ['only' => ['index']]);
@@ -52,7 +59,55 @@ class VentaController extends Controller
 
     return view('venta.create', compact('productos', 'clientes', 'comprobantes', 'servicios'));
 }
-    
+
+
+
+public function filtrarVentas(Request $request)
+{
+    $fecha = $request->query('fecha');
+
+    if (!$fecha) {
+        return response()->json(['error' => 'Fecha no proporcionada'], 400);
+    }
+
+    $ventas = Venta::with(['cliente.persona', 'comprobante', 'user', 'servicios'])
+        ->whereDate('fecha_hora', $fecha)
+        ->where('estado', 1)
+        ->get();
+
+    $ventasFiltradas = $ventas->map(function ($venta) {
+        $totalServicios = 0;
+        $impuesto = 16;
+
+        foreach ($venta->servicios as $servicio) {
+            $precioServicio = ($servicio->pivot->precio ?? 0) - ($servicio->pivot->descuento ?? 0);
+            $igv = $precioServicio * $impuesto / 100;
+            $totalServicios += $precioServicio + $igv;
+        }
+
+        $totalVenta = ($venta->total ?? 0) + $totalServicios;
+
+        return [
+            'id' => $venta->id,
+            'comprobante' => optional($venta->comprobante)->tipo_comprobante ?? 'No disponible',
+            'numero_comprobante' => $venta->numero_comprobante,
+            'cliente' => optional(optional($venta->cliente)->persona)->razon_social ?? 'No disponible',
+            'fecha' => \Carbon\Carbon::parse($venta->fecha_hora)->format('d-m-Y H:i'),
+            'vendedor' => optional($venta->user)->name ?? 'No disponible',
+            'total' => number_format($totalVenta, 2),
+            'acciones' => [
+                'ver' => route('ventas.show', $venta->id),
+                'imprimir' => route('ventas.imprimir', $venta->id),
+                'eliminar' => route('ventas.destroy', $venta->id),
+                'can_ver' => auth()->user()->can('mostrar-venta'),
+                'can_imprimir' => auth()->user()->can('imprimir-venta'),
+                'can_eliminar' => auth()->user()->can('eliminar-venta'),
+            ],
+        ];
+    });
+
+    return response()->json($ventasFiltradas);
+}
 
     public function store(StoreVentaRequest $request)
 {
@@ -129,4 +184,35 @@ class VentaController extends Controller
         Venta::where('id', $id)->update(['estado' => 0]);
         return redirect()->route('ventas.index')->with('success', 'Venta eliminada');
     }
+
+    public function generarReporte(Request $request)
+{
+    // Obtener la fecha seleccionada del filtro
+    $fecha = $request->query('fecha');
+
+    // Obtener ventas filtradas o todas
+    $ventas = Venta::with(['cliente.persona', 'comprobante', 'user'])
+        ->when($fecha, function ($query) use ($fecha) {
+            $query->whereDate('fecha_hora', $fecha);
+        })
+        ->where('estado', 1)
+        ->get();
+
+    // Datos para el reporte
+    $data = [
+        'logo' => public_path('Recursos/Logo.png'), // Ruta al logo
+        'fecha_reporte' => Carbon::now()->format('d-m-Y H:i'),
+        'usuario' => Auth::user()->name,
+        'ventas' => $ventas,
+        'fecha_filtro' => $fecha ? "Fecha seleccionada: $fecha" : "Todas las fechas"
+    ];
+
+    // Cargar la vista y generar el PDF
+    $pdf = Pdf::loadView('reporte.ventas', $data);
+
+    // Descargar el archivo PDF
+    return $pdf->download('reporte_ventas.pdf');
+}
+
+
 }
