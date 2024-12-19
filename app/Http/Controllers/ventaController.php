@@ -142,21 +142,7 @@ public function filtrarVentas(Request $request)
             }
         }
 
-        // Guardar servicios de la venta
-        $arrayServicio_id = $request->get('arrayidservicio');
-        $arrayPrecioServicio = $request->get('arrayprecioservicio');
-        $arrayDescuentoServicio = $request->get('arraydescuentoservicio');
 
-        // Validar si hay servicios para agregar
-        if (!is_null($arrayServicio_id) && is_array($arrayServicio_id)) {
-            $siseArrayServicio = count($arrayServicio_id);
-            for ($j = 0; $j < $siseArrayServicio; $j++) {
-                $venta->servicios()->attach($arrayServicio_id[$j], [
-                    'precio' => $arrayPrecioServicio[$j],
-                    'descuento' => $arrayDescuentoServicio[$j]
-                ]);
-            }
-        }
 
         DB::commit();
     } catch (Exception $e) {

@@ -459,41 +459,85 @@ button.selected {
 
     // Agregar servicio a la tabla
     function agregarServicios() {
-        let dataServicio = document.getElementById('servicios_id').value.split('-');
-        let idServicios = dataServicio[0];
-        let nameServicio = $('#servicios_id option:selected').text();
-        let precioServicio = parseFloat($('#precio').val());
-        let descuentoS = parseFloat($('#descuentoS').val()) || 0;
+    let dataServicio = document.getElementById('servicios_id').value.split('-');
+    let idServicios = dataServicio[0];
+    let nameServicio = $('#servicios_id option:selected').text();
+    let precioServicio = parseFloat($('#precio').val());
+    let descuentoS = parseFloat($('#descuentoS').val()) || 0;
 
-        if (nameServicio && precioServicio > 0) {
-            subtotal[cont] = round(precioServicio - descuentoS);
-            precioS += subtotal[cont];
-            igvServicios = round(precioS * impuesto / 100);
-            total = round(precioS + igvProductos + igvServicios);  // Sumar impuestos de productos y servicios
+    if (nameServicio && precioServicio > 0) {
+        // Calcular subtotal del servicio sin IVA
+        let subtotalSinIva = round(precioServicio - descuentoS);
+        
+        // Calcular subtotal con IVA
+        let subtotalConIva = round(subtotalSinIva * (1 + impuesto / 100));
+        
+        // Actualizar variables globales
+        subtotal[cont] = subtotalConIva; // Guardar el subtotal con IVA
+        precioS += subtotalSinIva; // Agregar el subtotal sin IVA al total de servicios
+        igvServicios = round(precioS * impuesto / 100);
+        total = round(precioS + igvProductos + igvServicios); // Sumar totales de productos y servicios con IVA
 
-            let fila = '<tr id="filaS' + cont + '">' +
-                '<th>' + (cont + 1) + '</th>' +
-                '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
-                '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio.toFixed(2) + '</td>' +
-                '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS.toFixed(2) + '</td>' +
-                '<td>' + subtotal[cont].toFixed(2) + '</td>' +
-                '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
-                '</tr>';
+        // Crear fila para la tabla de servicios
+        let filaServicios = '<tr id="filaS' + cont + '">' +
+            '<th>' + (cont + 1) + '</th>' +
+            '<td><input type="hidden" name="arrayidservicio[]" value="' + idServicios + '">' + nameServicio + '</td>' +
+            '<td><input type="hidden" name="arrayprecioservicio[]" value="' + precioServicio + '">' + precioServicio.toFixed(2) + '</td>' +
+            '<td><input type="hidden" name="arraydescuentoservicio[]" value="' + descuentoS + '">' + descuentoS.toFixed(2) + '</td>' +
+            '<td>' + subtotalSinIva.toFixed(2) + '</td>' +
+            '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+            '</tr>';
 
-            $('#tabla_detalle_servicios tbody').append(fila); // Apuntar al tbody
-            limpiarCamposS();
-            cont++;
+        $('#tabla_detalle_servicios tbody').append(filaServicios); // Apuntar al tbody de servicios
 
-            // Actualizar los totales
-            $('#precioS').html(precioS.toFixed(2));
-            $('#igvS').html(igvServicios.toFixed(2));
-            $('#totalS').html(total.toFixed(2));
-            $('#impuesto').val(igvProductos + igvServicios);  // Mostrar impuesto total
-            $('#inputTotalS').val(total.toFixed(2));
-        } else {
-            showModal('Valores Incorrectos');
-        }
+        // Crear fila para reflejar el servicio en la tabla de productos (con IVA aplicado)
+        let filaProductos = '<tr id="filaP' + cont + '">' +
+            '<th>' + (cont + 1) + '</th>' +
+            '<td>' + nameServicio + '</td>' + // Mostrar nombre del servicio
+            '<td>1</td>' + // Cantidad fija para servicios
+            '<td>' + precioServicio.toFixed(2) + '</td>' +
+            '<td>' + descuentoS.toFixed(2) + '</td>' +
+            '<td>' + subtotalSinIva.toFixed(2) + '</td>' +
+            '<td><button class="btn btn-danger" type="button" onClick="eliminarServicio(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
+            '</tr>';
+
+        $('#tabla_detalle tbody').append(filaProductos); // Apuntar al tbody de productos
+
+        limpiarCamposS();
+        cont++;
+
+        // Actualizar los totales
+        actualizarTotales();
+        actualizarTotalesServicios();
+    } else {
+        showModal('Valores Incorrectos');
     }
+}
+
+// Actualizar los totales en la tabla de productos y servicios
+function actualizarTotales() {
+    let igv = round((precioS + sumas) * impuesto / 100); // Calcular IVA para productos y servicios
+    total = round(precioS + sumas + igv); // Calcular total general
+
+    $('#sumas').html((precioS + sumas).toFixed(2)); // Actualizar sumas de productos y servicios
+    $('#igv').html(igv.toFixed(2)); // Actualizar IVA
+    $('#total').html(total.toFixed(2)); // Actualizar total
+    $('#inputTotal').val(total.toFixed(2)); // Actualizar input oculto
+}
+
+// Actualizar los totales en la tabla de servicios
+function actualizarTotalesServicios() {
+    $('#precioS').html(precioS.toFixed(2)); // Actualizar sumas de servicios
+    $('#igvS').html(igvServicios.toFixed(2)); // Actualizar IVA de servicios
+    $('#totalS').html((precioS + igvServicios).toFixed(2)); // Actualizar total de servicios
+}
+
+// Función para redondear números
+function round(num, decimales = 2) {
+    return +(Math.round(num + "e+" + decimales) + "e-" + decimales);
+}
+
+
 
     // Eliminar servicio de la tabla
     function eliminarServicio(indice) {
@@ -934,6 +978,38 @@ function validateFolioInput(input) {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const btnSiServicio = document.getElementById('btn_si_servicio');
+    const btnNoServicio = document.getElementById('btn_no_servicio');
+    const btnServicios = document.getElementById('btn_servicios');
+    const btnAgregar = document.getElementById('btn_agregar');
+
+    // Si el usuario elige "Sí"
+    btnSiServicio.addEventListener('click', function () {
+        btnServicios.disabled = false; // Habilitar el botón de servicios extras
+        btnAgregar.disabled = false; // Reactivar el botón "Agregar"
+        btnSiServicio.classList.add('selected'); // Marcar el botón "Sí" como seleccionado
+        btnNoServicio.classList.remove('selected'); // Quitar la selección del botón "No"
+    });
+
+    // Si el usuario elige "No"
+    btnNoServicio.addEventListener('click', function () {
+        btnServicios.disabled = true; // Deshabilitar el botón de servicios extras
+        btnAgregar.disabled = false; // Reactivar el botón "Agregar"
+        btnNoServicio.classList.add('selected'); // Marcar el botón "No" como seleccionado
+        btnSiServicio.classList.remove('selected'); // Quitar la selección del botón "Sí"
+    });
+
+    // Asegurarte que seleccionar un servicio habilite el botón "Agregar"
+    const serviciosSelect = document.getElementById('servicios_id');
+    serviciosSelect.addEventListener('change', function () {
+        if (serviciosSelect.value) {
+            btnAgregar.disabled = false; // Habilitar "Agregar"
+        } else {
+            btnAgregar.disabled = true; // Deshabilitar si no hay selección
+        }
+    });
+});
 
 </script>
 @endpush
