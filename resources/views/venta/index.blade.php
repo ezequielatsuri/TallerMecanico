@@ -85,7 +85,7 @@
                             {{$item->user->name}}
                         </td>
                         <td>
-                            {{$totalVenta}}
+                        {{ number_format($item->total, 2) }}
                         </td>
                         <td>
                             <div class="d-flex align-items-center" role="group" aria-label="Basic mixed styles example">
@@ -166,7 +166,7 @@
     const fechaSeleccionada = this.value;
 
     if (fechaSeleccionada) {
-        fetch(/ventas/filtrar?fecha=${fechaSeleccionada})
+        fetch(`/ventas/filtrar?fecha=${fechaSeleccionada}`)
             .then(response => response.json())
             .then(data => {
                 const tablaVentas = document.querySelector('#datatablesSimple tbody');
