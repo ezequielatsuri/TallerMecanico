@@ -85,7 +85,7 @@
                             {{$item->user->name}}
                         </td>
                         <td>
-                            {{$totalVenta}}
+                        {{ number_format($item->total, 2) }}
                         </td>
                         <td>
                             <div class="d-flex align-items-center" role="group" aria-label="Basic mixed styles example">
