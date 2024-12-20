@@ -85,7 +85,7 @@ public function filtrarVentas(Request $request)
             $totalServicios += $precioServicio + $igv;
         }
 
-        $totalVenta = ($venta->total ?? 0) + $totalServicios;
+        $totalVenta = ($venta->total ?? 0) ;
 
         return [
             'id' => $venta->id,
